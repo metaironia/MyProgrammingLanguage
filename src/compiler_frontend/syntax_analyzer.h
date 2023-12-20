@@ -9,6 +9,14 @@ TreeNode *GetGrammar (const LanguageToken *token_struct);
 
 TreeNode *GetSumSub (const LanguageToken *token_struct, size_t *position);
 
-TreeNode *GetNumVar (const LanguageToken *token_struct, size_t *position);
+TreeNode *GetMulDiv (const LanguageToken *token_struct, size_t *position);
+
+TreeNode *GetPow (const LanguageToken *token_struct, size_t *position);
+
+TreeNode *GetParenthesis (const LanguageToken *token_struct, size_t *position);
+
+TreeNode *GetNum (const LanguageToken *token_struct, size_t *position);
+
+TreeNode *GetVar (const LanguageToken *token_struct, size_t *position);
 
 #endif

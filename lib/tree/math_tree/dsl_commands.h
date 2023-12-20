@@ -27,6 +27,8 @@
 
 #define VAR_(...)  (CreateMathTreeNode (VARIABLE, __VA_ARGS__, NULL, NULL))
 
+#define ASSIGN_    (CreateLangTreeNode (ASSIGN, NULL, NULL))
+
 #define END_       (CreateMathTreeNode (END, 0, NULL, NULL))
 
 #endif

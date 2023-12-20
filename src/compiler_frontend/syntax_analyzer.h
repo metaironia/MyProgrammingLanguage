@@ -7,6 +7,10 @@
 
 TreeNode *GetGrammar (const LanguageToken *token_struct);
 
+TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position);
+
+TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position);
+
 TreeNode *GetSumSub (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetMulDiv (const LanguageToken *token_struct, size_t *position);

@@ -15,7 +15,7 @@ TreeNode *GetGrammar (const LanguageToken *token_struct) {
 
     size_t position = 0;
 
-    TreeNode *tree_node = GetSumSub (token_struct, &position); 
+    TreeNode *tree_node = GetLangOperator (token_struct, &position); 
 
     if (((token_struct -> node_array)[position]) -> data -> nodeType != END) {
 
@@ -25,7 +25,7 @@ TreeNode *GetGrammar (const LanguageToken *token_struct) {
 
     return tree_node;
 }
-/*
+
 TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position) {
     
     assert (token_struct);
@@ -44,13 +44,25 @@ TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position) {
     assert ((token_struct -> node_array)[*position]);
     assert (position);
 
-    TreeNode *tree_node    = GetAssign (token_struct, position);
+    TreeNode *tree_node    = ASSIGN_;
     TreeNode *current_node = (token_struct -> node_array)[*position];
 
-    tree_node -> left_branch = Get
+    tree_node -> left_branch = GetVar (token_struct, position);
+
+    current_node = (token_struct -> node_array)[*position];
+
+    if (NODE_TYPE != LANGUAGE_OPERATOR || NODE_LANG_OPERATOR != ASSIGN) {
+
+        fprintf (stderr, "ERROR in ASSIGN\n");
+        return NULL;
+    }
+
+    (*position)++;
+
+    tree_node -> right_branch = GetSumSub (token_struct, position);
 
     return tree_node;
-} */
+} 
 
 
 TreeNode *GetSumSub (const LanguageToken *token_struct, size_t *position) {

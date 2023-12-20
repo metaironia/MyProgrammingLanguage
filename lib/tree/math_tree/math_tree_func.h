@@ -112,13 +112,13 @@ unsigned int NodeNumberCheckErrors (const TreeNode *math_expression_node);
 
 const char *NumberToString (const double number);
 
-const char *MathNodeTypeToString (const TreeNode *math_tree_node);
+const char *MathNodeTypeToString (const TreeNode *math_tree_node, const NameTable *name_table);
 
 const char *LangNodeTypeToString (const TreeNode *current_node);
 
 const char *LangNodeOperatorToString (const LangNodeOperator current_operator);
 
-const char *MathNodeNumVarEndToString (const TreeNode *math_tree_node);
+const char *MathNodeNumVarEndToString (const TreeNode *math_tree_node, const NameTable *name_table);
 
 const char *MathNodeOperatorToString (const TreeNode *math_tree_node);
 
@@ -150,10 +150,12 @@ double MathTreeNodeBinaryCompute (const double left_branch_value, const double r
 TreeFuncStatus NameTableCtor (NameTable *name_table);
 
 TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type,
-                                                       const char *word_name,
-                                                       const size_t word_number);
+                                                    const char *word_name,
+                                                    const size_t word_number);
 
-TreeFuncStatus NameTableDtor (NameTable *name_table);                                  
+TreeFuncStatus NameTableDtor (NameTable *name_table); 
+
+const char *NameTableVariableFind (const size_t variable_index, const NameTable *name_table);
 
 //---------------------------------------------------------------------------------------------
 

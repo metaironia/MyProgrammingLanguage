@@ -22,22 +22,14 @@
 #endif
 
 #define TREE_VERIFY(tree)   {                                                   \
-                                if (TreeVerify (tree, __func__) != 0) {         \
-                                                                                \
-                                    MathTreeGraphDump (tree);                   \
-                                                                                \
+                                if (TreeVerify (tree, __func__) != 0)           \
                                     return TREE_FUNC_STATUS_FAIL;               \
-                                }                                               \
                             }
 
 #define TREE_VERIFY_PTR_FUNC(tree)                                              \
                             {                                                   \
-                                if (TreeVerify (tree, __func__) != 0) {         \
-                                                                                \
-                                    MathTreeGraphDump (tree);                   \
-                                                                                \
+                                if (TreeVerify (tree, __func__) != 0)           \
                                     return NULL;                                \
-                                }                                               \
                             }
 
 #define TREE_NODE_VERIFY(tree_node)                                  \

@@ -39,7 +39,7 @@ enum TreeFuncStatus LogPrintTreeError (const char *error_text) {
     return TREE_FUNC_STATUS_OK;
 }
 
-enum TreeFuncStatus MathTreeGraphDump (const Tree *tree_for_graph_dump) {
+enum TreeFuncStatus MathTreeGraphDump (const Tree *tree_for_graph_dump, const NameTable *name_table) {
 
     assert (tree_for_graph_dump);
 
@@ -48,7 +48,7 @@ enum TreeFuncStatus MathTreeGraphDump (const Tree *tree_for_graph_dump) {
 
     TreeDotFileBegin (tree_dot_file);
 
-    TreeDotFileCreateElements (tree_dot_file, tree_for_graph_dump -> root);
+    TreeDotFileCreateElements (tree_dot_file, tree_for_graph_dump -> root, name_table);
     TreeDotFileDrawArrows     (tree_dot_file, tree_for_graph_dump -> root);
 
     TreeDotFileEnd (tree_dot_file);
@@ -143,7 +143,8 @@ enum TreeFuncStatus TreeDotFileSetColorElement (FILE *tree_dot_file_elem_for_set
 }
 
 enum TreeFuncStatus TreeDotFileCreateElements (FILE *tree_dot_file_gen_elems,
-                                               const TreeNode *tree_node_for_gen_elems) {
+                                               const TreeNode *tree_node_for_gen_elems,
+                                               const NameTable *name_table) {
 
     assert (tree_dot_file_gen_elems);
 
@@ -160,23 +161,27 @@ enum TreeFuncStatus TreeDotFileCreateElements (FILE *tree_dot_file_gen_elems,
         LOG_PRINT (tree_dot_file_gen_elems, "fontsize = 16, fontname = \"times bold\", "
                                             "label = \"");
 
-        NodeTypePrint (tree_dot_file_gen_elems, tree_node_for_gen_elems);
+        NodeTypePrint (tree_dot_file_gen_elems, tree_node_for_gen_elems, name_table);
 
         LOG_PRINT (tree_dot_file_gen_elems, "\"];\n");
 
-        TreeDotFileCreateElements (tree_dot_file_gen_elems, tree_node_for_gen_elems -> left_branch);
-        TreeDotFileCreateElements (tree_dot_file_gen_elems, tree_node_for_gen_elems -> right_branch);
+        TreeDotFileCreateElements (tree_dot_file_gen_elems, tree_node_for_gen_elems -> left_branch, 
+                                   name_table);
+                                   
+        TreeDotFileCreateElements (tree_dot_file_gen_elems, tree_node_for_gen_elems -> right_branch,
+                                   name_table);
     }
 
     return TREE_FUNC_STATUS_OK;
 }
 
-enum TreeFuncStatus NodeTypePrint (FILE *tree_dot_file, const TreeNode *current_node) {
+enum TreeFuncStatus NodeTypePrint (FILE *tree_dot_file, const TreeNode *current_node, 
+                                   const NameTable *name_table) {
 
     assert (tree_dot_file);
     assert (current_node);
 
-    const char *type_string = MathNodeTypeToString (current_node);
+    const char *type_string = MathNodeTypeToString (current_node, name_table);
 
     if (type_string == NULL)
         type_string = LangNodeTypeToString (current_node);

@@ -152,7 +152,7 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
     return NULL;
 }
 
-const char *MathNodeTypeToString (const TreeNode *current_node) {
+const char *MathNodeTypeToString (const TreeNode *current_node, const NameTable *name_table) {
 
     assert (current_node);
 
@@ -161,13 +161,13 @@ const char *MathNodeTypeToString (const TreeNode *current_node) {
     if (NODE_TYPE == LANGUAGE_OPERATOR || NODE_TYPE == NODE_TYPE_ERROR)
         return NULL;
 
-    if (!(node_type_to_string = MathNodeNumVarEndToString (current_node)))
+    if (!(node_type_to_string = MathNodeNumVarEndToString (current_node, name_table)))
         node_type_to_string = MathNodeOperatorToString (current_node);
 
     return node_type_to_string;
 }
 
-const char *MathNodeNumVarEndToString (const TreeNode *current_node) {
+const char *MathNodeNumVarEndToString (const TreeNode *current_node, const NameTable *name_table) {
 
     assert (current_node);
 
@@ -178,7 +178,7 @@ const char *MathNodeNumVarEndToString (const TreeNode *current_node) {
             break;
 
         case VARIABLE:
-            //return NameTableVariableFind (NODE_VALUE);
+            return NameTableVariableFind ((size_t) NODE_VALUE, name_table);
             break;
 
         case END:
@@ -188,6 +188,19 @@ const char *MathNodeNumVarEndToString (const TreeNode *current_node) {
         default:
             return NULL;
     }
+
+    return NULL;
+}
+
+const char *NameTableVariableFind (const size_t variable_index, const NameTable *name_table) {
+
+    assert (name_table);
+
+    for (size_t i = 0; i < name_table -> table_size; i++)
+        if (variable_index == (name_table -> name_table_cell)[i].word_number &&
+            (name_table -> name_table_cell)[i].word_type == NAME_TABLE_VARIABLE)
+
+            return (name_table -> name_table_cell)[i].word_name;
 
     return NULL;
 }

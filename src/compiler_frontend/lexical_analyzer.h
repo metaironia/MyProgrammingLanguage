@@ -64,14 +64,14 @@ struct LanguageToken {
     TreeNode **node_array;
 };
 
-LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct);
+LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct, NameTable *name_table);
 
 LexicalFuncStatus StringInputFromFile (FILE *input_file, char **input_array);
 
-LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct);
+LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *name_table);
 
 bool LexemeCheckIfNumber (char *word_to_check, TreeNode **current_node);
 
-bool LexemeCheckIfVariable (const char *word_to_check, TreeNode **current_node);
+bool LexemeCheckIfVariable (const char *word_to_check, TreeNode **current_node, NameTable *name_table);
 
 #endif

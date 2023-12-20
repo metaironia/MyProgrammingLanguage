@@ -63,6 +63,27 @@
 
 const int MAX_NUMBER_LENGTH = 30;
 
+enum NameTableDef {
+
+    NAME_TABLE_KEYWORD,
+    NAME_TABLE_VARIABLE
+};
+
+struct NameTableCell {
+
+    NameTableDef word_type;
+    const char *word_name;
+    size_t word_number;
+};
+
+struct NameTable {
+
+    NameTableCell *name_table_cell;
+    size_t table_size;    
+};
+
+const int MAX_NAME_TABLE_LENGTH = 32;
+
 MathNodeType IsOperatorUnaryOrBinary (const MathNodeOperator node_operator_to_check);
 
 TreeNode *CreateMathTreeNode (const MathNodeType type_of_node, const double node_value,
@@ -125,6 +146,14 @@ double MathTreeNodeUnaryCompute (const double left_branch_value,
 
 double MathTreeNodeBinaryCompute (const double left_branch_value, const double right_branch_value,
                                   const MathNodeOperator current_node_operator);
+
+TreeFuncStatus NameTableCtor (NameTable *name_table);
+
+TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type,
+                                                       const char *word_name,
+                                                       const size_t word_number);
+
+TreeFuncStatus NameTableDtor (NameTable *name_table);                                  
 
 //---------------------------------------------------------------------------------------------
 

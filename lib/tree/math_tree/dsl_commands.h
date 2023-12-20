@@ -25,7 +25,7 @@
 
 #define NUM_(...)  (CreateMathTreeNode (NUMBER, __VA_ARGS__, NULL, NULL))
 
-#define VAR_       (CreateMathTreeNode (VARIABLE, 0, NULL, NULL))
+#define VAR_(...)  (CreateMathTreeNode (VARIABLE, __VA_ARGS__, NULL, NULL))
 
 #define END_       (CreateMathTreeNode (END, 0, NULL, NULL))
 

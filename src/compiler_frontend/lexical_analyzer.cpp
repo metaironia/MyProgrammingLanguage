@@ -10,16 +10,18 @@
 
 #include "lexical_analyzer.h"
 #include "lexical_quotations.h"
-LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct) {
+
+LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct, NameTable *name_table) {
 
     assert (input_file);
     assert (token_struct);
+    assert (name_table);
 
     token_struct -> char_array = (char **) calloc (MAX_PROGRAM_LENGTH, sizeof (char *));
 
     StringInputFromFile (input_file, token_struct -> char_array);
 
-    StringTokenSeparate (token_struct);
+    StringTokenSeparate (token_struct, name_table);
 
     return LEXICAL_FUNC_STATUS_OK;
 }
@@ -45,10 +47,11 @@ LexicalFuncStatus StringInputFromFile (FILE *input_file, char **input_array) {
     return LEXICAL_FUNC_STATUS_OK;
 }
 
-LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct) {
+LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *name_table) {
 
     assert (token_struct);
     assert (token_struct -> char_array);
+    assert (name_table);
 
     (token_struct -> node_array) = (TreeNode **) calloc (MAX_PROGRAM_LENGTH, sizeof (TreeNode *));
 
@@ -61,7 +64,7 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct) {
         current_word = (token_struct -> char_array)[char_array_index];
 
         if (LexemeCheckIfNumber   (current_word, current_node) ||
-            LexemeCheckIfVariable (current_word, current_node)) {
+            LexemeCheckIfVariable (current_word, current_node, name_table)) {
 
             current_node++;
             continue;
@@ -116,10 +119,13 @@ bool LexemeCheckIfNumber (char *word_to_check, TreeNode **current_node) {
     return false; 
 }
 
-bool LexemeCheckIfVariable (const char *word_to_check, TreeNode **current_node) {
+bool LexemeCheckIfVariable (const char *word_to_check, TreeNode **current_node, NameTable *name_table) {
 
     assert (word_to_check);
     assert (current_node);
+    assert (name_table);
+
+    static int number_of_variable = 0;
 
     if ((!isalpha (word_to_check[0]) || word_to_check[0] < 0) && word_to_check[0] != '_')
         return false;
@@ -128,7 +134,12 @@ bool LexemeCheckIfVariable (const char *word_to_check, TreeNode **current_node) 
         if ((!isalnum (word_to_check[i]) || word_to_check[0] < 0) && word_to_check[0] != '_')
             return false; 
 
-    *current_node++ = VAR_; 
+
+    *current_node++ = VAR_ (number_of_variable);
+
+    NameTableAdd (name_table, NAME_TABLE_VARIABLE, word_to_check, number_of_variable);
+
+    number_of_variable++;
 
     return true;
 } 

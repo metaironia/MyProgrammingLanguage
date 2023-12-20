@@ -178,7 +178,7 @@ const char *MathNodeNumVarEndToString (const TreeNode *current_node) {
             break;
 
         case VARIABLE:
-            return "x";
+            //return NameTableVariableFind (NODE_VALUE);
             break;
 
         case END:
@@ -720,6 +720,43 @@ TreeFuncStatus MathTreeNodeSmthAndOneSimplify (TreeNode *current_node) {
     return TREE_FUNC_STATUS_OK;
 }
 
+TreeFuncStatus NameTableCtor (NameTable *name_table) {
+
+    assert (name_table);
+
+    name_table -> name_table_cell = (NameTableCell *) calloc (MAX_NAME_TABLE_LENGTH, sizeof (NameTableCell));
+    assert (name_table -> name_table_cell);
+
+    name_table -> table_size = 0;
+
+    return TREE_FUNC_STATUS_OK;
+};
+
+TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type,
+                                                       const char *word_name,
+                                                       const size_t word_number) {
+
+    assert (name_table);
+
+    (name_table -> name_table_cell)[name_table -> table_size].word_type = word_type;
+    (name_table -> name_table_cell)[name_table -> table_size].word_name = word_name;
+    (name_table -> name_table_cell)[name_table -> table_size].word_number = word_number;
+
+    (name_table -> table_size)++;
+
+    return TREE_FUNC_STATUS_OK;
+}
+
+TreeFuncStatus NameTableDtor (NameTable *name_table) {
+
+    assert (name_table);
+
+    free (name_table -> name_table_cell);
+    name_table -> name_table_cell = NULL;
+
+    return TREE_FUNC_STATUS_OK;
+}
+
 //govno below, have to be refactored ---------------------------------------------------------
 
 TreeFuncStatus MathTreeNodeRead (FILE *file_for_read_tree, TreeNode **tree_node_for_fill) {  //PREORDER
@@ -828,7 +865,7 @@ TreeFuncStatus MathTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
         }
 
         else if (strcmp ("x", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = VAR_;
+            *tree_node_for_data_read = VAR_ (0);
         }
 
         else

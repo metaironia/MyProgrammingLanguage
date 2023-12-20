@@ -22,7 +22,7 @@ TreeNode *CreateMathTreeNode (const MathNodeType type_of_node, const double node
     current_node -> data = (MathNode *) calloc (1, sizeof (MathNode));
     assert (current_node -> data);
 
-    if ((type_of_node != NUMBER && type_of_node != VARIABLE) &&
+    if ((type_of_node != NUMBER && type_of_node != VARIABLE && type_of_node != END) &&
         IsOperatorUnaryOrBinary ((MathNodeOperator) node_value) != type_of_node)
 
         return NULL;
@@ -161,19 +161,17 @@ const char *MathNodeTypeToString (const TreeNode *current_node) {
     if (NODE_TYPE == LANGUAGE_OPERATOR || NODE_TYPE == NODE_TYPE_ERROR)
         return NULL;
 
-    if (!(node_type_to_string = MathNodeNumOrVarToString (current_node)))
+    if (!(node_type_to_string = MathNodeNumVarEndToString (current_node)))
         node_type_to_string = MathNodeOperatorToString (current_node);
 
     return node_type_to_string;
 }
 
-const char *MathNodeNumOrVarToString (const TreeNode *current_node) {
+const char *MathNodeNumVarEndToString (const TreeNode *current_node) {
 
     assert (current_node);
 
-    const MathNodeType node_type = NODE_TYPE;
-
-    switch (node_type) {
+    switch (NODE_TYPE) {
 
         case NUMBER:
             return NumberToString (NODE_VALUE);
@@ -181,6 +179,10 @@ const char *MathNodeNumOrVarToString (const TreeNode *current_node) {
 
         case VARIABLE:
             return "x";
+            break;
+
+        case END:
+            return "END";
             break;
 
         default:

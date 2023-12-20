@@ -97,7 +97,7 @@ const char *LangNodeTypeToString (const TreeNode *current_node);
 
 const char *LangNodeOperatorToString (const LangNodeOperator current_operator);
 
-const char *MathNodeNumOrVarToString (const TreeNode *math_tree_node);
+const char *MathNodeNumVarEndToString (const TreeNode *math_tree_node);
 
 const char *MathNodeOperatorToString (const TreeNode *math_tree_node);
 

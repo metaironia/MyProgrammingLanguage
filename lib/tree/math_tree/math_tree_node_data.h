@@ -47,7 +47,8 @@ enum MathNodeType {
     UNARY_OPERATOR,
     BINARY_OPERATOR,
     LANGUAGE_OPERATOR,
-    NODE_TYPE_ERROR
+    END,
+    NODE_TYPE_ERROR,
 };
 
 struct MathNode {

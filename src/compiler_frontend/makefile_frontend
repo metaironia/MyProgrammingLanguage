@@ -6,8 +6,10 @@ CXXFLAGS=-Wshadow -Winit-self -Wcast-align -Wundef -Wfloat-equal -Winline -Wredu
 	 -Wempty-body -Wformat-security -Wformat=2 -Wignored-qualifiers -Wlogical-op -Wno-missing-field-initializers \
 	 -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wstack-usage=8192 -Wstrict-aliasing \
 	 -Wstrict-null-sentinel -Wtype-limits -Wwrite-strings -Werror=vla -D_DEBUG -D_EJUDGE_CLIENT_SIDE 
-SOURCES= main.cpp lexical_analyzer.cpp ../../lib/tree/tree_func.cpp ../../lib/tree/tree_log.cpp			\
-		 ../../lib/tree/math_tree/math_tree_func.cpp ../../lib/tree/math_tree/math_operation.cpp  
+SOURCES= main.cpp lexical_analyzer.cpp syntax_analyzer.cpp ../../lib/tree/tree_func.cpp \
+		 ../../lib/tree/tree_log.cpp ../../lib/tree/math_tree/math_tree_func.cpp \
+		 ../../lib/tree/math_tree/math_operation.cpp \
+		 		 
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=compiler_frontend
 

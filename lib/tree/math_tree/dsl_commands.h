@@ -27,4 +27,6 @@
 
 #define VAR_       (CreateMathTreeNode (VARIABLE, 0, NULL, NULL))
 
+#define END_       (CreateMathTreeNode (END, 0, NULL, NULL))
+
 #endif

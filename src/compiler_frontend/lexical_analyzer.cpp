@@ -33,10 +33,10 @@ LexicalFuncStatus StringInputFromFile (FILE *input_file, char **input_array) {
 
     for (size_t i = 0; !feof (input_file); i++) { 
 
-        if (fscanf (input_file, " %[^ ,;.-]", current_word) == 0)
-            current_word[0] = (char) getc (input_file); 
-        
-        if (current_word[0] != '\0')
+        if (fscanf (input_file, " %[^ ,;.-\r\n]", current_word) == 0)
+            current_word[0] = (char) fgetc (input_file); 
+
+        if (current_word[0] != '\0') 
             input_array[i] = strdup (current_word);
 
         memset (current_word, 0, (sizeof (current_word) / sizeof (current_word[0])));
@@ -90,9 +90,9 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct) {
         CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, GREATER);
         CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR,  OPEN_PARENTHESIS);
         CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR,  CLOSE_PARENTHESIS);
-
-        fprintf (stderr, "dodo");
     }       
+
+    *current_node = END_;
 
     return LEXICAL_FUNC_STATUS_OK;
 }

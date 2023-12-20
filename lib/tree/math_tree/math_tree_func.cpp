@@ -41,6 +41,25 @@ TreeNode *CreateMathTreeNode (const MathNodeType type_of_node, const double node
     return current_node;
 }
 
+TreeNode *CreateLangTreeNode (const LangNodeOperator node_operator, TreeNode *const ptr_left_branch,
+                              TreeNode *const ptr_right_branch) {
+
+    TreeNode *current_node = CreateTreeNode ();
+    assert (current_node);
+
+    current_node -> data = (MathNode *) calloc (1, sizeof (MathNode));
+    assert (current_node -> data);
+
+    current_node -> data -> nodeType = LANGUAGE_OPERATOR;
+
+    NODE_LANG_OPERATOR = node_operator;
+
+    current_node -> left_branch  = ptr_left_branch;
+    current_node -> right_branch = ptr_right_branch;
+
+    return current_node;
+}
+
 MathNodeType IsOperatorUnaryOrBinary (const MathNodeOperator node_operator_to_check) {
 
     switch (node_operator_to_check) {
@@ -50,12 +69,18 @@ MathNodeType IsOperatorUnaryOrBinary (const MathNodeOperator node_operator_to_ch
         case OPERATOR_DIV:
         case OPERATOR_MUL:
         case OPERATOR_POW:
+        case OPERATOR_EQUAL:
+        case OPERATOR_NOT_EQUAL:
+        case OPERATOR_GREATER:
+        case OPERATOR_LESS:
             return BINARY_OPERATOR;
             break;
 
         case OPERATOR_SIN:
         case OPERATOR_COS:
         case OPERATOR_LN:
+        case OPERATOR_OPEN_PARENTHESIS:
+        case OPERATOR_CLOSE_PARENTHESIS:
             return UNARY_OPERATOR;
             break;
 
@@ -66,15 +91,65 @@ MathNodeType IsOperatorUnaryOrBinary (const MathNodeOperator node_operator_to_ch
     return NODE_TYPE_ERROR;
 }
 
-TreeFuncStatus MathNodeTypePrint (FILE *file_for_print,
-                                  const TreeNode *current_node_for_print) {
+const char *LangNodeTypeToString (const TreeNode *current_node) {
 
-    assert (file_for_print);
-    assert (current_node_for_print);
+    assert (current_node);
+    assert (current_node -> data);
 
-    LOG_PRINT (file_for_print, "%s", MathNodeTypeToString (current_node_for_print));
+    const char *node_type_to_string = NULL;
 
-    return TREE_FUNC_STATUS_OK;
+    if (NODE_TYPE != LANGUAGE_OPERATOR || NODE_TYPE == NODE_TYPE_ERROR)
+        return NULL;
+
+    node_type_to_string = LangNodeOperatorToString ((current_node -> data -> nodeValue).langOperator);
+
+    return node_type_to_string;
+}
+
+const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
+
+    switch (current_operator) {
+        case IF:
+            return "IF";
+            break;
+
+        case WHILE:
+            return "WHILE";
+            break;
+
+        case ELSE:
+            return "ELSE";
+            break;
+
+        case ASSIGN:
+            return "ASSIGN";
+            break; 
+
+        case PRINT:
+            return "PRINT";
+            break;
+        
+        case CALL_FUNC:
+            return "CALL_FUNC";
+            break;
+
+        case FUNC_RET:
+            return "FUNC_RET";
+            break;
+
+        case READ:
+            return "READ";
+            break;
+
+        case FUNC_ARG:
+            return "FUNC_ARG";
+            break;
+        
+        default:
+            return NULL;
+    }
+
+    return NULL;
 }
 
 const char *MathNodeTypeToString (const TreeNode *current_node) {
@@ -82,6 +157,9 @@ const char *MathNodeTypeToString (const TreeNode *current_node) {
     assert (current_node);
 
     const char *node_type_to_string = NULL;
+
+    if (NODE_TYPE == LANGUAGE_OPERATOR || NODE_TYPE == NODE_TYPE_ERROR)
+        return NULL;
 
     if (!(node_type_to_string = MathNodeNumOrVarToString (current_node)))
         node_type_to_string = MathNodeOperatorToString (current_node);
@@ -235,10 +313,10 @@ double MathTreeNodeComputeOperatorResult (const TreeNode *current_node,
             return variable_value;
 
         case UNARY_OPERATOR:
-            return MathTreeNodeUnaryCompute (BRANCH_VALUE (left_branch), NODE_MATH_OPERATOR);
+            return MathTreeNodeUnaryCompute (left_branch_node_value, NODE_MATH_OPERATOR);
 
         case BINARY_OPERATOR:
-            return MathTreeNodeBinaryCompute (BRANCH_VALUE (left_branch), BRANCH_VALUE (right_branch),
+            return MathTreeNodeBinaryCompute (right_branch_node_value, BRANCH_VALUE (right_branch),
                                               NODE_MATH_OPERATOR);
 
         case NODE_TYPE_ERROR:

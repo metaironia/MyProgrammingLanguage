@@ -171,7 +171,7 @@ enum TreeFuncStatus TreeDotFileCreateElements (FILE *tree_dot_file_gen_elems,
     return TREE_FUNC_STATUS_OK;
 }
 
-enum TreeFuncStatus NodeTypePrint (FILE *tree_dot_file, TreeNode *current_node) {
+enum TreeFuncStatus NodeTypePrint (FILE *tree_dot_file, const TreeNode *current_node) {
 
     assert (tree_dot_file);
     assert (current_node);
@@ -179,11 +179,11 @@ enum TreeFuncStatus NodeTypePrint (FILE *tree_dot_file, TreeNode *current_node) 
     const char *type_string = MathNodeTypeToString (current_node);
 
     if (type_string == NULL)
-        type_string == LangNodeTypeToString (current_node);
+        type_string = LangNodeTypeToString (current_node);
 
     assert (type_string);
 
-    LOG_PRINT (file_for_print, "%s", type_string);
+    LOG_PRINT (tree_dot_file, "%s", type_string);
 
     return TREE_FUNC_STATUS_OK;
 }

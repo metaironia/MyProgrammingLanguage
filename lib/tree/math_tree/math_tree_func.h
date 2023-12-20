@@ -69,6 +69,9 @@ TreeNode *CreateMathTreeNode (const MathNodeType type_of_node, const double node
                               TreeNode *const ptr_left_branch,
                               TreeNode *const ptr_right_branch);
 
+TreeNode *CreateLangTreeNode (const LangNodeOperator node_operator, TreeNode *const ptr_left_branch,
+                              TreeNode *const ptr_right_branch);
+
 unsigned int MathTreeNodeVerify (const TreeNode *math_expression_tree_node);
 
 unsigned int MathTreeVerify (const Tree *math_expression_tree,
@@ -89,6 +92,10 @@ unsigned int NodeNumberCheckErrors (const TreeNode *math_expression_node);
 const char *NumberToString (const double number);
 
 const char *MathNodeTypeToString (const TreeNode *math_tree_node);
+
+const char *LangNodeTypeToString (const TreeNode *current_node);
+
+const char *LangNodeOperatorToString (const LangNodeOperator current_operator);
 
 const char *MathNodeNumOrVarToString (const TreeNode *math_tree_node);
 

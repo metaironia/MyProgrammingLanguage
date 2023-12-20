@@ -42,7 +42,7 @@ enum TreeFuncStatus TreeDotFileEnd (FILE *tree_dot_file_end);
 enum TreeFuncStatus TreeDotFileCreateElements (FILE *tree_dot_file_gen_elems,
                                                const TreeNode *tree_node_for_gen_elems);
 
-enum TreeFuncStatus NodeTypePrint (FILE *tree_dot_file, TreeNode *current_node);
+enum TreeFuncStatus NodeTypePrint (FILE *tree_dot_file, const TreeNode *current_node);
 
 enum TreeFuncStatus TreeDotFileDrawArrows (FILE *tree_dot_file_draw,
                                            const TreeNode *tree_node_for_draw_arrows);

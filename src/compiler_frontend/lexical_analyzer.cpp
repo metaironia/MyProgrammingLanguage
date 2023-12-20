@@ -10,31 +10,12 @@
 
 #include "lexical_analyzer.h"
 #include "lexical_quotations.h"
-
-TreeNode *CreateLangTreeNode (const LangNodeOperator node_operator, TreeNode *const ptr_left_branch,
-                              TreeNode *const ptr_right_branch) {
-
-    TreeNode *current_node = CreateTreeNode ();
-    assert (current_node);
-
-    current_node -> data = (MathNode *) calloc (1, sizeof (MathNode));
-    assert (current_node -> data);
-
-    current_node -> data -> nodeType = LANGUAGE_OPERATOR;
-
-    NODE_LANG_OPERATOR = node_operator;
-
-    current_node -> left_branch  = ptr_left_branch;
-    current_node -> right_branch = ptr_right_branch;
-
-    return current_node;
-}
 LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct) {
 
     assert (input_file);
     assert (token_struct);
 
-    token_struct -> char_array = (char **) calloc (MAX_PROGRAM_LENGHT, sizeof (char *));
+    token_struct -> char_array = (char **) calloc (MAX_PROGRAM_LENGTH, sizeof (char *));
 
     StringInputFromFile (input_file, token_struct -> char_array);
 
@@ -55,7 +36,8 @@ LexicalFuncStatus StringInputFromFile (FILE *input_file, char **input_array) {
         if (fscanf (input_file, " %[^ ,;.-]", current_word) == 0)
             current_word[0] = (char) getc (input_file); 
         
-        input_array[i] = strdup (current_word);
+        if (current_word[0] != '\0')
+            input_array[i] = strdup (current_word);
 
         memset (current_word, 0, (sizeof (current_word) / sizeof (current_word[0])));
     }
@@ -68,9 +50,9 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct) {
     assert (token_struct);
     assert (token_struct -> char_array);
 
-    (token_struct -> node_array) = (TreeNode *) calloc (MAX_PROGRAM_LENGHT, sizeof (TreeNode));
+    (token_struct -> node_array) = (TreeNode **) calloc (MAX_PROGRAM_LENGTH, sizeof (TreeNode *));
 
-    TreeNode *current_node = (token_struct -> node_array);
+    TreeNode **current_node = (token_struct -> node_array);
 
     char *current_word = (token_struct -> char_array)[0];
 
@@ -78,11 +60,14 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct) {
         
         current_word = (token_struct -> char_array)[char_array_index];
 
-        if (LexemeCheckIfNumber (current_word, &current_node))
-            break;
+        if (LexemeCheckIfNumber   (current_word, current_node) ||
+            LexemeCheckIfVariable (current_word, current_node)) {
 
-        if (LexemeCheckIfVariable (current_word, &current_node))
-            break;
+            current_node++;
+            continue;
+        }
+
+        bool is_success = false;
 
         CHECK_WORD_LANGUAGE_OP (current_word, IF);
         CHECK_WORD_LANGUAGE_OP (current_word, WHILE);
@@ -103,8 +88,10 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct) {
         CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, NOT_EQUAL);
         CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, LESS);
         CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, GREATER);
-        CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR, OPEN_PARENTHESIS);
-        CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR, CLOSE_PARENTHESIS);
+        CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR,  OPEN_PARENTHESIS);
+        CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR,  CLOSE_PARENTHESIS);
+
+        fprintf (stderr, "dodo");
     }       
 
     return LEXICAL_FUNC_STATUS_OK;
@@ -121,7 +108,7 @@ bool LexemeCheckIfNumber (char *word_to_check, TreeNode **current_node) {
 
     if (word_end_ptr[0] == '\0') {
 
-        *current_node++ = NUM_ (value);
+        *current_node = NUM_ (value);
         
         return true;
     } 
@@ -134,73 +121,15 @@ bool LexemeCheckIfVariable (const char *word_to_check, TreeNode **current_node) 
     assert (word_to_check);
     assert (current_node);
 
-    if (!isalpha (word_to_check[0]) && word_to_check[0] != '_')
+    if ((!isalpha (word_to_check[0]) || word_to_check[0] < 0) && word_to_check[0] != '_')
         return false;
 
     for (size_t i = 1; word_to_check[i]; i++)
-        if (!isalnum (word_to_check[i]) && word_to_check[0] != '_')
+        if ((!isalnum (word_to_check[i]) || word_to_check[0] < 0) && word_to_check[0] != '_')
             return false; 
 
     *current_node++ = VAR_; 
 
     return true;
-}
-
-const char *LangNodeTypeToString (const TreeNode *current_node) {
-
-    assert (current_node);
-    assert (current_node -> data);
-
-    const char *node_type_to_string = NULL;
-
-    node_type_to_string = LangNodeOperatorToString ((current_node -> data -> nodeValue).langOperator);
-
-    return node_type_to_string;
-}
-
-const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
-
-    switch (current_operator) {
-        case IF:
-            return "IF";
-            break;
-
-        case WHILE:
-            return "WHILE";
-            break;
-
-        case ELSE:
-            return "ELSE";
-            break;
-
-        case ASSIGN:
-            return "ASSIGN";
-            break; 
-
-        case PRINT:
-            return "PRINT";
-            break;
-        
-        case CALL_FUNC:
-            return "CALL_FUNC";
-            break;
-
-        case FUNC_RET:
-            return "FUNC_RET";
-            break;
-
-        case READ:
-            return "READ";
-            break;
-
-        case FUNC_ARG:
-            return "FUNC_ARG";
-            break;
-        
-        default:
-            return NULL;
-    }
-
-    return NULL;
 } 
 

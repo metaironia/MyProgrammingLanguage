@@ -1,54 +1,55 @@
 #ifndef LEXICAL_QUOTATIONS_H
 #define LEXICAL_QUOTATIONS_H
 
-const char *IF_QUOTES[] = {"РЅСѓР¶РµРЅ", "РµСЃР»Рё", "С…РѕС‚СЏ", "С…РѕС‚СЊ", "РєРѕРіРґР°"};
+const char *const IF_QUOTES[] = {"нужен", "если", "хотя", "хоть", "когда"};
 
-const char *WHILE_QUOTES[] = {"РїРѕРєР°"};
+const char *const WHILE_QUOTES[] = {"пока"};
 
-const char *ELSE_QUOTES[] = {"РЅРѕ", "РёРЅР°С‡Рµ"};
+const char *const ELSE_QUOTES[] = {"но", "иначе"};
 
-const char *ASSIGN_QUOTES[] = {"С‚РµРїРµСЂСЊ", "СЌС‚Рѕ", "СЃРµР№С‡Р°СЃ", "СЂР°РІРЅРѕ"};
+const char *const ASSIGN_QUOTES[] = {"теперь", "это", "сейчас", "равно"};
 
-const char *PRINT_QUOTES[] = {"РіРѕРІРѕСЂРёР»", "РіРѕРІРѕСЂРёС‚", "Р±Р°Р·Р°СЂРёС‚", "Р±Р°Р·Р°СЂРёР»", "СЃРєР°Р·Р°Р»","РїРёС€РµРј", "РїРёС€РµС‚"};
+const char *const PRINT_QUOTES[] = {"говорил", "говорит", "базарит", "базарил",
+                                    "сказал","пишем", "пишет", "базаришь"};
 
-const char *CALL_FUNC_QUOTES[] = {"Р·РІРѕРЅСЋ", "Р·РІРѕРЅРёР»", "РїСѓР»Р»Р°Рї", "Р·РѕРІРµС‚", "Р·РѕРІСѓ"};
+const char *const CALL_FUNC_QUOTES[] = {"звоню", "звонил", "пуллап", "зовет", "зову"};
 
-const char *FUNC_RET_QUOTES[] = {"РѕС‚РґР°Р№", "РѕС‚РґР°РІР°Р№", "РґРѕРјРѕР№", "РґР°С‚СЊ"};
+const char *const FUNC_RET_QUOTES[] = {"отдай", "отдавай", "домой", "дать"};
 
-const char *READ_QUOTES[] = {"РІРёРґРµР»", "РІРёР¶Сѓ", "СЃРјРѕС‚СЂСЋ", "СЃРјРѕС‚СЂРµР»"};
+const char *const READ_QUOTES[] = {"видел", "вижу", "смотрю", "смотрел"};
 
-const char *FUNC_ARG_QUOTES[] = {"РіРґРµ", "РіСЌРЅРі", "РіРµРЅРі", "Р±СЂР°С‚РІР°", "РєРѕСЂРµС€", "РІР·СЏР»"};
+const char *const FUNC_ARG_QUOTES[] = {"где", "гэнг", "генг", "братва", "кореш", "взял"};
 
-const char *OPEN_PARENTHESIS_QUOTES[] = {"РѕС‚РєСЂС‹С‚СЊ", "РѕС‚РєСЂС‹Р»"}; 
+const char *const OPEN_PARENTHESIS_QUOTES[] = {"открыть", "открыл"}; 
 
-const char *CLOSE_PARENTHESIS_QUOTES[] = {"Р·Р°РєСЂС‹С‚СЊ", "Р·Р°РєСЂС‹Р»"};
+const char *const CLOSE_PARENTHESIS_QUOTES[] = {"закрыть", "закрыл"};
 
-const char *EQUAL_QUOTES[] = {"РґСѓРјР°Р»", "РґСѓРјР°РµС‚", "Р±СѓРґС‚Рѕ"};
+const char *const EQUAL_QUOTES[] = {"думал", "думает", "будто"};
 
-const char *NOT_EQUAL_QUOTES[] = {"РЅРµ"};
+const char *const NOT_EQUAL_QUOTES[] = {"не"};
 
-const char *GREATER_QUOTES[] = {"Р±РѕР»СЊС€Рµ", "Р±РѕРіР°С‡Рµ"};
+const char *const GREATER_QUOTES[] = {"больше", "богаче"};
 
-const char *LESS_QUOTES[] = {"РјРµРЅСЊС€Рµ"};
+const char *const LESS_QUOTES[] = {"меньше"};
 
-const char *MUL_QUOTES[] = {"РјРЅРѕР¶Сѓ", "РјРЅРѕР¶РёС‚", "РјРЅРѕР¶РёС‚СЊ", "РјРЅРѕРіРѕРєСЂР°С‚РЅРѕ", "РјРЅРѕР¶Р°С‚СЊ"};
+const char *const MUL_QUOTES[] = {"множу", "множит", "множить", "многократно", "множать"};
 
-const char *DIV_QUOTES[] = {"РґРµР»СЋ", "РґРµР»РёРј", "СЂР°Р·РґРµР»РёРј", "СЂР°Р·РґРµР»СЏРµРј"};
+const char *const DIV_QUOTES[] = {"делю", "делим", "разделим", "разделяем"};
 
-const char *ADD_QUOTES[] = {"СЃСѓРјРјРёСЂСѓСЋ", "СЃСѓРјРјРёСЂРѕРІР°С‚СЊ", "РїР»СЋСЃ", "РїСЂРёР±Р°РІР»СЏСЋ", "РїСЂРёР±Р°РІР»СЏС‚СЊ", "РїСЂРёР±С‹Р»СЊ"};
+const char *const ADD_QUOTES[] = {"суммирую", "суммировать", "плюс", "прибавляю", "прибавлять", "прибыль"};
 
-const char *SUB_QUOTES[] = {"РѕС‚РЅРёРјР°СЋ", "РјРёРЅСѓСЃ", "СѓР±С‹С‚РѕРє", "РѕС‚РЅРёРјР°РµС€СЊ"};
+const char *const SUB_QUOTES[] = {"отнимаю", "минус", "убыток", "отнимаешь"};
 
-const char *POW_QUOTES[] = {"СЃС‚РµРїРµРЅ"};
+const char *const POW_QUOTES[] = {"степен"};
 
-const char *OR_QUOTES[] = {"Р»РёР±Рѕ", "РёР»Рё"};
+const char *const OR_QUOTES[] = {"либо", "или"};
 
-const char *AND_QUOTES[] = {"Рё"};
+const char *const AND_QUOTES[] = {"и"};
 
-const char *FUNC_END_SIGN = ".";
+const char *const FUNC_END_SIGN = ".";
 
-const char *IF_WHILE_ELSE_START_SIGN = ",";
+const char *const IF_WHILE_ELSE_START_SIGN = ",";
 
-const char *IF_WHILE_ELSE_END_SIGN = ";";
+const char *const IF_WHILE_ELSE_END_SIGN = ";";
 
 #endif

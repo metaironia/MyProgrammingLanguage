@@ -26,11 +26,16 @@ enum LangNodeOperator {
     WHILE,
     ELSE,
     ASSIGN,
+    END_LINE,
     PRINT,
     CALL_FUNC,
     FUNC_RET,
     READ,
     FUNC_ARG,
+    INIT,
+    TYPE_INT,
+    CLOSE_BRACE,
+    OPEN_BRACE
 };
 
 union MathNodeData {

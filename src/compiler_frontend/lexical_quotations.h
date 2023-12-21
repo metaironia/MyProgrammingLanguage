@@ -7,7 +7,7 @@ const char *const WHILE_QUOTES[] = {"пока"};
 
 const char *const ELSE_QUOTES[] = {"но", "иначе"};
 
-const char *const ASSIGN_QUOTES[] = {"теперь", "это", "сейчас", "равно"};
+const char *const ASSIGN_QUOTES[] = {"теперь", "это", "сейчас", "равно", "будет"};
 
 const char *const PRINT_QUOTES[] = {"говорил", "говорит", "базарит", "базарил",
                                     "сказал","пишем", "пишет", "базаришь"};
@@ -44,12 +44,14 @@ const char *const POW_QUOTES[] = {"степен"};
 
 const char *const OR_QUOTES[] = {"либо", "или"};
 
+const char *const INIT_QUOTES[] = {"сюда", "бля", "сипаю"};
+
 const char *const AND_QUOTES[] = {"и"};
 
-const char *const FUNC_END_SIGN = ".";
+const char *const CLOSE_BRACE_QUOTES[] = {".", "гррра", "бай", "прощай"};
 
-const char *const IF_WHILE_ELSE_START_SIGN = ",";
+const char *const OPEN_BRACE_QUOTES[] = {",", "кстати", "эй"};
 
-const char *const IF_WHILE_ELSE_END_SIGN = ";";
+const char *const END_LINE_QUOTES[] = {";"};
 
 #endif

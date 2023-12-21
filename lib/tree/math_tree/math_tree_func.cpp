@@ -128,6 +128,10 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
         case PRINT:
             return "PRINT";
             break;
+
+        case END_LINE:
+            return "LINE_END";
+            break;
         
         case CALL_FUNC:
             return "CALL_FUNC";
@@ -143,6 +147,14 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
 
         case FUNC_ARG:
             return "FUNC_ARG";
+            break;
+
+        case INIT:
+            return "TYPE";
+            break;
+        
+        case TYPE_INT:
+            return "TYPE_INT";
             break;
         
         default:

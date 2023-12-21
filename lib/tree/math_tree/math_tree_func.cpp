@@ -132,6 +132,14 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
         case END_LINE:
             return "LINE_END";
             break;
+
+        case NEW_FUNC:
+            return "NEW_FUNC";
+            break;
+
+        case FUNC:
+            return "FUNC";
+            break;
         
         case CALL_FUNC:
             return "CALL_FUNC";
@@ -165,6 +173,14 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
             return "OR";
             break;
         
+        case OPEN_BRACE:
+            return "OPEN_BRACE";
+            break;
+
+        case CLOSE_BRACE:
+            return "CLOSE_BRACE";
+            break;
+
         default:
             return NULL;
     }

@@ -21,7 +21,8 @@
                                             *current_node++ = CreateLangTreeNode (keyword, NULL,            \
                                                                                            NULL);           \
                                             is_success = true;                                              \
-                                                                                                            \
+                                            (token_struct -> index_node_word)[node_array_index] =           \
+                                                                                        char_array_index;   \
                                             break;                                                          \
                                         };                                                                  \
                                                                                                             \
@@ -29,24 +30,24 @@
                                         continue;                                                           \
                                 }                                                                   
 
-#define CHECK_WORD_MATH_OP(current_word, keyword_type, keyword)                                                             \
-                                {                                                                                           \
-                                    for (size_t i = 0;                                                                      \
-                                         i < sizeof (keyword##_QUOTES) / sizeof (keyword##_QUOTES)[0];                      \
-                                         i++)                                                                               \
-                                                                                                                            \
-                                                                                                                            \
-                                        if (strstr (current_word, keyword##_QUOTES[i])) {                                   \
-                                                                                                                            \
-                                            *current_node++ = CreateMathTreeNode (keyword_type, OPERATOR_##keyword, NULL,   \
-                                                                                                                    NULL);  \
-                                            is_success = true;                                                              \
-                                                                                                                            \
-                                            break;                                                                          \
-                                        };                                                                                  \
-                                                                                                                            \
-                                    if (is_success)                                                                         \
-                                        continue;                                                                           \
+#define CHECK_WORD_MATH_OP(current_word, keyword_type, keyword)                                                     \
+                                {                                                                                   \
+                                    for (size_t i = 0;                                                              \
+                                         i < sizeof (keyword##_QUOTES) / sizeof (keyword##_QUOTES)[0];              \
+                                         i++)                                                                       \
+                                                                                                                    \
+                                        if (strstr (current_word, keyword##_QUOTES[i])) {                           \
+                                                                                                                    \
+                                            *current_node++ = CreateMathTreeNode (keyword_type,                     \
+                                                                                  OPERATOR_##keyword, NULL, NULL);  \
+                                            is_success = true;                                                      \
+                                            (token_struct -> index_node_word)[node_array_index] =                   \
+                                                                                        char_array_index;           \
+                                            break;                                                                  \
+                                        };                                                                          \
+                                                                                                                    \
+                                    if (is_success)                                                                 \
+                                        continue;                                                                   \
                                 }
 
 enum LexicalFuncStatus {
@@ -62,6 +63,7 @@ struct LanguageToken {
 
     char **char_array;
     TreeNode **node_array;
+    size_t *index_node_word;
 };
 
 LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct, NameTable *name_table);

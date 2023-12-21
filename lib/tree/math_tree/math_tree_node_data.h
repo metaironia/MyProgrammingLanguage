@@ -30,6 +30,8 @@ enum LangNodeOperator {
     PRINT,
     CALL_FUNC,
     FUNC_RET,
+    NEW_FUNC,
+    FUNC,
     READ,
     FUNC_ARG,
     INIT,

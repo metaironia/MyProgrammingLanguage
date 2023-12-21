@@ -53,20 +53,24 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
     assert (token_struct -> char_array);
     assert (name_table);
 
-    (token_struct -> node_array) = (TreeNode **) calloc (MAX_PROGRAM_LENGTH, sizeof (TreeNode *));
+    (token_struct -> node_array) = (TreeNode **) calloc (MAX_PROGRAM_LENGTH, sizeof (TreeNode *));  
+    (token_struct -> index_node_word) = (size_t *) calloc (MAX_PROGRAM_LENGTH, sizeof (size_t));
 
     TreeNode **current_node = (token_struct -> node_array);
 
     char *current_word = (token_struct -> char_array)[0];
 
-    for (size_t char_array_index = 0; (token_struct -> char_array)[char_array_index]; char_array_index++) {
+    for (size_t char_array_index = 0, node_array_index = 0; 
+         (token_struct -> char_array)[char_array_index]; char_array_index++) {
         
-        current_word = (token_struct -> char_array)[char_array_index];
+        node_array_index = current_node - (token_struct -> node_array);
+        current_word     = (token_struct -> char_array)[char_array_index];
 
         if (LexemeCheckIfNumber   (current_word, current_node) ||
             LexemeCheckIfVariable (current_word, current_node, name_table)) {
 
             current_node++;
+            (token_struct -> index_node_word)[node_array_index] = char_array_index;
             continue;
         }
 
@@ -139,7 +143,7 @@ bool LexemeCheckIfVariable (const char *word_to_check, TreeNode **current_node, 
             return false; 
 
 
-    *current_node++ = VAR_ (number_of_variable);
+    *current_node= VAR_ (number_of_variable);
 
     NameTableAdd (name_table, NAME_TABLE_VARIABLE, word_to_check, number_of_variable);
 

@@ -45,7 +45,13 @@
  
 #define IF_              (CreateLangTreeNode (IF, NULL, NULL))
 
+#define WHILE_           (CreateLangTreeNode (WHILE, NULL, NULL))
+
 #define READ_            (CreateLangTreeNode (READ, NULL, NULL))
+
+#define FUNC_(...)       (CreateLangTreeNode (FUNC, __VA_ARGS__, NULL))
+
+#define NEW_FUNC_(...)   (CreateLangTreeNode (NEW_FUNC, NULL, __VA_ARGS__))
 
 #define AND_(...)        (CreateLangTreeNode (AND, __VA_ARGS__))
 

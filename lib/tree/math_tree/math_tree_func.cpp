@@ -156,6 +156,14 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
         case TYPE_INT:
             return "TYPE_INT";
             break;
+
+        case AND:
+            return "AND";
+            break;
+
+        case OR:
+            return "OR";
+            break;
         
         default:
             return NULL;
@@ -267,19 +275,19 @@ const char *MathNodeOperatorToString (const TreeNode *current_node) {
             break;
 
         case OPERATOR_GREATER:
-            return ">";
+            return "GREATER";
             break;
 
         case OPERATOR_LESS:
-            return "<";
+            return "LESS";
             break;
 
         case OPERATOR_EQUAL:
-            return "=";
+            return "EQ";
             break;
         
         case OPERATOR_NOT_EQUAL:
-            return "!=";
+            return "NOT_EQUAL";
             break;
 
         case OPERATOR_OPEN_PARENTHESIS:

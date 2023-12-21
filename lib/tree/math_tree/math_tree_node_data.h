@@ -35,7 +35,9 @@ enum LangNodeOperator {
     INIT,
     TYPE_INT,
     CLOSE_BRACE,
-    OPEN_BRACE
+    OPEN_BRACE,
+    OR,
+    AND
 };
 
 union MathNodeData {

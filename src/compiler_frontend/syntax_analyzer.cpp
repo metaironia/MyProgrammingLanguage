@@ -110,11 +110,78 @@ TreeNode *GetExpression (const LanguageToken *token_struct, size_t *position) {
     assert ((token_struct -> node_array)[*position]);
     assert (position);
 
-    TreeNode *tree_node    = GetPow (token_struct, position);
+    TreeNode *tree_node    = GetComparison (token_struct, position);
     TreeNode *current_node = (token_struct -> node_array)[*position];
 
+    while (NODE_TYPE == LANGUAGE_OPERATOR && 
+          (NODE_LANG_OPERATOR == OR || NODE_LANG_OPERATOR == AND)) {
 
+        (*position)++;
 
+        switch (NODE_MATH_OPERATOR) {
+
+            case AND:
+                tree_node = AND_ (tree_node, GetComparison (token_struct, position));
+                break;
+
+            case OR:
+                tree_node = OR_ (tree_node, GetComparison (token_struct, position));
+                break;
+            
+            default:
+                fprintf (stderr, "UNKNOWN ERROR in EXPRESSION.\n");
+                return NULL;
+        }
+
+        current_node = (token_struct -> node_array)[*position];
+    }
+
+    return tree_node;
+}
+
+TreeNode *GetComparison (const LanguageToken *token_struct, size_t *position) {
+
+    assert (token_struct);
+    assert ((token_struct -> node_array)[*position]);
+    assert (position);
+
+    TreeNode *tree_node    = GetSumSub (token_struct, position);
+    TreeNode *current_node = (token_struct -> node_array)[*position];
+
+    if (NODE_TYPE != BINARY_OPERATOR || 
+        (NODE_LANG_OPERATOR != OPERATOR_EQUAL && NODE_LANG_OPERATOR != OPERATOR_NOT_EQUAL &&
+        NODE_LANG_OPERATOR != OPERATOR_GREATER && NODE_LANG_OPERATOR != OPERATOR_LESS)) {
+        
+        fprintf (stderr, "ERROR in COMPARISON\n");
+        return NULL;
+    }
+
+    (*position)++;
+
+    switch (NODE_LANG_OPERATOR) {
+
+        case OPERATOR_EQUAL:
+            tree_node = EQUAL_ (tree_node, GetSumSub (token_struct, position));
+            break;
+
+        case OPERATOR_NOT_EQUAL:
+            tree_node = NOT_EQUAL_ (tree_node, GetSumSub (token_struct, position));
+            break;
+
+        case OPERATOR_GREATER:
+            tree_node = GREATER_ (tree_node, GetSumSub (token_struct, position));
+            break;
+
+        case OPERATOR_LESS:
+            tree_node = LESS_ (tree_node, GetSumSub (token_struct, position));
+            break;
+
+        default:
+            fprintf (stderr, "UNKNOWN ERROR in COMPARISON\n");
+            return NULL;
+    }  
+
+    return tree_node;
 }
 
 TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position) {
@@ -146,7 +213,26 @@ TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position) {
 
     (*position)++;
 
+    const size_t old_position = *position;
+
     tree_node -> right_branch = GetSumSub (token_struct, position);
+
+    current_node = (token_struct -> node_array)[*position];
+
+    if (old_position == *position) {
+        
+        if (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == READ) {
+           
+            tree_node -> right_branch = READ_;
+            (*position)++;
+        }
+
+        else {
+
+            fprintf (stderr, "ERROR after ASSIGN.\n");
+            return NULL;    
+        }
+    }
 
     if (is_init)
         tree_node = INIT_ (TYPE_INT_, tree_node);

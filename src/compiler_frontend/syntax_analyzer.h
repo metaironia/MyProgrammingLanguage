@@ -11,6 +11,10 @@ TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetIf (const LanguageToken *token_struct, size_t *position);
 
+TreeNode *GetExpression (const LanguageToken *token_struct, size_t *position);
+
+TreeNode *GetComparison (const LanguageToken *token_struct, size_t *position);
+
 TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetSumSub (const LanguageToken *token_struct, size_t *position);

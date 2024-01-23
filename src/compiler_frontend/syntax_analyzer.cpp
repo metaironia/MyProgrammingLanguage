@@ -22,13 +22,11 @@ bool IsSyntaxAssert (const int condition,      const char *error_quote,
                                                                                                             
         while (pos_to_print < current_pos + WORDS_TO_PRINT_AMOUNT) { 
         
+            if (NODE_TYPE == END)                
+                break;
+
             fprintf (stderr, "%s ", 
                      token_struct -> char_array[token_struct -> index_node_word[pos_to_print]]);
-
-            if (NODE_TYPE           == LANGUAGE_OPERATOR &&
-                NODE_LANG_OPERATOR  == END)
-                
-                break; 
 
             current_node = (token_struct -> node_array)[++pos_to_print]; 
         }
@@ -67,7 +65,7 @@ TreeNode *GetGrammar (const LanguageToken *token_struct) {
 
     if (((token_struct -> node_array)[position]) -> data -> nodeType != END) {
 
-        fprintf (stderr, "err gram\n");
+        fprintf (stderr, "wtf, unknown error in gram\n");
         return NULL;
     }
 

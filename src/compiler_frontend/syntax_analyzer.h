@@ -5,27 +5,25 @@
 
 #include "lexical_analyzer.h"
 
-#define SYN_ASSERT(quote)                                                                                       \
-                    {                                                                                           \
-                        fprintf (stderr, "Syntax error: " quote "\n");                                          \
-                                                                                                                \
-                        for (size_t i = *position; i < *position + 4 && NODE_TYPE != END;                       \
-                             ++i, current_node = (token_struct -> node_array)[i])                               \
-                                                                                                                \
-                            fprintf (stderr, "%s ",                                                             \
-                                     token_struct -> char_array[token_struct -> index_node_word[i]]);           \
-                                                                                                                \
-                        fprintf (stderr, "\n");                                                                 \
-                        return NULL;                                                                            \
-                    }
+#define SYN_ASSERT(condition, quote)    if (!IsSyntaxAssert (condition, quote, *position, token_struct)) \
+                                            return NULL;
+
+const int WORDS_TO_PRINT_AMOUNT = 5;
+
+bool IsSyntaxAssert (const int condition,      const char *error_quote, 
+                     const size_t current_pos, const LanguageToken *token_struct);
 
 TreeNode *GetGrammar (const LanguageToken *token_struct);
 
 TreeNode *GetFunction (const LanguageToken *token_struct, size_t *position);
 
+TreeNode *GetArgument (const LanguageToken *token_struct, size_t *position);
+
 TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetIf (const LanguageToken *token_struct, size_t *position);
+
+TreeNode *GetPrint (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetWhile (const LanguageToken *token_struct, size_t *position);
 
@@ -42,6 +40,8 @@ TreeNode *GetMulDiv (const LanguageToken *token_struct, size_t *position);
 TreeNode *GetPow (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetParenthesis (const LanguageToken *token_struct, size_t *position);
+
+TreeNode *GetFuncCall (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetNum (const LanguageToken *token_struct, size_t *position);
 

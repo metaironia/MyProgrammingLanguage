@@ -83,7 +83,7 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
         CHECK_WORD_LANGUAGE_OP (current_word, PRINT);
         CHECK_WORD_LANGUAGE_OP (current_word, END_LINE);
         CHECK_WORD_LANGUAGE_OP (current_word, INIT);
-        CHECK_WORD_LANGUAGE_OP (current_word, CALL_FUNC);
+        CHECK_WORD_LANGUAGE_OP (current_word, FUNC_CALL);
         CHECK_WORD_LANGUAGE_OP (current_word, FUNC_RET);
         CHECK_WORD_LANGUAGE_OP (current_word, OPEN_BRACE);
         CHECK_WORD_LANGUAGE_OP (current_word, CLOSE_BRACE);

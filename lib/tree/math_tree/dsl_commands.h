@@ -51,7 +51,11 @@
 
 #define FUNC_(...)       (CreateLangTreeNode (FUNC, __VA_ARGS__, NULL))
 
+#define FUNC_CALL_(...)  (CreateLangTreeNode (FUNC_CALL, __VA_ARGS__, NULL))
+
 #define NEW_FUNC_(...)   (CreateLangTreeNode (NEW_FUNC, NULL, __VA_ARGS__))
+
+#define COMMA_(...)      (CreateLangTreeNode (COMMA,__VA_ARGS__))
 
 #define AND_(...)        (CreateLangTreeNode (AND, __VA_ARGS__))
 

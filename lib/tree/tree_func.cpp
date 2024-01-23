@@ -397,7 +397,8 @@ enum TreeFuncStatus TreeAllNodesDestruct (TreeNode **tree_node_for_destruct) {
 
 enum TreeFuncStatus TreeDestruct (Tree *tree_for_destruct) {
 
-    assert (tree_for_destruct);
+    if (!tree_for_destruct)
+        return TREE_FUNC_STATUS_OK;
 
     TreeAllNodesDestruct (&(tree_for_destruct -> root));
 

@@ -41,7 +41,8 @@ enum TreeFuncStatus LogPrintTreeError (const char *error_text) {
 
 enum TreeFuncStatus MathTreeGraphDump (const Tree *tree_for_graph_dump, const NameTable *name_table) {
 
-    assert (tree_for_graph_dump);
+    if (!(tree_for_graph_dump && tree_for_graph_dump -> root))
+        return TREE_FUNC_STATUS_FAIL;
 
     FILE *tree_dot_file = fopen (TREE_DOT_FILE_NAME, "w");
     assert (tree_dot_file);

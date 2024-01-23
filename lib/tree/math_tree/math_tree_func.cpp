@@ -140,9 +140,13 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
         case FUNC:
             return "FUNC";
             break;
+
+        case COMMA:
+            return "COMMA";
+            break;
         
-        case CALL_FUNC:
-            return "CALL_FUNC";
+        case FUNC_CALL:
+            return "FUNC_CALL";
             break;
 
         case FUNC_RET:
@@ -920,7 +924,7 @@ TreeFuncStatus MathTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
         else
             *tree_node_for_data_read = NUM_ (strtod (buffer_for_read_node_data, 0));
 
-        ON_TREE_DEBUG (printf("data "));
+        ON_TREE_DEBUG (printf ("data "));
 
         fseek (file_for_read_node_data, 1, SEEK_CUR);
 

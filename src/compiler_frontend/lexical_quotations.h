@@ -12,7 +12,7 @@ const char *const ASSIGN_QUOTES[] = {"теперь", "это", "сейчас", "равно", "будет"
 const char *const PRINT_QUOTES[] = {"говорил", "говорит", "базарит", "базарил",
                                     "сказал","пишем", "пишет", "базаришь"};
 
-const char *const CALL_FUNC_QUOTES[] = {"звоню", "звонил", "пуллап", "зовет", "зову"};
+const char *const FUNC_CALL_QUOTES[] = {"звоню", "звонил", "пуллап", "зовет", "зову"};
 
 const char *const FUNC_RET_QUOTES[] = {"отдай", "отдавай", "домой", "дать"};
 

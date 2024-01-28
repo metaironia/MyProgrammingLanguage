@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "dsl_commands.h"
 
@@ -786,13 +787,13 @@ TreeFuncStatus NameTableCtor (NameTable *name_table) {
 };
 
 TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type,
-                                                       const char *word_name,
-                                                       const size_t word_number) {
+                                                    const char *word_name,
+                                                    const size_t word_number) {
 
     assert (name_table);
 
     (name_table -> name_table_cell)[name_table -> table_size].word_type = word_type;
-    (name_table -> name_table_cell)[name_table -> table_size].word_name = word_name;
+    (name_table -> name_table_cell)[name_table -> table_size].word_name = strdup (word_name);
     (name_table -> name_table_cell)[name_table -> table_size].word_number = word_number;
 
     (name_table -> table_size)++;
@@ -804,134 +805,248 @@ TreeFuncStatus NameTableDtor (NameTable *name_table) {
 
     assert (name_table);
 
+    for (size_t i = 0; i < (name_table -> table_size); i++)
+        free ((name_table -> name_table_cell)[i].word_name);
+
+    size_t name_table_cells_size_bytes = sizeof (NameTableCell) * (name_table -> table_size);
+    memset (name_table -> name_table_cell, 0, name_table_cells_size_bytes);
+
+    name_table -> table_size = 0;
+
     free (name_table -> name_table_cell);
     name_table -> name_table_cell = NULL;
 
     return TREE_FUNC_STATUS_OK;
 }
 
-//govno below, have to be refactored ---------------------------------------------------------
-
-TreeFuncStatus MathTreeNodeRead (FILE *file_for_read_tree, TreeNode **tree_node_for_fill) {  //PREORDER
+TreeFuncStatus LangTreeNodeRead (FILE *file_for_read_tree, TreeNode **tree_node_for_fill,
+                                 NameTable *name_table) {  //PREORDER
 
     assert (file_for_read_tree);
+    assert (tree_node_for_fill);
+    assert (name_table);
 
-    char *buf = (char *) calloc (NODE_READ_BUF_SIZE, sizeof (char));
-    assert (buf);
-
-    //HOW TO READ VARIABLE NUM OF SYMBOLS???
-
-    if (IsBracketInFileStr (file_for_read_tree, '(') == false) {
-
-        if (MathTreeNodeNilCheck (file_for_read_tree, buf) == TREE_FUNC_STATUS_OK)
-            return TREE_FUNC_STATUS_OK;
-        else
-            return TREE_FUNC_STATUS_FAIL;
-    }
-
+    if (IsBracketInFileStr (file_for_read_tree, '(') == false)
+        return TreeNodeNilCheck (file_for_read_tree);
 
     ON_TREE_DEBUG (printf ("( "));
 
     *tree_node_for_fill = CreateTreeNode ();
 
-    if (MathTreeNodeDataRead (file_for_read_tree, tree_node_for_fill, buf) == TREE_FUNC_STATUS_FAIL)
+    if (LangTreeNodeDataRead (file_for_read_tree, tree_node_for_fill, name_table) == TREE_FUNC_STATUS_FAIL)
         return TREE_FUNC_STATUS_FAIL;
-
     //recursion below
 
-    if (MathTreeNodeRead (file_for_read_tree, &((*tree_node_for_fill) -> left_branch)) == TREE_FUNC_STATUS_FAIL)
+    if (LangTreeNodeRead (file_for_read_tree,
+                          &((*tree_node_for_fill) -> left_branch), name_table) == TREE_FUNC_STATUS_FAIL)
+
         return TREE_FUNC_STATUS_FAIL;
 
-    if (MathTreeNodeRead (file_for_read_tree, &((*tree_node_for_fill) -> right_branch)) == TREE_FUNC_STATUS_FAIL)
+    if (LangTreeNodeRead (file_for_read_tree,
+                          &((*tree_node_for_fill) -> right_branch), name_table) == TREE_FUNC_STATUS_FAIL)
+
         return TREE_FUNC_STATUS_FAIL;
 
-    //ON_TREE_DEBUG (printf ("|read two nodes|"));
-
+    ON_TREE_DEBUG (printf ("|read two nodes|"));
 
     if (IsBracketInFileStr (file_for_read_tree, ')')) {
 
-        ON_TREE_DEBUG (printf (") "));
-
+        ON_TREE_DEBUG (printf (")"));
         return TREE_FUNC_STATUS_OK;
     }
 
     return TREE_FUNC_STATUS_FAIL;
 }
 
-TreeFuncStatus MathTreeNodeNilCheck (FILE *file_for_node_nil_check, char *buffer_for_node_check) {
+TreeFuncStatus TreeNodeNilCheck (FILE *file_for_node_nil_check) {
 
     assert (file_for_node_nil_check);
-    assert (buffer_for_node_check);
 
-    fscanf (file_for_node_nil_check, "%4s", buffer_for_node_check);
+    char buf[NODE_READ_BUF_SIZE] = "";
 
-    if (strcmp (buffer_for_node_check, NIL) == 0) {
+    fscanf (file_for_node_nil_check, "%4s", buf);
+
+    if (strcmp (buf, NIL) == 0) {
 
         ON_TREE_DEBUG (printf ("nil "));
 
         return TREE_FUNC_STATUS_OK;
     }
 
-    ON_TREE_DEBUG (printf ("wtf, |%s|", buffer_for_node_check));
+    ON_TREE_DEBUG (printf ("wtf, |%s|", buf));
 
     return TREE_FUNC_STATUS_FAIL;
 }
 
-TreeFuncStatus MathTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **tree_node_for_data_read,
-                                     char *buffer_for_read_node_data) {
+TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **tree_node_for_data_read,
+                                     NameTable *name_table) {
 
     assert (file_for_read_node_data);
-    assert (buffer_for_read_node_data);
+    assert (tree_node_for_data_read);
+    assert (name_table);
 
-    if (fscanf (file_for_read_node_data, " \" %100[^\"]", buffer_for_read_node_data)) {  //TODO fix num of read symbols
+    char buf[NODE_READ_BUF_SIZE] = "";
 
-        if (strcmp ("add", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = ADD_ (0, 0);
-        }
+    if (fscanf (file_for_read_node_data, " %s", buf)) {
 
-        else if (strcmp ("sub", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = SUB_ (0, 0);
-        }
+        if (strcmp ("EQ", buf) == 0)
+            *tree_node_for_data_read = EQUAL_ (NULL, NULL);
 
-        else if (strcmp ("mul", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = MUL_ (0, 0);
-        }
+        else if (strcmp ("NOT_EQ", buf) == 0)
+            *tree_node_for_data_read = NOT_EQUAL_ (NULL, NULL);
 
-        else if (strcmp ("div", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = DIV_ (0, 0);
-        }
+        else if (strcmp ("GREATER", buf) == 0)
+            *tree_node_for_data_read = GREATER_ (NULL, NULL);
 
-        else if (strcmp ("pow", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = POW_ (0, 0);
-        }
+        else if (strcmp ("LESS", buf) == 0)
+            *tree_node_for_data_read = LESS_ (NULL, NULL);
 
-        else if (strcmp ("sin", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = SIN_ (0);
-        }
+        else if (strcmp ("ASSIGN", buf) == 0)
+            *tree_node_for_data_read = ASSIGN_;
 
-        else if (strcmp ("cos", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = COS_ (0);
-        }
+        else if (strcmp ("LINE_END", buf) == 0)
+            *tree_node_for_data_read = END_LINE_ (NULL);
 
-        else if (strcmp ("ln", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = LN_ (0);
-        }
+        else if (strcmp ("INIT", buf) == 0)
+            *tree_node_for_data_read = INIT_ (NULL, NULL);
 
-        else if (strcmp ("x", buffer_for_read_node_data) == 0) {
-            *tree_node_for_data_read = VAR_ (0);
-        }
+        else if (strcmp ("TYPE_INT", buf) == 0)
+            *tree_node_for_data_read = TYPE_INT_;
+        
+        else if (strcmp ("TYPE", buf) == 0)
+            *tree_node_for_data_read = INIT_ (NULL, NULL);
+
+        else if (strcmp ("IF", buf) == 0)
+            *tree_node_for_data_read = IF_;
+
+        else if (strcmp ("WHILE", buf) == 0)
+            *tree_node_for_data_read = WHILE_;
+
+        else if (strcmp ("READ", buf) == 0)
+            *tree_node_for_data_read = READ_;
+
+        else if (strcmp ("FUNC", buf) == 0) 
+            *tree_node_for_data_read = FUNC_ (NULL);
+
+        else if (strcmp ("NEW_FUNC", buf) == 0) 
+            *tree_node_for_data_read = NEW_FUNC_ (NULL);
+
+        else if (strcmp ("COMMA", buf) == 0) 
+            *tree_node_for_data_read = COMMA_ (NULL, NULL);
+
+        else if (strcmp ("AND", buf) == 0) 
+            *tree_node_for_data_read = AND_ (NULL, NULL);
+
+        else if (strcmp ("OR", buf) == 0)
+            *tree_node_for_data_read = OR_ (NULL, NULL);
+
+        else if (strcmp ("MUL", buf) == 0)
+            *tree_node_for_data_read = MUL_ (NULL, NULL);
+
+        else if (strcmp ("DIV", buf) == 0)
+            *tree_node_for_data_read = DIV_ (NULL, NULL);
+
+        else if (strcmp ("POW", buf) == 0)
+            *tree_node_for_data_read = POW_ (NULL, NULL);
+
+        else if (strcmp ("SIN", buf) == 0)
+            *tree_node_for_data_read = SIN_ (NULL);
+
+        else if (strcmp ("COS", buf) == 0)
+            *tree_node_for_data_read = COS_ (NULL);
+
+        else if (strcmp ("LN", buf) == 0)
+            *tree_node_for_data_read = LN_ (NULL);
+
+        else if (CheckIfWordIsNumber   (buf, tree_node_for_data_read) ||
+                 CheckIfWordIsVariable (buf, tree_node_for_data_read, name_table));
+        //continue if num or var wasn't read successfully
 
         else
-            *tree_node_for_data_read = NUM_ (strtod (buffer_for_read_node_data, 0));
+            return TREE_FUNC_STATUS_FAIL;
 
-        ON_TREE_DEBUG (printf ("data "));
-
-        fseek (file_for_read_node_data, 1, SEEK_CUR);
+        ON_TREE_DEBUG (printf ("data read successfully"));
 
         return TREE_FUNC_STATUS_OK;
     }
 
-    ON_TREE_DEBUG (printf ("wtf 1"));
+    ON_TREE_DEBUG (printf ("wtf happened in node data read"));
 
     return TREE_FUNC_STATUS_FAIL;
+}
+
+bool CheckIfWordIsNumber (char *word_to_check, TreeNode **current_node) {
+
+    assert (word_to_check);
+    assert (current_node);
+
+    char *word_end_ptr = word_to_check;
+
+    const double value = strtod (word_to_check, &word_end_ptr);
+
+    if (*word_end_ptr == '\0') {
+
+        *current_node = NUM_ (value);
+        
+        return true;
+    } 
+
+    return false; 
+}
+
+bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, NameTable *name_table) {
+
+    assert (word_to_check);
+    assert (current_node);
+    assert (name_table);
+
+    static int number_of_variable = 0;
+fprintf (stderr, "%d ", number_of_variable);
+    if ((!isalpha (word_to_check[0]) || word_to_check[0] < 0) && word_to_check[0] != '_')
+        return false;
+
+    for (size_t i = 1; word_to_check[i]; i++)
+        if ((!isalnum (word_to_check[i]) || word_to_check[0] < 0) && word_to_check[0] != '_')
+            return false; 
+
+    *current_node = VAR_ (number_of_variable);
+
+    NameTableAdd (name_table, NAME_TABLE_VARIABLE, word_to_check, number_of_variable);
+
+    number_of_variable++;
+
+    return true;
+} 
+
+TreeFuncStatus LangTreeFilePrint (FILE *output_file, Tree *lang_tree, NameTable *name_table) {
+
+    assert (output_file);
+    assert (lang_tree);
+
+    LangTreeNodeFilePrint (output_file, lang_tree -> root, name_table);        
+
+    return TREE_FUNC_STATUS_OK;    
+}
+
+TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, TreeNode *lang_tree_node, NameTable *name_table) {
+
+    assert (output_file);
+
+    if (!lang_tree_node) {
+     
+        fprintf (output_file, "nil ");
+        return TREE_FUNC_STATUS_OK;
+    }
+
+    fprintf (output_file, "(");
+
+    NodeTypePrint (output_file, lang_tree_node, name_table);
+    fprintf (output_file, " ");
+
+    LangTreeNodeFilePrint (output_file, lang_tree_node -> left_branch, name_table);
+    LangTreeNodeFilePrint (output_file, lang_tree_node -> right_branch, name_table);
+
+    fprintf (output_file, ")");
+
+    return TREE_FUNC_STATUS_OK;
 }

@@ -72,7 +72,7 @@ enum NameTableDef {
 struct NameTableCell {
 
     NameTableDef word_type;
-    const char *word_name;
+    char *word_name;
     size_t word_number;
 };
 
@@ -159,12 +159,20 @@ const char *NameTableVariableFind (const size_t variable_index, const NameTable 
 
 //---------------------------------------------------------------------------------------------
 
-TreeFuncStatus MathTreeNodeRead (FILE *file_for_read_tree, TreeNode **tree_node_for_fill);
+TreeFuncStatus LangTreeNodeRead (FILE *file_for_read_tree, TreeNode **tree_node_for_fill,
+                                 NameTable *name_table);
 
-TreeFuncStatus MathTreeNodeNilCheck (FILE *file_for_node_nil_check, char *buffer_for_node_check);
+TreeFuncStatus TreeNodeNilCheck (FILE *file_for_node_nil_check);
 
-TreeFuncStatus MathTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **tree_node_for_data_read,
-                                     char *buffer_for_read_node_data);
+TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **tree_node_for_data_read,
+                                     NameTable *name_table);
 
+bool CheckIfWordIsNumber (char *word_to_check, TreeNode **current_node);
+
+bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, NameTable *name_table);
+
+TreeFuncStatus LangTreeFilePrint (FILE *output_file, Tree *lang_tree, NameTable *name_table);
+
+TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, TreeNode *lang_tree_node, NameTable *name_table);
 
 #endif

@@ -106,7 +106,7 @@ enum TreeFuncStatus TreeDotFileBegin (FILE *tree_dot_file_begin) {
 
     assert (tree_dot_file_begin);
 
-    LOG_PRINT (tree_dot_file_begin, "digraph DifferentiatorTree{\n"
+    LOG_PRINT (tree_dot_file_begin, "digraph LanguageTree{\n"
                                     "rankdir = TB;\n"
                                     "graph [bgcolor = white];\n");
 

@@ -31,7 +31,7 @@
  
 #define NOT_EQUAL_(...)  (CreateMathTreeNode (BINARY_OPERATOR, OPERATOR_NOT_EQUAL, __VA_ARGS__))
  
-#define GREATER_(...)     (CreateMathTreeNode (BINARY_OPERATOR, OPERATOR_GREATER, __VA_ARGS__))
+#define GREATER_(...)    (CreateMathTreeNode (BINARY_OPERATOR, OPERATOR_GREATER, __VA_ARGS__))
  
 #define LESS_(...)       (CreateMathTreeNode (BINARY_OPERATOR, OPERATOR_LESS, __VA_ARGS__))
  

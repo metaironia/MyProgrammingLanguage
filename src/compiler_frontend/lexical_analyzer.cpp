@@ -66,8 +66,8 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
         node_array_index = current_node - (token_struct -> node_array);
         current_word     = (token_struct -> char_array)[char_array_index];
 
-        if (LexemeCheckIfNumber   (current_word, current_node) ||
-            LexemeCheckIfVariable (current_word, current_node, name_table)) {
+        if (CheckIfWordIsNumber   (current_word, current_node) ||
+            CheckIfWordIsVariable (current_word, current_node, name_table)) {
 
             current_node++;
             (token_struct -> index_node_word)[node_array_index] = char_array_index;
@@ -108,47 +108,5 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
     return LEXICAL_FUNC_STATUS_OK;
 }
 
-bool LexemeCheckIfNumber (char *word_to_check, TreeNode **current_node) {
 
-    assert (word_to_check);
-    assert (current_node);
-
-    char *word_end_ptr = word_to_check;
-
-    const double value = strtod (word_to_check, &word_end_ptr);
-
-    if (word_end_ptr[0] == '\0') {
-
-        *current_node = NUM_ (value);
-        
-        return true;
-    } 
-
-    return false; 
-}
-
-bool LexemeCheckIfVariable (const char *word_to_check, TreeNode **current_node, NameTable *name_table) {
-
-    assert (word_to_check);
-    assert (current_node);
-    assert (name_table);
-
-    static int number_of_variable = 0;
-
-    if ((!isalpha (word_to_check[0]) || word_to_check[0] < 0) && word_to_check[0] != '_')
-        return false;
-
-    for (size_t i = 1; word_to_check[i]; i++)
-        if ((!isalnum (word_to_check[i]) || word_to_check[0] < 0) && word_to_check[0] != '_')
-            return false; 
-
-
-    *current_node= VAR_ (number_of_variable);
-
-    NameTableAdd (name_table, NAME_TABLE_VARIABLE, word_to_check, number_of_variable);
-
-    number_of_variable++;
-
-    return true;
-} 
 

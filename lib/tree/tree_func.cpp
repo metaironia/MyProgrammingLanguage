@@ -25,7 +25,6 @@ enum TreeFuncStatus TreeCtor (Tree *tree_to_create) {
 TreeNode *CreateTreeNode (void) {
 
     TreeNode *tree_node_ptr = (TreeNode *) calloc (1, sizeof (TreeNode));
-
     assert (tree_node_ptr);
 
     return tree_node_ptr;

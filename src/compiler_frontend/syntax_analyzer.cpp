@@ -63,11 +63,8 @@ TreeNode *GetGrammar (const LanguageToken *token_struct) {
         current_node = (token_struct -> node_array)[position];
     }
 
-    if (((token_struct -> node_array)[position]) -> data -> nodeType != END) {
-
-        fprintf (stderr, "wtf, unknown error in gram\n");
+    if (((token_struct -> node_array)[position]) -> data -> nodeType != END)
         return NULL;
-    }
 
     return tree_node;
 }

@@ -72,8 +72,4 @@ LexicalFuncStatus StringInputFromFile (FILE *input_file, char **input_array);
 
 LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *name_table);
 
-bool LexemeCheckIfNumber (char *word_to_check, TreeNode **current_node);
-
-bool LexemeCheckIfVariable (const char *word_to_check, TreeNode **current_node, NameTable *name_table);
-
 #endif

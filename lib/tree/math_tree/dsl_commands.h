@@ -42,16 +42,20 @@
 #define INIT_(...)       (CreateLangTreeNode (INIT, __VA_ARGS__))
  
 #define TYPE_INT_        (CreateLangTreeNode (TYPE_INT, NULL, NULL))
- 
-#define IF_              (CreateLangTreeNode (IF, NULL, NULL))
 
-#define WHILE_           (CreateLangTreeNode (WHILE, NULL, NULL))
+#define PRINT_           (CreateLangTreeNode (PRINT, NULL, NULL))
+ 
+#define IF_(...)         (CreateLangTreeNode (IF, __VA_ARGS__, NULL))
+
+#define WHILE_(...)      (CreateLangTreeNode (WHILE, __VA_ARGS__, NULL))
 
 #define READ_            (CreateLangTreeNode (READ, NULL, NULL))
 
 #define FUNC_(...)       (CreateLangTreeNode (FUNC, __VA_ARGS__, NULL))
 
 #define FUNC_CALL_(...)  (CreateLangTreeNode (FUNC_CALL, __VA_ARGS__, NULL))
+
+#define FUNC_RET_(...)   (CreateLangTreeNode (FUNC_RET, __VA_ARGS__, NULL))
 
 #define NEW_FUNC_(...)   (CreateLangTreeNode (NEW_FUNC, NULL, __VA_ARGS__))
 

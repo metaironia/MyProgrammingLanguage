@@ -7,14 +7,14 @@ const char *const WHILE_QUOTES[] = {"пока"};
 
 const char *const ELSE_QUOTES[] = {"но", "иначе"};
 
-const char *const ASSIGN_QUOTES[] = {"теперь", "это", "сейчас", "равно", "будет"};
+const char *const ASSIGN_QUOTES[] = {"теперь", "это", "сейчас", "равно", "будет", "равен"};
 
 const char *const PRINT_QUOTES[] = {"говорил", "говорит", "базарит", "базарил",
                                     "сказал","пишем", "пишет", "базаришь"};
 
 const char *const FUNC_CALL_QUOTES[] = {"звоню", "звонил", "пуллап", "зовет", "зову"};
 
-const char *const FUNC_RET_QUOTES[] = {"отдай", "отдавай", "домой", "дать"};
+const char *const FUNC_RET_QUOTES[] = {"отдай", "отдавай", "домой", "дать", "вернуть", "верни"};
 
 const char *const READ_QUOTES[] = {"видел", "вижу", "смотрю", "смотрел"};
 

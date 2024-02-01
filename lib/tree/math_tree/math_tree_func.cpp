@@ -917,10 +917,10 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
             *tree_node_for_data_read = INIT_ (NULL, NULL);
 
         else if (strcmp ("IF", buf) == 0)
-            *tree_node_for_data_read = IF_;
+            *tree_node_for_data_read = IF_ (NULL);
 
         else if (strcmp ("WHILE", buf) == 0)
-            *tree_node_for_data_read = WHILE_;
+            *tree_node_for_data_read = WHILE_ (NULL);
 
         else if (strcmp ("READ", buf) == 0)
             *tree_node_for_data_read = READ_;

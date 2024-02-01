@@ -5,13 +5,17 @@
 
 #include "lexical_analyzer.h"
 
-#define SYN_ASSERT(condition, quote)    if (!IsSyntaxAssert (condition, quote, *position, token_struct)) \
-                                            return NULL;
+#define INIT_FUNC_INT_(node_func)       INIT_ (TYPE_INT_, FUNC_ (node_func))
+
+#define SYN_ASSERT(condition, quote)    if (!(condition)) {                                 \
+                                                                                            \
+                                            SyntaxAssert (quote, *position, token_struct);  \
+                                            return NULL;                                    \
+                                        }
 
 const int WORDS_TO_PRINT_AMOUNT = 5;
 
-bool IsSyntaxAssert (const int condition,      const char *error_quote, 
-                     const size_t current_pos, const LanguageToken *token_struct);
+void SyntaxAssert (const char *error_quote, const size_t current_pos, const LanguageToken *token_struct);
 
 TreeNode *GetGrammar (const LanguageToken *token_struct);
 
@@ -20,6 +24,8 @@ TreeNode *GetFunction (const LanguageToken *token_struct, size_t *position);
 TreeNode *GetArgument (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position);
+
+TreeNode *GetReturn (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetIf (const LanguageToken *token_struct, size_t *position);
 

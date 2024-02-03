@@ -89,6 +89,8 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
         CHECK_WORD_LANGUAGE_OP (current_word, CLOSE_BRACE);
         CHECK_WORD_LANGUAGE_OP (current_word, READ);
         CHECK_WORD_LANGUAGE_OP (current_word, FUNC_ARG);
+        CHECK_WORD_LANGUAGE_OP (current_word, AND);
+        CHECK_WORD_LANGUAGE_OP (current_word, OR);
 
         CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, ADD);
         CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, SUB);
@@ -107,6 +109,3 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
 
     return LEXICAL_FUNC_STATUS_OK;
 }
-
-
-

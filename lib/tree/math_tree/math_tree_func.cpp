@@ -312,7 +312,7 @@ const char *MathNodeOperatorToString (const TreeNode *current_node) {
             break;
 
         case OPERATOR_OPEN_PARENTHESIS:
-            return ")";
+            return "(";
             break;
 
         case OPERATOR_CLOSE_PARENTHESIS:
@@ -1001,7 +1001,7 @@ bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, 
     assert (name_table);
 
     static int number_of_variable = 0;
-fprintf (stderr, "%d ", number_of_variable);
+
     if ((!isalpha (word_to_check[0]) || word_to_check[0] < 0) && word_to_check[0] != '_')
         return false;
 

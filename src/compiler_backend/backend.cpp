@@ -131,19 +131,21 @@ BackendFuncStatus AsmFileOperatorWhileWrite (FILE *asm_file, TreeNode *current_n
 
     return BACKEND_STATUS_OK;
 }
-
+*/
 BackendFuncStatus AsmFileOperatorAssignWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table) {
 
     assert (asm_file);
     assert (current_node);
     assert (name_table);
 
+    AsmFileMathExpressionWrite (asm_file, current_node -> right_branch, name_table);
 
+    current_node = current_node -> left_branch;
+    fprintf (asm_file, "pop [%zu]\n", size_t (NODE_VALUE));
 
-    fprintf (asm_file, "pop []\n", );
     return BACKEND_STATUS_OK;
 }
-*/
+
 BackendFuncStatus AsmFileMathExpressionWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table) {
 
     assert (asm_file);

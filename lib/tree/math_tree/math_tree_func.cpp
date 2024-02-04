@@ -791,6 +791,7 @@ TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type
                                                     const size_t word_number) {
 
     assert (name_table);
+    assert (name_table -> name_table_cell);
 
     (name_table -> name_table_cell)[name_table -> table_size].word_type = word_type;
     (name_table -> name_table_cell)[name_table -> table_size].word_name = strdup (word_name);
@@ -939,6 +940,12 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
 
         else if (strcmp ("OR", buf) == 0)
             *tree_node_for_data_read = OR_ (NULL, NULL);
+
+        else if (strcmp ("ADD", buf) == 0)
+            *tree_node_for_data_read = ADD_ (NULL, NULL);
+
+        else if (strcmp ("SUB", buf) == 0)
+            *tree_node_for_data_read = SUB_ (NULL, NULL);
 
         else if (strcmp ("MUL", buf) == 0)
             *tree_node_for_data_read = MUL_ (NULL, NULL);

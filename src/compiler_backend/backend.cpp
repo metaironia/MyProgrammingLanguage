@@ -9,6 +9,8 @@
 
 #include "backend.h"
 
+//TODO add asserts to current_node -> data
+
 /*
 BackendFuncStatus TreeToAsmFile (FILE *asm_file, Tree *lang_tree, NameTable *name_table) {
 
@@ -74,7 +76,7 @@ BackendFuncStatus AsmFileNewFuncWrite (FILE *asm_file, TreeNode *current_node, N
 
     return AsmFileNewFuncWrite (asm_file, current_node -> left_branch, name_table);
 }
-
+*/
 BackendFuncStatus AsmFileLangOperatorWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table) {
 
     assert (asm_file);
@@ -82,6 +84,9 @@ BackendFuncStatus AsmFileLangOperatorWrite (FILE *asm_file, TreeNode *current_no
 
     if (!current_node)
         return BACKEND_STATUS_OK;
+
+    if (!(NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == END_LINE))
+        return BACKEND_STATUS_FAIL;
 
     TreeNode *end_line_node = current_node;
    
@@ -101,6 +106,9 @@ BackendFuncStatus AsmFileLangOperatorWrite (FILE *asm_file, TreeNode *current_no
             case ASSIGN:
                 AsmFileOperatorAssignWrite (asm_file, current_node, name_table);
                 break;
+
+            default:
+                return BACKEND_STATUS_FAIL;
         }
 
     return AsmFileLangOperatorWrite (asm_file, end_line_node -> right_branch, name_table);    
@@ -112,9 +120,18 @@ BackendFuncStatus AsmFileOperatorIfWrite (FILE *asm_file, TreeNode *current_node
     assert (current_node);
     assert (name_table);
 
-//    AsmFileConditionWrite (asm_file, current_node -> left_branch, name_table);
+    static size_t operator_if_number = 0;
+
+    AsmFileConditionWrite (asm_file, current_node -> left_branch, name_table);
+
+    fprintf (asm_file, "push 0\n"
+                       "je end_if_%zu\n", operator_if_number);
 
     AsmFileLangOperatorWrite (asm_file, current_node -> right_branch, name_table);
+
+    fprintf (asm_file, ":end_if_%zu\n", operator_if_number);
+
+    operator_if_number++;
 
     return BACKEND_STATUS_OK;
 }
@@ -125,13 +142,117 @@ BackendFuncStatus AsmFileOperatorWhileWrite (FILE *asm_file, TreeNode *current_n
     assert (current_node);
     assert (name_table);
 
-//    AsmFileConditionWrite (asm_file, current_node -> left_branch, name_table);
+    static size_t operator_while_number = 0;
+
+    fprintf (asm_file, ":while_%zu\n", operator_while_number);
+
+    AsmFileConditionWrite (asm_file, current_node -> left_branch, name_table);
+
+    fprintf (asm_file, "push 0\n"
+                       "je end_while_%zu\n", operator_while_number);
 
     AsmFileLangOperatorWrite (asm_file, current_node -> right_branch, name_table);
 
+    fprintf (asm_file, "jmp while_%zu\n"
+                       ":end_while_%zu\n",
+                       operator_while_number, operator_while_number);
+
+    operator_while_number++;
+
     return BACKEND_STATUS_OK;
 }
-*/
+
+BackendFuncStatus AsmFileOperatorOrAndWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table) {
+
+    assert (asm_file);
+    assert (current_node);
+    assert (name_table);
+
+    if (NODE_TYPE == LANGUAGE_OPERATOR && (NODE_LANG_OPERATOR == OR || NODE_LANG_OPERATOR == AND)) {
+        
+        AsmFileOperatorOrAndWrite      (asm_file, current_node -> left_branch, name_table);
+
+        AsmFileOperatorComparisonWrite (asm_file, current_node -> right_branch, name_table);
+    }
+
+    else 
+        return AsmFileOperatorComparisonWrite (asm_file, current_node, name_table);
+    
+    if (NODE_TYPE == LANGUAGE_OPERATOR)
+        switch (NODE_LANG_OPERATOR) {
+
+            case OR:
+                fprintf (asm_file, "add\n");
+                break;
+
+            case AND:
+                fprintf (asm_file, "mul\n");
+                break;
+            
+            default:
+                return BACKEND_STATUS_FAIL;
+        }
+
+    return BACKEND_STATUS_OK;
+}
+
+BackendFuncStatus AsmFileOperatorComparisonWrite (FILE *asm_file, TreeNode *current_node,
+                                                  NameTable *name_table) {
+
+    assert (asm_file);
+    assert (current_node);
+
+    AsmFileMathExpressionWrite (asm_file, current_node -> left_branch, name_table);
+    AsmFileMathExpressionWrite (asm_file, current_node -> right_branch, name_table);
+
+    if (NODE_TYPE == BINARY_OPERATOR)
+        switch (NODE_MATH_OPERATOR) {
+
+            case OPERATOR_GREATER:
+                fprintf (asm_file, "ja ");
+                break;
+        
+            case OPERATOR_LESS:
+                fprintf (asm_file, "jb ");
+                break;
+          
+            case OPERATOR_EQUAL:
+                fprintf (asm_file, "je ");
+                break;
+
+            case OPERATOR_NOT_EQUAL:
+                fprintf (asm_file, "jne ");
+                break;
+
+            default:
+                return BACKEND_STATUS_FAIL;
+        }
+
+    static size_t comparison_num = 0;
+
+    fprintf (asm_file, "comparison_%zu\n"
+                       "push 0\n"
+                       "jmp comparison_end_%zu\n"
+                       ":comparison_%zu\n"
+                       "push 1\n"
+                       ":comparison_end_%zu\n",
+                        comparison_num, comparison_num, comparison_num, comparison_num);
+
+    comparison_num++;
+
+    return BACKEND_STATUS_OK;
+}
+
+
+BackendFuncStatus AsmFileConditionWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table) {
+
+    assert (asm_file);
+    assert (current_node);
+    assert (name_table);
+
+    return AsmFileOperatorOrAndWrite (asm_file, current_node, name_table);
+}
+
 BackendFuncStatus AsmFileOperatorAssignWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table) {
 
     assert (asm_file);

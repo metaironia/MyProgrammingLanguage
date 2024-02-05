@@ -30,6 +30,13 @@ BackendFuncStatus AsmFileOperatorIfWrite (FILE *asm_file, TreeNode *current_node
 
 BackendFuncStatus AsmFileOperatorWhileWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table);
 
+BackendFuncStatus AsmFileOperatorOrAndWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table);
+
+BackendFuncStatus AsmFileOperatorComparisonWrite (FILE *asm_file, TreeNode *current_node,
+                                                  NameTable *name_table);
+
+BackendFuncStatus AsmFileConditionWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table);                                                
+
 BackendFuncStatus AsmFileOperatorAssignWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table);
 
 BackendFuncStatus AsmFileMathExpressionWrite (FILE *asm_file, TreeNode *current_node, NameTable *name_table);

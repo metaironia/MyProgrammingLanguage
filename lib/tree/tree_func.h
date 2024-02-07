@@ -1,7 +1,7 @@
 #ifndef TREE_FUNC_H
 #define TREE_FUNC_H
 
-#include "../stack/my_stack_func.h"
+#include "../mystacklib/my_stack_func.h"
 #include "math_tree/math_tree_node_data.h"
 
 
@@ -11,13 +11,11 @@
     #define TREE_DATA_FORMAT    "%s"
 #endif
 
-#define DEBUG_TREE               0
+#define DEBUG_TREE               1
 
 #if DEBUG_TREE
-
     #define ON_TREE_DEBUG(...)   {__VA_ARGS__;}
 #else
-
     #define ON_TREE_DEBUG(...)
 #endif
 

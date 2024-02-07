@@ -4,7 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "../stack/my_stack_func.h"
+#include "../mystacklib/my_stack_func.h"
 
 #include "tree_func.h"
 #include "tree_log.h"

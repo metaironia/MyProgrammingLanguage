@@ -2,19 +2,17 @@
 #define MY_STACK_FUNC_H
 
 #include <stdio.h>
-#include <stdint.h>
-#include <math.h>
 
 #include "extern_for_stack.h"
 #include "my_stack_func_additional.h"
 #include "hash_func.h"
 
 /// Macros that prints to log file.
-#define LOG_PRINT(LOG_FILE, ...)  do {                                \
-                                      fprintf(LOG_FILE, __VA_ARGS__); \
-                                      fflush (LOG_FILE);              \
-                                                                      \
-                                  } while (0)
+#define LOG_PRINT_STACK(LOG_FILE_STACK, ...)  do {                                      \
+                                                  fprintf(LOG_FILE_STACK, __VA_ARGS__); \
+                                                  fflush (LOG_FILE_STACK);              \
+                                                                                        \
+                                              } while (0)
 
 /// Macros that outputs name of variable.
 #define NAME_OF_VAR(x)     #x
@@ -51,27 +49,10 @@
     #define ON_DEBUG(...)
 #endif
 
-/// Type definition of element of data in stack.
-typedef int Elem_t;
-
-/// 1 if stack element type is floating point number, 0 if not,
-#define IS_STACK_ELEM_FLOAT  0
-
-/// Defines how to check if stack element is poison number.
-#if IS_STACK_ELEM_FLOAT
-
-    const Elem_t POISON_NUM = NAN;                      ///< Poison number if stack element type is floating point.
-    #define IS_STACK_ELEM_POISON(x)  isnan ((float) x)  ///< Method to check if stack element is poison.
-#else
-
-    const Elem_t POISON_NUM = 0xDEAD;                   ///< Poison number if stack element type is integer.
-    #define IS_STACK_ELEM_POISON(x)  (x == POISON_NUM)  ///< Method to check if stack element is poison.
-#endif
-
 /// Constant for canaries in stack.
 const unsigned long long STACK_CANARY = 0xFEE1DEAD;
 
-const unsigned long long DEFAULT_STACK_CAPACITY = 1;
+//const unsigned long long DEFAULT_STACK_CAPACITY = 1;
 
 /// Max possible canary size in bytes.
 const int MAX_CANARY_SIZE_BYTES = 8;
@@ -84,6 +65,9 @@ const int HOW_MUCH_STACK_DECREASES = 4;
 
 /// How many times stack size should be lower than stack capacity to decrease the stack capacity.
 const int DECREASE_AMOUNT = 2;
+
+/// Poison number to data elements in stack.
+const Elem_t POISON_NUM = NAN;
 
 /// Struct that contains all info about stack.
 struct Stack {
@@ -177,7 +161,8 @@ enum StackFuncStatus StackPush (Stack *stk, Elem_t value);
 /**
     Function that pops the element from data.
     @param [in, out] stk stack.
-    @return popped value from stack.
+    @param [in, out] ret_value pointer to element that has to be popped.
+    @return \p OK if was done successfully, \p FAIL if error happened.
 */
 Elem_t StackPop (Stack *stk);
 
@@ -226,6 +211,5 @@ enum StackFuncStatus StackDataHashGen (Stack *stk_for_hash);
 */
 enum StackFuncStatus LogPrintStackError (unsigned int errnum);
 
-FILE *LogFileOpen (const char *file);
 
 #endif

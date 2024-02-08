@@ -25,7 +25,7 @@ void SetPointersToBuf (PtrToStr *const ptrs_to_strings, char *const buffer, off_
 
 void SlashRSymbolChecker (PtrToStr *const ptrs_to_strings, const int64_t num_of_str);
 
-const char *InputFileName (const char *argvv[]) {
+const char *InputFileName (const char *argvv[]);
 
 
 #endif

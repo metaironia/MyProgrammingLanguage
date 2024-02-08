@@ -1,25 +1,37 @@
 #include <stdio.h>
 #include <assert.h>
 #include <locale.h>
-#include <ctype.h>
 
+#include "../../lib/tree/tree_func.h"
+
+#include "../../lib/oneginlib/functions_for_input.h"
+#include "../../lib/oneginlib/functions_for_output.h"
+
+#include "frontend_arg_checker.h"
 #include "lexical_quotations.h"
 #include "lexical_analyzer.h"
 #include "syntax_analyzer.h"
-#include "../../lib/tree/tree_log.h"
 
 int main (const int argc, const char *argv[]) {
 
+    if (FrontendCheckCmdArgs (argc) == FRONTEND_STATUS_FAIL)
+        return -1;
+
     setlocale (LC_ALL, ".1251");
 
-    LanguageToken test_token = {};
-    NameTable test_name_table = {};
+    LanguageToken lang_tokens = {};
 
-    NameTableCtor (&test_name_table);
+    NameTable lang_name_table = {};
+    NameTableCtor (&lang_name_table);
 
-//    FILE *test_file = fopen ("test.txt", "r");
 
-//    LexicalAnalyzer (test_file, &test_token, &test_name_table);
+    FILE *input_file = fopen (InputFileName (argv), "r");
+    assert (input_file);
+
+    LexicalAnalyzer (input_file, &lang_tokens, &lang_name_table);
+
+    fclose (input_file);
+    input_file = NULL;
 
     /*
     for (size_t i = 0; test_token.node_array[i]; i++) {
@@ -31,25 +43,24 @@ int main (const int argc, const char *argv[]) {
     fprintf (stderr, "\ngde\n");
     */
 
-    Tree test_tree = {};
-    TreeCtor (&test_tree);
+    Tree lang_tree = {};
+    TreeCtor (&lang_tree);
 
-//    test_tree.root = GetGrammar (&test_token);
+    lang_tree.root = GetGrammar (&lang_tokens);
 
-//    SemanticAnalyzer (test_tree);
+    if (!lang_tree.root)
+        return -1;
 
-//    MathTreeGraphDump (&test_tree, &test_name_table);
+    FILE *output_file = fopen (OutputFileName (argv), "w");
+    assert (output_file);
 
-//    LangTreeFilePrint (stdout, &test_tree, &test_name_table);
+    LangTreeFilePrint (output_file, &lang_tree, &lang_name_table);
 
-    FILE *test_file = fopen ("test.txt", "r");
+    fclose (output_file);
+    output_file = NULL;
 
-    LangTreeNodeRead (test_file, &test_tree.root, &test_name_table);
-
-    MathTreeGraphDump (&test_tree, &test_name_table);
-
-    TreeDestruct (&test_tree);
-    NameTableDtor (&test_name_table);
+    TreeDtor (&lang_tree);
+    NameTableDtor (&lang_name_table);
 
     return 0;
 }

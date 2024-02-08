@@ -13,7 +13,7 @@
                     if (strstr (current_word, keyword##_QUOTES[i])) {                                 \
                                                                                                       \
                         if ((strcmp (keyword##_QUOTES[i], "но") == 0 ||                               \
-                            (strcmp (keyword##_QUOTES[i], "не") == 0) ||                              \                               
+                            (strcmp (keyword##_QUOTES[i], "не") == 0) ||                              \
                             (strcmp (keyword##_QUOTES[i], "и") == 0)) &&                              \
                             strcmp (keyword##_QUOTES[i], current_word) != 0)                          \
                                 break;                                                                \
@@ -26,7 +26,7 @@
                                                                                                       \
                 if (is_success)                                                                       \
                     continue;                                                                         \
-            }                                                                   
+            }
 
 #define CHECK_WORD_MATH_OP(current_word, keyword_type, keyword)                                               \
             {                                                                                                 \
@@ -51,7 +51,7 @@ enum LexicalFuncStatus {
 };
 
 const int MAX_WORD_LENGTH    = 64;
-const int MAX_PROGRAM_LENGTH = 10000; 
+const int MAX_PROGRAM_LENGTH = 10000;
 
 struct LanguageToken {
 

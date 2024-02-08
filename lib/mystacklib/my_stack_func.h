@@ -2,6 +2,7 @@
 #define MY_STACK_FUNC_H
 
 #include <stdio.h>
+#include <math.h>
 
 #include "extern_for_stack.h"
 #include "my_stack_func_additional.h"

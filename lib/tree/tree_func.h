@@ -156,7 +156,7 @@ enum TreeFuncStatus TreeNodeClear (TreeNode *tree_node_for_destruct);
 
 enum TreeFuncStatus TreeAllNodesDestruct (TreeNode **tree_node_for_destruct);
 
-enum TreeFuncStatus TreeDestruct (Tree *tree_for_destruct);
+enum TreeFuncStatus TreeDtor (Tree *tree_for_destruct);
 
 bool IsBracketInFileStr (FILE *file_to_check_str, const char bracket_type);
 

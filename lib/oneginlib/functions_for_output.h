@@ -11,4 +11,6 @@ void PrintAll (FILE *const output_file, PtrToStr *const ptrs_to_strings, const i
 
 void inline PrintLine (FILE *const output_file);
 
+const char *OutputFileName (const char *argvv[]);
+
 #endif

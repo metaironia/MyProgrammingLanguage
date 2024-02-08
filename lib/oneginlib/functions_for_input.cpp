@@ -115,3 +115,9 @@ void SlashRSymbolChecker (PtrToStr *const ptrs_to_strings, const int64_t num_of_
         }
     }
 }
+
+const char *InputFileName (const char *argvv[]) {
+
+    return argvv[1];
+}
+

@@ -41,3 +41,8 @@ void PrintLine (FILE *const output_file) {
                          "-----------------------------------------------------------------------------"
                          "\n");
 }
+
+const char *OutputFileName (const char *argvv[]) {
+
+    return argvv[2];
+}

@@ -124,7 +124,7 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
 
         case ASSIGN:
             return "ASSIGN";
-            break; 
+            break;
 
         case PRINT:
             return "PRINT";
@@ -145,7 +145,7 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
         case COMMA:
             return "COMMA";
             break;
-        
+
         case FUNC_CALL:
             return "FUNC_CALL";
             break;
@@ -165,7 +165,7 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
         case INIT:
             return "TYPE";
             break;
-        
+
         case TYPE_INT:
             return "TYPE_INT";
             break;
@@ -177,7 +177,7 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
         case OR:
             return "OR";
             break;
-        
+
         case OPEN_BRACE:
             return "OPEN_BRACE";
             break;
@@ -264,23 +264,23 @@ const char *MathNodeOperatorToString (const TreeNode *current_node) {
     switch (NODE_MATH_OPERATOR) {
 
         case OPERATOR_ADD:
-            return "+";
+            return "ADD";
             break;
 
         case OPERATOR_SUB:
-            return "-";
+            return "SUB";
             break;
 
         case OPERATOR_DIV:
-            return "/";
+            return "DIV";
             break;
 
         case OPERATOR_MUL:
-            return "*";
+            return "MUL";
             break;
 
         case OPERATOR_POW:
-            return "^";
+            return "POW";
             break;
 
         case OPERATOR_SIN:
@@ -306,7 +306,7 @@ const char *MathNodeOperatorToString (const TreeNode *current_node) {
         case OPERATOR_EQUAL:
             return "EQ";
             break;
-        
+
         case OPERATOR_NOT_EQUAL:
             return "NOT_EQUAL";
             break;
@@ -464,15 +464,15 @@ unsigned int MathTreeNodeChecker (const TreeNode *current_node) {
     if (!current_node)
         return 0;
 
-    unsigned int errors_in_node_and_subtree = MathNodeTypeCheckError (current_node);
+    unsigned int errors_in_node_and_subtree = 0; // MathNodeTypeCheckError (current_node);
 
     if (errors_in_node_and_subtree)
         return errors_in_node_and_subtree;
 
     errors_in_node_and_subtree |= NodeBinaryOperatorCheckErrors (current_node) |
                                   NodeUnaryOperatorCheckErrors (current_node)  |
-                                  NodeVariableCheckErrors (current_node)       |
                                   NodeNumberCheckErrors (current_node);
+                                  //NodeVariableCheckErrors (current_node)
 
     errors_in_node_and_subtree |= MathTreeNodeChecker (current_node -> left_branch);
     errors_in_node_and_subtree |= MathTreeNodeChecker (current_node -> right_branch);
@@ -480,12 +480,12 @@ unsigned int MathTreeNodeChecker (const TreeNode *current_node) {
     return errors_in_node_and_subtree;
 }
 
+/*
 unsigned int MathNodeTypeCheckError (const TreeNode *current_node) {
 
     assert (current_node);
 
-    unsigned int is_node_type_error = ((NODE_TYPE != NUMBER   &&
-                                      NODE_TYPE != VARIABLE) &&
+    unsigned int is_node_type_error = ((NODE_TYPE != NUMBER && NODE_TYPE != VARIABLE) &&
                                       IsOperatorUnaryOrBinary (NODE_MATH_OPERATOR) != NODE_TYPE);
 
     if (is_node_type_error)
@@ -493,6 +493,7 @@ unsigned int MathNodeTypeCheckError (const TreeNode *current_node) {
 
     return is_node_type_error;
 }
+*/
 
 unsigned int NodeBinaryOperatorCheckErrors (const TreeNode *current_node) {
 
@@ -913,7 +914,7 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
 
         else if (strcmp ("TYPE_INT", buf) == 0)
             *tree_node_for_data_read = TYPE_INT_;
-        
+
         else if (strcmp ("TYPE", buf) == 0)
             *tree_node_for_data_read = INIT_ (NULL, NULL);
 
@@ -926,16 +927,16 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
         else if (strcmp ("READ", buf) == 0)
             *tree_node_for_data_read = READ_;
 
-        else if (strcmp ("FUNC", buf) == 0) 
+        else if (strcmp ("FUNC", buf) == 0)
             *tree_node_for_data_read = FUNC_ (NULL);
 
-        else if (strcmp ("NEW_FUNC", buf) == 0) 
+        else if (strcmp ("NEW_FUNC", buf) == 0)
             *tree_node_for_data_read = NEW_FUNC_ (NULL);
 
-        else if (strcmp ("COMMA", buf) == 0) 
+        else if (strcmp ("COMMA", buf) == 0)
             *tree_node_for_data_read = COMMA_ (NULL, NULL);
 
-        else if (strcmp ("AND", buf) == 0) 
+        else if (strcmp ("AND", buf) == 0)
             *tree_node_for_data_read = AND_ (NULL, NULL);
 
         else if (strcmp ("OR", buf) == 0)
@@ -994,11 +995,11 @@ bool CheckIfWordIsNumber (char *word_to_check, TreeNode **current_node) {
     if (*word_end_ptr == '\0') {
 
         *current_node = NUM_ (value);
-        
-        return true;
-    } 
 
-    return false; 
+        return true;
+    }
+
+    return false;
 }
 
 bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, NameTable *name_table) {
@@ -1014,7 +1015,7 @@ bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, 
 
     for (size_t i = 1; word_to_check[i]; i++)
         if ((!isalnum (word_to_check[i]) || word_to_check[0] < 0) && word_to_check[0] != '_')
-            return false; 
+            return false;
 
     *current_node = VAR_ (number_of_variable);
 
@@ -1023,16 +1024,16 @@ bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, 
     number_of_variable++;
 
     return true;
-} 
+}
 
 TreeFuncStatus LangTreeFilePrint (FILE *output_file, Tree *lang_tree, NameTable *name_table) {
 
     assert (output_file);
     assert (lang_tree);
 
-    LangTreeNodeFilePrint (output_file, lang_tree -> root, name_table);        
+    LangTreeNodeFilePrint (output_file, lang_tree -> root, name_table);
 
-    return TREE_FUNC_STATUS_OK;    
+    return TREE_FUNC_STATUS_OK;
 }
 
 TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, TreeNode *lang_tree_node, NameTable *name_table) {
@@ -1040,7 +1041,7 @@ TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, TreeNode *lang_tree_nod
     assert (output_file);
 
     if (!lang_tree_node) {
-     
+
         fprintf (output_file, "nil ");
         return TREE_FUNC_STATUS_OK;
     }

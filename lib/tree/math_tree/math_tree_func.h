@@ -25,13 +25,13 @@
 
 
 
-#define MATH_TREE_VERIFY(math_tree, func_type)                                                     \
+#define MATH_TREE_VERIFY(math_tree, func_type)                                          \
                                 {                                                       \
                                     if (MathTreeVerify (math_tree, __func__) != 0) {    \
                                                                                         \
                                         MathTreeGraphDump (math_tree);                  \
                                                                                         \
-                                        return func_type##_FUNC_STATUS_FAIL;                   \
+                                        return func_type##_FUNC_STATUS_FAIL;            \
                                     }                                                   \
                                 }
 
@@ -47,18 +47,27 @@
 
 #define MATH_TREE_NODE_VERIFY(math_tree_node, func_type)                            \
                                 {                                                   \
-                                    if (MathTreeNodeVerify (math_tree_node) != 0) { \
-                                                                                    \
+                                    if (MathTreeNodeVerify (math_tree_node) != 0)   \
                                         return func_type##_FUNC_STATUS_FAIL;        \
-                                    }                                               \
                                 }
 
 #define MATH_TREE_NODE_VERIFY_PTR_FUNC(math_tree_node)                                  \
                                 {                                                       \
-                                    if (MathTreeNodeVerify (math_tree_node) != 0) {     \
-                                                                                        \
+                                    if (MathTreeNodeVerify (math_tree_node) != 0)       \
                                         return NULL;                                    \
-                                    }                                                   \
+                                }
+
+#define NAME_TABLE_SET_AND_PRINT_ERROR(current_error)                                   \
+                                {                                                       \
+                                    LOG_PRINT (TREE_LOG_FILE, #current_error);          \
+                                    LOG_PRINT (TREE_LOG_FILE, " has occured.\n");       \
+                                    errors_name_table |= current_error;                 \
+                                }
+
+#define NAME_TABLE_VERIFY(name_table, func_type)                                        \
+                                {                                                       \
+                                    if (NameTableVerify (name_table, __func__) != 0)    \
+                                        return func_type##_STATUS_FAIL;                 \
                                 }
 
 const int MAX_NUMBER_LENGTH = 30;
@@ -80,6 +89,13 @@ struct NameTable {
 
     NameTableCell *name_table_cell;
     size_t table_size;    
+};
+
+enum NameTableErrors {
+
+    NAME_TABLE_NULL_PTR = (1 << 0),
+    NAME_TABLE_CELL_NULL_PTR = (1 << 1),
+    // NAME_TABLE_MULTIPLE_VARS_ONE_NAME = (1 << 2)
 };
 
 const int MAX_NAME_TABLE_LENGTH = 32;
@@ -153,11 +169,13 @@ TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type
                                                     const char *word_name,
                                                     const size_t word_number);
 
+long long NameTableFind (NameTable *name_table, const char *word_name, const long long index);
+
+unsigned int NameTableVerify (NameTable *name_table, const char *parent_func_name);
+
 TreeFuncStatus NameTableDtor (NameTable *name_table); 
 
 const char *NameTableVariableFind (const size_t variable_index, const NameTable *name_table);
-
-//---------------------------------------------------------------------------------------------
 
 TreeFuncStatus LangTreeNodeRead (FILE *file_for_read_tree, TreeNode **tree_node_for_fill,
                                  NameTable *name_table);

@@ -13,6 +13,8 @@
 
 #include "math_operation.h"
 
+extern FILE *TREE_LOG_FILE;
+
 TreeNode *CreateMathTreeNode (const MathNodeType type_of_node, const double node_value,
                               TreeNode *const ptr_left_branch,
                               TreeNode *const ptr_right_branch) {
@@ -94,8 +96,7 @@ MathNodeType IsOperatorUnaryOrBinary (const MathNodeOperator node_operator_to_ch
 
 const char *LangNodeTypeToString (const TreeNode *current_node) {
 
-    assert (current_node);
-    assert (current_node -> data);
+    MATH_TREE_NODE_VERIFY_PTR_FUNC (current_node);
 
     const char *node_type_to_string = NULL;
 
@@ -195,7 +196,7 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
 
 const char *MathNodeTypeToString (const TreeNode *current_node, const NameTable *name_table) {
 
-    assert (current_node);
+    MATH_TREE_NODE_VERIFY_PTR_FUNC (current_node);
 
     const char *node_type_to_string = NULL;
 
@@ -210,7 +211,7 @@ const char *MathNodeTypeToString (const TreeNode *current_node, const NameTable 
 
 const char *MathNodeNumVarEndToString (const TreeNode *current_node, const NameTable *name_table) {
 
-    assert (current_node);
+    MATH_TREE_NODE_VERIFY_PTR_FUNC (current_node);
 
     switch (NODE_TYPE) {
 
@@ -236,6 +237,7 @@ const char *MathNodeNumVarEndToString (const TreeNode *current_node, const NameT
 const char *NameTableVariableFind (const size_t variable_index, const NameTable *name_table) {
 
     assert (name_table);
+    assert (name_table -> name_table_cell);
 
     for (size_t i = 0; i < name_table -> table_size; i++)
         if (variable_index == (name_table -> name_table_cell)[i].word_number &&
@@ -259,7 +261,7 @@ const char *NumberToString (const double number) {
 
 const char *MathNodeOperatorToString (const TreeNode *current_node) {
 
-    assert (current_node);
+    MATH_TREE_NODE_VERIFY_PTR_FUNC (current_node);
 
     switch (NODE_MATH_OPERATOR) {
 
@@ -464,7 +466,7 @@ unsigned int MathTreeNodeChecker (const TreeNode *current_node) {
     if (!current_node)
         return 0;
 
-    unsigned int errors_in_node_and_subtree = 0; // MathNodeTypeCheckError (current_node);
+    unsigned int errors_in_node_and_subtree = 0; // = MathNodeTypeCheckError (current_node);
 
     if (errors_in_node_and_subtree)
         return errors_in_node_and_subtree;
@@ -602,21 +604,17 @@ TreeFuncStatus MathTreeNodeBinaryOperatorSimplify (TreeNode *current_node) {
     if (IS_VALUE_EQUAL (0, left_branch) || IS_VALUE_EQUAL (0, right_branch))
         return MathTreeNodeSmthAndZeroSimplify (current_node);
 
-    if (IS_VALUE_EQUAL (1, left_branch) || IS_VALUE_EQUAL (1, right_branch)) {
+    if (IS_VALUE_EQUAL (1, left_branch) || IS_VALUE_EQUAL (1, right_branch))
         return MathTreeNodeSmthAndOneSimplify (current_node);
-}
+
     return TREE_FUNC_STATUS_FAIL;
 }
 
 TreeFuncStatus MathTreeNodeNumAndNumSimplify (TreeNode *current_node) {
 
-    assert (current_node);
-
-    assert (current_node -> left_branch);
-    assert (current_node -> right_branch);
-
-    assert (current_node -> left_branch -> data);
-    assert (current_node -> right_branch -> data);
+    MATH_TREE_NODE_VERIFY (current_node, TREE);
+    MATH_TREE_NODE_VERIFY (current_node -> left_branch, TREE);
+    MATH_TREE_NODE_VERIFY (current_node -> right_branch, TREE);
 
     double value_after_simplify = NAN;
 
@@ -634,13 +632,9 @@ TreeFuncStatus MathTreeNodeNumAndNumSimplify (TreeNode *current_node) {
 
 TreeFuncStatus MathTreeNodeSmthAndZeroSimplify (TreeNode *current_node) {
 
-    assert (current_node);
-
-    assert (current_node -> left_branch);
-    assert (current_node -> right_branch);
-
-    assert (current_node -> left_branch -> data);
-    assert (current_node -> right_branch -> data);
+    MATH_TREE_NODE_VERIFY (current_node, TREE);
+    MATH_TREE_NODE_VERIFY (current_node -> left_branch, TREE);
+    MATH_TREE_NODE_VERIFY (current_node -> right_branch, TREE);
 
     TreeNode *branch_non_zero_ptr = NULL;
     TreeNextBranch branch_non_zero = NODE_NO_BRANCH;
@@ -708,13 +702,9 @@ TreeFuncStatus MathTreeNodeSmthAndZeroSimplify (TreeNode *current_node) {
 
 TreeFuncStatus MathTreeNodeSmthAndOneSimplify (TreeNode *current_node) {
 
-    assert (current_node);
-
-    assert (current_node -> left_branch);
-    assert (current_node -> right_branch);
-
-    assert (current_node -> left_branch -> data);
-    assert (current_node -> right_branch -> data);
+    MATH_TREE_NODE_VERIFY (current_node, TREE);
+    MATH_TREE_NODE_VERIFY (current_node -> left_branch, TREE);
+    MATH_TREE_NODE_VERIFY (current_node -> right_branch, TREE);
 
     TreeNode *branch_non_one_ptr = NULL;
     TreeNextBranch branch_non_one = NODE_NO_BRANCH;
@@ -784,15 +774,18 @@ TreeFuncStatus NameTableCtor (NameTable *name_table) {
 
     name_table -> table_size = 0;
 
+    NAME_TABLE_VERIFY (name_table, TREE_FUNC);
+
     return TREE_FUNC_STATUS_OK;
-};
+}
 
 TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type,
                                                     const char *word_name,
                                                     const size_t word_number) {
 
-    assert (name_table);
-    assert (name_table -> name_table_cell);
+    assert (word_name);
+
+    NAME_TABLE_VERIFY (name_table, TREE_FUNC);
 
     (name_table -> name_table_cell)[name_table -> table_size].word_type = word_type;
     (name_table -> name_table_cell)[name_table -> table_size].word_name = strdup (word_name);
@@ -800,7 +793,57 @@ TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type
 
     (name_table -> table_size)++;
 
+    NAME_TABLE_VERIFY (name_table, TREE_FUNC);
+
     return TREE_FUNC_STATUS_OK;
+}
+
+long long NameTableFind (NameTable *name_table, const char *word_name, const long long index) {
+
+    assert (word_name);
+    assert (name_table);
+    assert (name_table -> name_table_cell);
+
+    size_t start_pos_find = 0;
+
+    if (index >= 0)
+        start_pos_find = index;
+
+    for (size_t i = start_pos_find; i < name_table -> table_size; i++)
+        if (strcmp ((name_table -> name_table_cell)[i].word_name, word_name) == 0)
+            return i;
+
+    return -1;
+}
+
+unsigned int NameTableVerify (NameTable *name_table, const char *parent_func_name) {
+
+    assert (parent_func_name);
+
+    unsigned int errors_name_table = 0;
+
+    LOG_PRINT (TREE_LOG_FILE, "From function %s:\n", parent_func_name);
+
+    if (!name_table)
+        NAME_TABLE_SET_AND_PRINT_ERROR (NAME_TABLE_NULL_PTR);
+    
+    if (!(name_table -> name_table_cell))
+        NAME_TABLE_SET_AND_PRINT_ERROR (NAME_TABLE_CELL_NULL_PTR);
+
+    /*
+    if (name_table -> table_size != 0)
+        for (size_t i = 0; i < name_table -> table_size - 1; i++)
+            if (NameTableFind (name_table, (name_table -> name_table_cell)[i].word_name, i + 1) != -1) {
+
+                NAME_TABLE_SET_AND_PRINT_ERROR (NAME_TABLE_MULTIPLE_VARS_ONE_NAME);
+                break;
+            }
+    */
+
+    if (errors_name_table == 0)
+        LOG_PRINT (TREE_LOG_FILE, "No errors.\n");        
+
+    return errors_name_table;
 }
 
 TreeFuncStatus NameTableDtor (NameTable *name_table) {
@@ -1045,6 +1088,8 @@ TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, TreeNode *lang_tree_nod
         fprintf (output_file, "nil ");
         return TREE_FUNC_STATUS_OK;
     }
+
+    MATH_TREE_NODE_VERIFY (lang_tree_node, TREE);
 
     fprintf (output_file, "(");
 

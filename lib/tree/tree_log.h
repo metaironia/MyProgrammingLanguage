@@ -10,10 +10,10 @@
 
 #define LOG_PRINT_TREE_ERROR(error)    LogPrintTreeError (error)
 
-#define LOG_PRINT(LOG_FILE, ...)       {                                   \
+#define LOG_PRINT(LOG_FILE, ...)       do {                                \
                                            fprintf(LOG_FILE, __VA_ARGS__); \
                                            fflush (LOG_FILE);              \
-                                       }
+                                       } while (0)
 
 #define TREE_ERROR_SET_AND_PRINT(tree_errors, current_error)                       \
                                        {                                           \

@@ -184,10 +184,11 @@ enum TreeFuncStatus NodeTypePrint (FILE *tree_dot_file, const TreeNode *current_
 
     const char *type_string = MathNodeTypeToString (current_node, name_table);
 
-    if (type_string == NULL)
+    if (!type_string)
         type_string = LangNodeTypeToString (current_node);
 
-    assert (type_string);
+    if (!type_string)
+        return TREE_FUNC_STATUS_FAIL;
 
     LOG_PRINT (tree_dot_file, "%s", type_string);
 

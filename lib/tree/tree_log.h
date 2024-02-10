@@ -10,17 +10,16 @@
 
 #define LOG_PRINT_TREE_ERROR(error)    LogPrintTreeError (error)
 
-#define LOG_PRINT(LOG_FILE, ...)       do {                                \
+#define LOG_PRINT(LOG_FILE, ...)       {                                   \
                                            fprintf(LOG_FILE, __VA_ARGS__); \
                                            fflush (LOG_FILE);              \
-                                                                           \
-                                       } while (0)
+                                       }
 
-#define TREE_ERROR_SET_AND_PRINT(tree_errors, current_error)                      \
-                                      {                                           \
-                                          tree_errors |= current_error;           \
-                                          LOG_PRINT_TREE_ERROR (#current_error);  \
-                                      }
+#define TREE_ERROR_SET_AND_PRINT(tree_errors, current_error)                       \
+                                       {                                           \
+                                           tree_errors |= current_error;           \
+                                           LOG_PRINT_TREE_ERROR (#current_error);  \
+                                       }
 
 const int MAX_IMAGE_NAME_LENGTH = 64;
 

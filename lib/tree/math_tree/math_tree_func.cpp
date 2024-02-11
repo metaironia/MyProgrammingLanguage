@@ -774,7 +774,7 @@ TreeFuncStatus NameTableCtor (NameTable *name_table) {
 
     name_table -> table_size = 0;
 
-    NAME_TABLE_VERIFY (name_table, TREE_FUNC);
+    NAME_TABLE_VERIFY (name_table, TREE);
 
     return TREE_FUNC_STATUS_OK;
 }
@@ -785,7 +785,7 @@ TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type
 
     assert (word_name);
 
-    NAME_TABLE_VERIFY (name_table, TREE_FUNC);
+    NAME_TABLE_VERIFY (name_table, TREE);
 
     (name_table -> name_table_cell)[name_table -> table_size].word_type = word_type;
     (name_table -> name_table_cell)[name_table -> table_size].word_name = strdup (word_name);
@@ -793,12 +793,12 @@ TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type
 
     (name_table -> table_size)++;
 
-    NAME_TABLE_VERIFY (name_table, TREE_FUNC);
+    NAME_TABLE_VERIFY (name_table, TREE);
 
     return TREE_FUNC_STATUS_OK;
 }
 
-long long NameTableFind (NameTable *name_table, const char *word_name, const long long index) {
+long long NameTableWordFind (const NameTable *name_table, const char *word_name, const long long index) {
 
     assert (word_name);
     assert (name_table);
@@ -1069,7 +1069,7 @@ bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, 
     return true;
 }
 
-TreeFuncStatus LangTreeFilePrint (FILE *output_file, Tree *lang_tree, NameTable *name_table) {
+TreeFuncStatus LangTreeFilePrint (FILE *output_file, const Tree *lang_tree, const NameTable *name_table) {
 
     assert (output_file);
     assert (lang_tree);
@@ -1079,7 +1079,8 @@ TreeFuncStatus LangTreeFilePrint (FILE *output_file, Tree *lang_tree, NameTable 
     return TREE_FUNC_STATUS_OK;
 }
 
-TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, TreeNode *lang_tree_node, NameTable *name_table) {
+TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, const TreeNode *lang_tree_node, 
+                                      const NameTable *name_table) {
 
     assert (output_file);
 

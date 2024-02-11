@@ -67,7 +67,7 @@
 #define NAME_TABLE_VERIFY(name_table, func_type)                                        \
                                 {                                                       \
                                     if (NameTableVerify (name_table, __func__) != 0)    \
-                                        return func_type##_STATUS_FAIL;                 \
+                                        return func_type##_FUNC_STATUS_FAIL;                 \
                                 }
 
 const int MAX_NUMBER_LENGTH = 30;
@@ -169,7 +169,7 @@ TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type
                                                     const char *word_name,
                                                     const size_t word_number);
 
-long long NameTableFind (NameTable *name_table, const char *word_name, const long long index);
+long long NameTableWordFind (const NameTable *name_table, const char *word_name, const long long index);
 
 unsigned int NameTableVerify (NameTable *name_table, const char *parent_func_name);
 
@@ -189,8 +189,9 @@ bool CheckIfWordIsNumber (char *word_to_check, TreeNode **current_node);
 
 bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, NameTable *name_table);
 
-TreeFuncStatus LangTreeFilePrint (FILE *output_file, Tree *lang_tree, NameTable *name_table);
+TreeFuncStatus LangTreeFilePrint (FILE *output_file, const Tree *lang_tree, const NameTable *name_table);
 
-TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, TreeNode *lang_tree_node, NameTable *name_table);
+TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, const TreeNode *lang_tree_node,
+                                      const NameTable *name_table);
 
 #endif

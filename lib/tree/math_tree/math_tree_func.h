@@ -24,7 +24,6 @@
 #define BRANCH_OPERATOR(branch)       ((current_node -> branch -> data -> nodeValue).mathOperator)
 
 
-
 #define MATH_TREE_VERIFY(math_tree, func_type)                                          \
                                 {                                                       \
                                     if (MathTreeVerify (math_tree, __func__) != 0) {    \
@@ -67,7 +66,38 @@
 #define NAME_TABLE_VERIFY(name_table, func_type)                                        \
                                 {                                                       \
                                     if (NameTableVerify (name_table, __func__) != 0)    \
-                                        return func_type##_FUNC_STATUS_FAIL;                 \
+                                        return func_type##_FUNC_STATUS_FAIL;            \
+                                }
+
+#define MATH_TREE_VERIFY(math_tree)                                          \
+                                {                                                       \
+                                    if (MathTreeVerify (math_tree, __func__) != 0) {    \
+                                                                                        \
+                                        MathTreeGraphDump (math_tree);                  \
+                                                                                        \
+                                        return func_type##_FUNC_STATUS_FAIL;            \
+                                    }                                                   \
+                                }
+#define MATH_TREE_VERIFY_UNSIGNED_FUNC(math_tree, func_type)                            \
+                                {                                                       \
+                                    if (MathTreeVerify (math_tree, __func__) != 0) {    \
+                                                                                        \
+                                        MathTreeGraphDump (math_tree);                  \
+                                                                                        \
+                                        return 0xDEAD1;                                 \
+                                    }                                                   \
+                                }
+
+#define MATH_TREE_NODE_VERIFY_UNSIGNED_FUNC(math_tree_node)                         \
+                                {                                                   \
+                                    if (MathTreeNodeVerify (math_tree_node) != 0)   \
+                                        return 0xDEAD2;                             \
+                                }
+
+#define NAME_TABLE_VERIFY_UNSIGNED_FUNC(name_table)                                     \
+                                {                                                       \
+                                    if (NameTableVerify (name_table, __func__) != 0)    \
+                                        return 0xDEAD3;                                 \
                                 }
 
 const int MAX_NUMBER_LENGTH = 30;
@@ -99,6 +129,10 @@ enum NameTableErrors {
 };
 
 const int MAX_NAME_TABLE_LENGTH = 32;
+
+const int DEAD_TREE       = 0xDEAD1;
+const int DEAD_TREE_NODE  = 0xDEAD2;
+const int DEAD_NAME_TABLE = 0xDEAD3;
 
 MathNodeType IsOperatorUnaryOrBinary (const MathNodeOperator node_operator_to_check);
 

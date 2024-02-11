@@ -830,16 +830,6 @@ unsigned int NameTableVerify (NameTable *name_table, const char *parent_func_nam
     if (!(name_table -> name_table_cell))
         NAME_TABLE_SET_AND_PRINT_ERROR (NAME_TABLE_CELL_NULL_PTR);
 
-    /*
-    if (name_table -> table_size != 0)
-        for (size_t i = 0; i < name_table -> table_size - 1; i++)
-            if (NameTableFind (name_table, (name_table -> name_table_cell)[i].word_name, i + 1) != -1) {
-
-                NAME_TABLE_SET_AND_PRINT_ERROR (NAME_TABLE_MULTIPLE_VARS_ONE_NAME);
-                break;
-            }
-    */
-
     if (errors_name_table == 0)
         LOG_PRINT (TREE_LOG_FILE, "No errors.\n");        
 

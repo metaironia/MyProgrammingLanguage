@@ -84,20 +84,20 @@
                                                                                         \
                                         MathTreeGraphDump (math_tree);                  \
                                                                                         \
-                                        return 0xDEAD1;                                 \
+                                        return DEAD_TREE;                                 \
                                     }                                                   \
                                 }
 
 #define MATH_TREE_NODE_VERIFY_UNSIGNED_FUNC(math_tree_node)                         \
                                 {                                                   \
                                     if (MathTreeNodeVerify (math_tree_node) != 0)   \
-                                        return 0xDEAD2;                             \
+                                        return DEAD_TREE_NODE;                             \
                                 }
 
 #define NAME_TABLE_VERIFY_UNSIGNED_FUNC(name_table)                                     \
                                 {                                                       \
                                     if (NameTableVerify (name_table, __func__) != 0)    \
-                                        return 0xDEAD3;                                 \
+                                        return DEAD_NAME_TABLE;                                 \
                                 }
 
 const int MAX_NUMBER_LENGTH = 30;

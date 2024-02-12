@@ -798,7 +798,7 @@ const char *NameTableVariableFind (const size_t variable_index, const NameTable 
     return NULL;
 }
 
-long long NameTableWordFind (const NameTable *name_table, const char *word_name, 
+long long NameTableWordFind (const NameTable *name_table, const char *word_name,
                              const long long start_index) {
 
     assert (word_name);
@@ -819,12 +819,16 @@ long long NameTableWordFind (const NameTable *name_table, const char *word_name,
 
 const char *NameTableRepeatCheck (const NameTable *name_table) {
 
-    NAME_TABLE_VERIFY_UNSIGNED_FUNC (name_table);
+    if (NameTableVerify (name_table, __func__) != 0)
+        return NULL;
+
+    if (name_table -> table_size == 0)
+        return NULL;
 
     for (size_t i = 0; i < name_table -> table_size - 1; i++) {
 
         const char *current_func_name = (name_table -> name_table_cell)[i].word_name;
-        
+
         if (NameTableWordFind (name_table, current_func_name, i + 1) != -1) {
 
             return current_func_name;
@@ -833,7 +837,8 @@ const char *NameTableRepeatCheck (const NameTable *name_table) {
 
     return NULL;
 }
-unsigned int NameTableVerify (NameTable *name_table, const char *parent_func_name) {
+
+unsigned int NameTableVerify (const NameTable *name_table, const char *parent_func_name) {
 
     assert (parent_func_name);
 
@@ -843,12 +848,12 @@ unsigned int NameTableVerify (NameTable *name_table, const char *parent_func_nam
 
     if (!name_table)
         NAME_TABLE_SET_AND_PRINT_ERROR (NAME_TABLE_NULL_PTR);
-    
+
     if (!(name_table -> name_table_cell))
         NAME_TABLE_SET_AND_PRINT_ERROR (NAME_TABLE_CELL_NULL_PTR);
 
     if (errors_name_table == 0)
-        LOG_PRINT (TREE_LOG_FILE, "No errors.\n");        
+        LOG_PRINT (TREE_LOG_FILE, "No errors.\n");
 
     return errors_name_table;
 }
@@ -1086,7 +1091,7 @@ TreeFuncStatus LangTreeFilePrint (FILE *output_file, const Tree *lang_tree, cons
     return TREE_FUNC_STATUS_OK;
 }
 
-TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, const TreeNode *lang_tree_node, 
+TreeFuncStatus LangTreeNodeFilePrint (FILE *output_file, const TreeNode *lang_tree_node,
                                       const NameTable *name_table) {
 
     assert (output_file);

@@ -69,35 +69,27 @@
                                         return func_type##_FUNC_STATUS_FAIL;            \
                                 }
 
-#define MATH_TREE_VERIFY(math_tree)                                          \
+
+#define MATH_TREE_VERIFY_UNSIGNED_FUNC(math_tree, name_table)                           \
                                 {                                                       \
                                     if (MathTreeVerify (math_tree, __func__) != 0) {    \
                                                                                         \
-                                        MathTreeGraphDump (math_tree);                  \
+                                        MathTreeGraphDump (math_tree, name_table);      \
                                                                                         \
-                                        return func_type##_FUNC_STATUS_FAIL;            \
-                                    }                                                   \
-                                }
-#define MATH_TREE_VERIFY_UNSIGNED_FUNC(math_tree, func_type)                            \
-                                {                                                       \
-                                    if (MathTreeVerify (math_tree, __func__) != 0) {    \
-                                                                                        \
-                                        MathTreeGraphDump (math_tree);                  \
-                                                                                        \
-                                        return DEAD_TREE;                                 \
+                                        return DEAD_TREE;                               \
                                     }                                                   \
                                 }
 
 #define MATH_TREE_NODE_VERIFY_UNSIGNED_FUNC(math_tree_node)                         \
                                 {                                                   \
                                     if (MathTreeNodeVerify (math_tree_node) != 0)   \
-                                        return DEAD_TREE_NODE;                             \
+                                        return DEAD_TREE_NODE;                      \
                                 }
 
 #define NAME_TABLE_VERIFY_UNSIGNED_FUNC(name_table)                                     \
                                 {                                                       \
                                     if (NameTableVerify (name_table, __func__) != 0)    \
-                                        return DEAD_NAME_TABLE;                                 \
+                                        return DEAD_NAME_TABLE;                         \
                                 }
 
 const int MAX_NUMBER_LENGTH = 30;
@@ -118,7 +110,7 @@ struct NameTableCell {
 struct NameTable {
 
     NameTableCell *name_table_cell;
-    size_t table_size;    
+    size_t table_size;
 };
 
 enum NameTableErrors {
@@ -208,9 +200,9 @@ long long NameTableWordFind (const NameTable *name_table, const char *word_name,
 
 const char *NameTableRepeatCheck (const NameTable *name_table);
 
-unsigned int NameTableVerify (NameTable *name_table, const char *parent_func_name);
+unsigned int NameTableVerify (const NameTable *name_table, const char *parent_func_name);
 
-TreeFuncStatus NameTableDtor (NameTable *name_table); 
+TreeFuncStatus NameTableDtor (NameTable *name_table);
 
 const char *NameTableVariableFind (const size_t variable_index, const NameTable *name_table);
 

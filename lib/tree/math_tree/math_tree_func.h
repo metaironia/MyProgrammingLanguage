@@ -203,7 +203,10 @@ TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type
                                                     const char *word_name,
                                                     const size_t word_number);
 
-long long NameTableWordFind (const NameTable *name_table, const char *word_name, const long long index);
+long long NameTableWordFind (const NameTable *name_table, const char *word_name,
+                             const long long start_index);
+
+const char *NameTableRepeatCheck (const NameTable *name_table);
 
 unsigned int NameTableVerify (NameTable *name_table, const char *parent_func_name);
 

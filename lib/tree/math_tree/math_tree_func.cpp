@@ -234,20 +234,6 @@ const char *MathNodeNumVarEndToString (const TreeNode *current_node, const NameT
     return NULL;
 }
 
-const char *NameTableVariableFind (const size_t variable_index, const NameTable *name_table) {
-
-    assert (name_table);
-    assert (name_table -> name_table_cell);
-
-    for (size_t i = 0; i < name_table -> table_size; i++)
-        if (variable_index == (name_table -> name_table_cell)[i].word_number &&
-            (name_table -> name_table_cell)[i].word_type == NAME_TABLE_VARIABLE)
-
-            return (name_table -> name_table_cell)[i].word_name;
-
-    return NULL;
-}
-
 const char *NumberToString (const double number) {
 
     static char number_to_string[MAX_NUMBER_LENGTH + 1] = {};
@@ -798,7 +784,22 @@ TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type
     return TREE_FUNC_STATUS_OK;
 }
 
-long long NameTableWordFind (const NameTable *name_table, const char *word_name, const long long index) {
+const char *NameTableVariableFind (const size_t variable_index, const NameTable *name_table) {
+
+    assert (name_table);
+    assert (name_table -> name_table_cell);
+
+    for (size_t i = 0; i < name_table -> table_size; i++)
+        if (variable_index == (name_table -> name_table_cell)[i].word_number &&
+            (name_table -> name_table_cell)[i].word_type == NAME_TABLE_VARIABLE)
+
+            return (name_table -> name_table_cell)[i].word_name;
+
+    return NULL;
+}
+
+long long NameTableWordFind (const NameTable *name_table, const char *word_name, 
+                             const long long start_index) {
 
     assert (word_name);
     assert (name_table);
@@ -806,8 +807,8 @@ long long NameTableWordFind (const NameTable *name_table, const char *word_name,
 
     size_t start_pos_find = 0;
 
-    if (index >= 0)
-        start_pos_find = index;
+    if (start_index >= 0)
+        start_pos_find = start_index;
 
     for (size_t i = start_pos_find; i < name_table -> table_size; i++)
         if (strcmp ((name_table -> name_table_cell)[i].word_name, word_name) == 0)
@@ -816,6 +817,22 @@ long long NameTableWordFind (const NameTable *name_table, const char *word_name,
     return -1;
 }
 
+const char *NameTableRepeatCheck (const NameTable *name_table) {
+
+    NAME_TABLE_VERIFY_UNSIGNED_FUNC (name_table);
+
+    for (size_t i = 0; i < name_table -> table_size - 1; i++) {
+
+        const char *current_func_name = (name_table -> name_table_cell)[i].word_name;
+        
+        if (NameTableWordFind (name_table, current_func_name, i + 1) != -1) {
+
+            return current_func_name;
+        }
+    }
+
+    return NULL;
+}
 unsigned int NameTableVerify (NameTable *name_table, const char *parent_func_name) {
 
     assert (parent_func_name);

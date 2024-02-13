@@ -11,7 +11,7 @@
 
 int main (const int argc, const char *argv[]) {
 
-    if (MiddleendCheckCmdArgs (argc) == MIDDLEEND_STATUS_FAIL)
+    if (MiddleendCmdArgsCheck (argc) == MIDDLEEND_FUNC_STATUS_FAIL)
         return -1;
 
     Tree lang_tree = {};

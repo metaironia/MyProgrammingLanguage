@@ -24,11 +24,11 @@
 #define BRANCH_OPERATOR(branch)       ((current_node -> branch -> data -> nodeValue).mathOperator)
 
 
-#define MATH_TREE_VERIFY(math_tree, func_type)                                          \
+#define MATH_TREE_VERIFY(math_tree, func_type, name_table)                              \
                                 {                                                       \
                                     if (MathTreeVerify (math_tree, __func__) != 0) {    \
                                                                                         \
-                                        MathTreeGraphDump (math_tree);                  \
+                                        MathTreeGraphDump (math_tree, name_table);      \
                                                                                         \
                                         return func_type##_FUNC_STATUS_FAIL;            \
                                     }                                                   \

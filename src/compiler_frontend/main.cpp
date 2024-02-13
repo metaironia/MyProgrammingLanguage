@@ -11,6 +11,7 @@
 #include "lexical_quotations.h"
 #include "lexical_analyzer.h"
 #include "syntax_analyzer.h"
+#include "semantic_analyzer.h"
 
 int main (const int argc, const char *argv[]) {
 
@@ -50,6 +51,9 @@ int main (const int argc, const char *argv[]) {
 
     if (!lang_tree.root)
         return -1;
+
+    if (SemanticAnalyzer (&lang_tree, &lang_name_table) != 0)
+        return -2;
 
     FILE *output_file = fopen (OutputFileName (argv), "w");
     assert (output_file);

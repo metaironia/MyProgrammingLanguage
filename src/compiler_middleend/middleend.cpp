@@ -7,21 +7,21 @@
 #include "middleend.h"
 
 
-MiddleendStatus MiddleendCheckCmdArgs (const int argcc) {
+MiddleendStatus MiddleendCmdArgsCheck (const int argcc) {
 
     if (argcc < 2) {
 
         fprintf (stderr, "Not enough args. Program will be terminated.\n");
-        return MIDDLEEND_STATUS_FAIL;
+        return MIDDLEEND_FUNC_STATUS_FAIL;
     }
 
     else if (argcc > 3) {
 
         fprintf (stderr, "Too much args. Program will be terminated.\n");
-        return MIDDLEEND_STATUS_FAIL;
+        return MIDDLEEND_FUNC_STATUS_FAIL;
     }
 
-    return MIDDLEEND_STATUS_OK;
+    return MIDDLEEND_FUNC_STATUS_OK;
 }
 
 FILE *MiddleendOutputFileSet (const int argcc, const char *argvv[]) {

@@ -37,7 +37,7 @@ unsigned int VarsInFuncCheck (const TreeNode *func_node, const NameTable *all_fu
                               const NameTable *global_name_table);
 
 unsigned int VarAsFuncUsing (const TreeNode *current_node, const NameTable *all_func_name_table,
-                             const NameTable *func_local_name_table);
+                             const NameTable *global_name_table);
 
 unsigned int UndeclaredVarsCheck (const TreeNode *current_node, const NameTable *all_func_name_table,
                                   const NameTable *global_name_table, const NameTable *func_local_name_table);

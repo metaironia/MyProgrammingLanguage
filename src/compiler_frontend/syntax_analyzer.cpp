@@ -13,23 +13,23 @@ void SyntaxAssert (const char *error_quote, const size_t current_pos, const Lang
     if (!error_quote)
         return;
 
-    fprintf (stderr, "Syntax error: %s\n", error_quote);  
+    fprintf (stderr, "Syntax error: %s\n", error_quote);
 
-    size_t pos_to_print    = (current_pos >= 1) ? (current_pos - 1) : 0; 
-    TreeNode* current_node = (token_struct -> node_array)[pos_to_print];                              
-                                                                                                        
-    while (pos_to_print < current_pos + WORDS_TO_PRINT_AMOUNT) { 
-    
-        if (NODE_TYPE == END)                
+    size_t pos_to_print    = (current_pos >= 1) ? (current_pos - 1) : 0;
+    TreeNode* current_node = (token_struct -> node_array)[pos_to_print];
+
+    while (pos_to_print < current_pos + WORDS_TO_PRINT_AMOUNT) {
+
+        if (NODE_TYPE == END)
             break;
 
-        fprintf (stderr, "%s ", 
+        fprintf (stderr, "%s ",
                     token_struct -> char_array[token_struct -> index_node_word[pos_to_print]]);
 
-        current_node = (token_struct -> node_array)[++pos_to_print]; 
+        current_node = (token_struct -> node_array)[++pos_to_print];
     }
 
-    fprintf (stderr, "\n"); 
+    fprintf (stderr, "\n");
 }
 
 TreeNode *GetGrammar (const LanguageToken *token_struct) {
@@ -42,13 +42,13 @@ TreeNode *GetGrammar (const LanguageToken *token_struct) {
     TreeNode *tree_node    = NEW_FUNC_ (INIT_FUNC_INT_ (GetFunction (token_struct, &position)));
     TreeNode **next_node   = &(tree_node -> left_branch);
 
-    TreeNode *current_node = (token_struct -> node_array)[position]; 
+    TreeNode *current_node = (token_struct -> node_array)[position];
 
     while (NODE_TYPE != END && tree_node -> right_branch != NULL) {
 
         if (*next_node) {
-            
-            *next_node = NEW_FUNC_ (*next_node);   
+
+            *next_node = NEW_FUNC_ (*next_node);
             next_node  = &((*next_node) -> left_branch);
         }
 
@@ -67,28 +67,30 @@ TreeNode *GetGrammar (const LanguageToken *token_struct) {
 }
 
 TreeNode *GetFunction (const LanguageToken *token_struct, size_t *position) {
-    
+
     assert (position);
     assert (token_struct);
     assert ((token_struct -> node_array)[*position]);
-   
+
     const size_t old_position = *position;
     TreeNode *current_node    = (token_struct -> node_array)[*position];
 
     TreeNode *tree_node = GetVar (token_struct, position);
 
-    SYN_ASSERT (old_position != *position, "WRONG FUNCTION NAME"); 
+    SYN_ASSERT (old_position != *position, "WRONG FUNCTION NAME");
 
     current_node = (token_struct -> node_array)[*position];
 
-    tree_node -> left_branch = GetArgument (token_struct, position); 
+    tree_node -> left_branch = GetArgument (token_struct, position);
+
+    current_node = (token_struct -> node_array)[*position];
 
     SYN_ASSERT (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == OPEN_BRACE,
                 "NO OPEN BRACE after FUNCTION DECLARATION");
 
     (*position)++;
 
-    TreeNode **next_node = &(tree_node -> right_branch); 
+    TreeNode **next_node = &(tree_node -> right_branch);
 
     while (!(NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == END_LINE)) {
 
@@ -107,11 +109,11 @@ TreeNode *GetFunction (const LanguageToken *token_struct, size_t *position) {
 }
 
 TreeNode *GetArgument (const LanguageToken *token_struct, size_t *position) {
-    
+
     assert (position);
     assert (token_struct);
     assert ((token_struct -> node_array)[*position]);
-    
+
     TreeNode *current_node = (token_struct -> node_array)[*position];
 
     if (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == OPEN_BRACE)
@@ -129,43 +131,43 @@ TreeNode *GetArgument (const LanguageToken *token_struct, size_t *position) {
 
         tree_node    = COMMA_ (INIT_ (TYPE_INT_, GetVar (token_struct, position)), tree_node);
         current_node = (token_struct -> node_array)[*position];
-    }    
+    }
 
     return tree_node;
-} 
+}
 
 TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position) {
-    
+
     assert (position);
     assert (token_struct);
     assert ((token_struct -> node_array)[*position]);
 
     const size_t old_position = *position;
 
-    TreeNode *current_node = (token_struct -> node_array)[*position];     
+    TreeNode *current_node = (token_struct -> node_array)[*position];
     TreeNode *tree_node    = GetIf (token_struct, position);
 
-    if (old_position == *position)          
+    if (old_position == *position)
         tree_node = GetWhile (token_struct, position);
 
-    if (old_position == *position)          
-        tree_node = GetAssign (token_struct, position);  
+    if (old_position == *position)
+        tree_node = GetAssign (token_struct, position);
 
     if (old_position == *position)
         tree_node = GetReturn (token_struct, position);
 
-    if (old_position == *position)          
+    if (old_position == *position)
         tree_node = GetPrint (token_struct, position);
 
     if (old_position == *position)
         tree_node = GetFuncCall (token_struct, position);
 
-    SYN_ASSERT (old_position != *position && tree_node, "ERROR IN LANG OPERATOR"); 
-
     current_node = (token_struct -> node_array)[*position];
 
     SYN_ASSERT (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == END_LINE,
                 "ERROR in OPERATOR END LINE");
+
+    SYN_ASSERT (old_position != *position && tree_node, "ERROR IN LANG OPERATOR");
 
     (*position)++;
 
@@ -185,7 +187,7 @@ TreeNode *GetReturn (const LanguageToken *token_struct, size_t *position) {
 
     (*position)++;
 
-    TreeNode *tree_node = FUNC_RET_ (GetExpression (token_struct, position)); 
+    TreeNode *tree_node = FUNC_RET_ (GetExpression (token_struct, position));
 
     SYN_ASSERT (tree_node -> left_branch, "ERROR in EXPRESSION in RETURN");
 
@@ -193,12 +195,12 @@ TreeNode *GetReturn (const LanguageToken *token_struct, size_t *position) {
 }
 
 TreeNode *GetPrint (const LanguageToken *token_struct, size_t *position) {
-  
+
     assert (position);
     assert (token_struct);
     assert ((token_struct -> node_array)[*position]);
 
-    TreeNode *current_node = (token_struct -> node_array)[*position]; 
+    TreeNode *current_node = (token_struct -> node_array)[*position];
 
     if (NODE_TYPE != LANGUAGE_OPERATOR || NODE_LANG_OPERATOR != PRINT)
         return NULL;
@@ -206,6 +208,8 @@ TreeNode *GetPrint (const LanguageToken *token_struct, size_t *position) {
     TreeNode *tree_node = PRINT_;
 
     (*position)++;
+
+    current_node = (token_struct -> node_array)[*position];
 
     SYN_ASSERT (NODE_TYPE == VARIABLE, "WRONG EXPRESSION after PRINT");
 
@@ -220,7 +224,7 @@ TreeNode *GetIf (const LanguageToken *token_struct, size_t *position) {
     assert (token_struct);
     assert ((token_struct -> node_array)[*position]);
 
-    TreeNode *current_node = (token_struct -> node_array)[*position];   
+    TreeNode *current_node = (token_struct -> node_array)[*position];
 
     if (NODE_TYPE != LANGUAGE_OPERATOR || NODE_LANG_OPERATOR != IF)
         return NULL;
@@ -233,7 +237,7 @@ TreeNode *GetIf (const LanguageToken *token_struct, size_t *position) {
 
     current_node = (token_struct -> node_array)[*position];
 
-    SYN_ASSERT (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == OPEN_BRACE, 
+    SYN_ASSERT (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == OPEN_BRACE,
                 "ERROR in IF after EXPRESSION");
 
     (*position)++;
@@ -249,7 +253,7 @@ TreeNode *GetWhile (const LanguageToken *token_struct, size_t *position) {
     assert (token_struct);
     assert ((token_struct -> node_array)[*position]);
 
-    TreeNode *current_node = (token_struct -> node_array)[*position];   
+    TreeNode *current_node = (token_struct -> node_array)[*position];
 
     if (NODE_TYPE != LANGUAGE_OPERATOR || NODE_LANG_OPERATOR != WHILE)
         return NULL;
@@ -262,7 +266,7 @@ TreeNode *GetWhile (const LanguageToken *token_struct, size_t *position) {
 
     current_node = (token_struct -> node_array)[*position];
 
-    SYN_ASSERT (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == OPEN_BRACE,    
+    SYN_ASSERT (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == OPEN_BRACE,
                 "ERROR in WHILE after EXPRESSION");
 
     (*position)++;
@@ -283,7 +287,7 @@ TreeNode *GetExpression (const LanguageToken *token_struct, size_t *position) {
 
     SYN_ASSERT (tree_node, NULL);
 
-    while (NODE_TYPE == LANGUAGE_OPERATOR && 
+    while (NODE_TYPE == LANGUAGE_OPERATOR &&
           (NODE_LANG_OPERATOR == OR || NODE_LANG_OPERATOR == AND)) {
 
         (*position)++;
@@ -297,7 +301,7 @@ TreeNode *GetExpression (const LanguageToken *token_struct, size_t *position) {
             case OR:
                 tree_node = OR_ (tree_node, GetComparison (token_struct, position));
                 break;
-            
+
             default:
                 SYN_ASSERT (0, "UNKNOWN ERROR in EXPRESSION.\n");
         }
@@ -326,6 +330,8 @@ TreeNode *GetComparison (const LanguageToken *token_struct, size_t *position) {
     if (NODE_TYPE != BINARY_OPERATOR)
         return tree_node;
 
+    (*position)++;
+
     switch (NODE_MATH_OPERATOR) {
 
         case OPERATOR_EQUAL:
@@ -347,7 +353,7 @@ TreeNode *GetComparison (const LanguageToken *token_struct, size_t *position) {
         default:
             (*position)--;
             break;
-    }  
+    }
 
     SYN_ASSERT (tree_node -> right_branch, "ERROR after COMPARISON OPERATOR");
 
@@ -368,10 +374,10 @@ TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position) {
     bool is_init = false;
 
     if (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == INIT) {
-        
+
         is_init = true;
         (*position)++;
-    }     
+    }
 
     tree_node -> left_branch = GetVar (token_struct, position);
 
@@ -380,7 +386,7 @@ TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position) {
 
     current_node = (token_struct -> node_array)[*position];
 
-    SYN_ASSERT (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == ASSIGN, 
+    SYN_ASSERT (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == ASSIGN,
                 "ERROR in ASSIGNMENT OPERATOR");
 
     (*position)++;
@@ -392,13 +398,13 @@ TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position) {
     current_node = (token_struct -> node_array)[*position];
 
     if (!(tree_node -> right_branch)) {
-        
+
         if (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == READ) {
-           
+
             tree_node -> right_branch = READ_;
             (*position)++;
         }
-        
+
         else
             SYN_ASSERT (0, "ERROR after ASSIGNMENT");
     }
@@ -407,7 +413,7 @@ TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position) {
         tree_node = INIT_ (TYPE_INT_, tree_node);
 
     return tree_node;
-} 
+}
 
 TreeNode *GetSumSub (const LanguageToken *token_struct, size_t *position) {
 
@@ -420,7 +426,7 @@ TreeNode *GetSumSub (const LanguageToken *token_struct, size_t *position) {
 
     SYN_ASSERT (tree_node, NULL);
 
-    while (NODE_TYPE == BINARY_OPERATOR && 
+    while (NODE_TYPE == BINARY_OPERATOR &&
           (NODE_MATH_OPERATOR == OPERATOR_ADD || NODE_MATH_OPERATOR == OPERATOR_SUB)) {
 
         (*position)++;
@@ -434,7 +440,7 @@ TreeNode *GetSumSub (const LanguageToken *token_struct, size_t *position) {
             case OPERATOR_SUB:
                 tree_node = SUB_ (tree_node, GetMulDiv (token_struct, position));
                 break;
-            
+
             default:
                 SYN_ASSERT (0, "UNKNOWN ERROR in SUM or SUB COMPUTING.\n");
         }
@@ -458,7 +464,7 @@ TreeNode *GetMulDiv (const LanguageToken *token_struct, size_t *position) {
 
     SYN_ASSERT (tree_node, NULL);
 
-    while (NODE_TYPE == BINARY_OPERATOR && 
+    while (NODE_TYPE == BINARY_OPERATOR &&
           (NODE_MATH_OPERATOR == OPERATOR_MUL || NODE_MATH_OPERATOR == OPERATOR_DIV)) {
 
         (*position)++;
@@ -472,7 +478,7 @@ TreeNode *GetMulDiv (const LanguageToken *token_struct, size_t *position) {
             case OPERATOR_DIV:
                 tree_node = DIV_ (tree_node, GetPow (token_struct, position));
                 break;
-            
+
             default:
                 SYN_ASSERT (0, "UNKNOWN ERROR in MUL or DIV COMPUTING.\n");
         }
@@ -505,7 +511,7 @@ TreeNode *GetPow (const LanguageToken *token_struct, size_t *position) {
             case OPERATOR_POW:
                 tree_node = POW_ (tree_node, GetParenthesis (token_struct, position));
                 break;
-            
+
             default:
                 SYN_ASSERT (0, "UNKNOWN ERROR in POW COMPUTING.\n");
         }
@@ -541,13 +547,13 @@ TreeNode *GetParenthesis (const LanguageToken *token_struct, size_t *position) {
         (*position)++;
     }
 
-    else 
+    else
         switch (NODE_TYPE) {
-            
+
             case NUMBER:
                 tree_node = GetNum (token_struct, position);
                 break;
-            
+
             case VARIABLE:
                 tree_node = GetVar (token_struct, position);
                 break;
@@ -556,7 +562,7 @@ TreeNode *GetParenthesis (const LanguageToken *token_struct, size_t *position) {
                 if (NODE_LANG_OPERATOR == FUNC_CALL)
                     tree_node = GetFuncCall (token_struct, position);
                 break;
-            
+
             default:
                 return NULL;
         }
@@ -565,11 +571,11 @@ TreeNode *GetParenthesis (const LanguageToken *token_struct, size_t *position) {
 }
 
 TreeNode *GetFuncCall (const LanguageToken *token_struct, size_t *position) {
-   
+
     assert (position);
     assert (token_struct);
     assert ((token_struct -> node_array)[*position]);
-    
+
     TreeNode *current_node = (token_struct -> node_array)[*position];
 
     if (!(NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == FUNC_CALL))
@@ -593,7 +599,7 @@ TreeNode *GetFuncCall (const LanguageToken *token_struct, size_t *position) {
         }
 
         switch (NODE_TYPE) {
-            
+
             case VARIABLE:
                 *next_node = GetVar (token_struct, position);
                 break;
@@ -601,13 +607,13 @@ TreeNode *GetFuncCall (const LanguageToken *token_struct, size_t *position) {
             case NUMBER:
                 *next_node = GetNum (token_struct, position);
                 break;
-            
+
             default:
                 *next_node = NULL;
         }
 
         current_node = (token_struct -> node_array)[*position];
-    }    
+    }
 
     return tree_node;
 }

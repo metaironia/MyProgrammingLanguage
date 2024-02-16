@@ -31,14 +31,14 @@ LexicalFuncStatus StringInputFromFile (FILE *input_file, char **input_array) {
     assert (input_file);
     assert (input_array);
 
-    char current_word[MAX_WORD_LENGTH] = ""; 
+    char current_word[MAX_WORD_LENGTH] = "";
 
-    for (size_t i = 0; !feof (input_file); i++) { 
+    for (size_t i = 0; !feof (input_file); i++) {
 
         if (fscanf (input_file, " %[^ ,;.-\r\n]", current_word) == 0)
-            current_word[0] = (char) fgetc (input_file); 
+            current_word[0] = (char) fgetc (input_file);
 
-        if (current_word[0] != '\0') 
+        if (current_word[0] != '\0')
             input_array[i] = strdup (current_word);
 
         memset (current_word, 0, (sizeof (current_word) / sizeof (current_word[0])));
@@ -53,16 +53,16 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
     assert (token_struct -> char_array);
     assert (name_table);
 
-    (token_struct -> node_array) = (TreeNode **) calloc (MAX_PROGRAM_LENGTH, sizeof (TreeNode *));  
+    (token_struct -> node_array) = (TreeNode **) calloc (MAX_PROGRAM_LENGTH, sizeof (TreeNode *));
     (token_struct -> index_node_word) = (size_t *) calloc (MAX_PROGRAM_LENGTH, sizeof (size_t));
 
     TreeNode **current_node = (token_struct -> node_array);
 
     char *current_word = (token_struct -> char_array)[0];
 
-    for (size_t char_array_index = 0, node_array_index = 0; 
+    for (size_t char_array_index = 0, node_array_index = 0;
          (token_struct -> char_array)[char_array_index]; char_array_index++) {
-        
+
         node_array_index = current_node - (token_struct -> node_array);
         current_word     = (token_struct -> char_array)[char_array_index];
 
@@ -78,7 +78,7 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
 
         CHECK_WORD_LANGUAGE_OP (current_word, IF);
         CHECK_WORD_LANGUAGE_OP (current_word, WHILE);
-        CHECK_WORD_LANGUAGE_OP (current_word, ELSE);
+//        CHECK_WORD_LANGUAGE_OP (current_word, ELSE);
         CHECK_WORD_LANGUAGE_OP (current_word, ASSIGN);
         CHECK_WORD_LANGUAGE_OP (current_word, PRINT);
         CHECK_WORD_LANGUAGE_OP (current_word, END_LINE);
@@ -103,7 +103,7 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
         CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, GREATER);
         CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR,  OPEN_PARENTHESIS);
         CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR,  CLOSE_PARENTHESIS);
-    }       
+    }
 
     *current_node = END_;
 

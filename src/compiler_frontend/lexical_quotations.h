@@ -12,15 +12,15 @@ const char *const ASSIGN_QUOTES[] = {"теперь", "это", "сейчас", "равно", "будет"
 const char *const PRINT_QUOTES[] = {"говорил", "говорит", "базарит", "базарил",
                                     "сказал","пишем", "пишет", "базаришь"};
 
-const char *const FUNC_CALL_QUOTES[] = {"звоню", "звонил", "пуллап", "зовет", "зову"};
+const char *const FUNC_CALL_QUOTES[] = {"звоню", "звонил", "пуллап", "зовет", "зову", "звонить"};
 
 const char *const FUNC_RET_QUOTES[] = {"отдай", "отдавай", "домой", "дать", "вернуть", "верни"};
 
-const char *const READ_QUOTES[] = {"видел", "вижу", "смотрю", "смотрел"};
+const char *const READ_QUOTES[] = {"видел", "вижу", "смотрю", "смотрел", "читать", "читаю"};
 
 const char *const FUNC_ARG_QUOTES[] = {"где", "гэнг", "генг", "братва", "кореш", "взял"};
 
-const char *const OPEN_PARENTHESIS_QUOTES[] = {"открыть", "открыл"}; 
+const char *const OPEN_PARENTHESIS_QUOTES[] = {"открыть", "открыл"};
 
 const char *const CLOSE_PARENTHESIS_QUOTES[] = {"закрыть", "закрыл"};
 

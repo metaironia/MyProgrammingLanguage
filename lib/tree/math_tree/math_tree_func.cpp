@@ -430,6 +430,9 @@ unsigned int MathTreeVerify (const Tree *math_expression_tree,
 
     unsigned int errors_math_expression_tree = TreeVerify (math_expression_tree, name_parent_func);
 
+    if (errors_math_expression_tree != 0)
+        return errors_math_expression_tree;
+
     errors_math_expression_tree = MathTreeNodeVerify (math_expression_tree -> root);
 
     return errors_math_expression_tree;
@@ -958,6 +961,9 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
         else if (strcmp ("LESS", buf) == 0)
             *tree_node_for_data_read = LESS_ (NULL, NULL);
 
+        else if (strcmp ("PRINT", buf) == 0)
+            *tree_node_for_data_read = PRINT_;
+
         else if (strcmp ("ASSIGN", buf) == 0)
             *tree_node_for_data_read = ASSIGN_;
 
@@ -984,6 +990,12 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
 
         else if (strcmp ("FUNC", buf) == 0)
             *tree_node_for_data_read = FUNC_ (NULL);
+
+        else if (strcmp ("FUNC_CALL", buf) == 0)
+            *tree_node_for_data_read = FUNC_CALL_ (NULL);
+
+        else if (strcmp ("FUNC_RET", buf) == 0)
+            *tree_node_for_data_read = FUNC_RET_ (NULL);
 
         else if (strcmp ("NEW_FUNC", buf) == 0)
             *tree_node_for_data_read = NEW_FUNC_ (NULL);

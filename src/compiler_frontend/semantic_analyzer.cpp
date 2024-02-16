@@ -202,9 +202,7 @@ unsigned int VarsInFuncCheck (const TreeNode *func_node, const NameTable *all_fu
     unsigned int var_errors = MultipleVarsDefinitionCheck (&func_local_name_table)            |
                               UndeclaredVarsCheck (end_line_node, all_func_name_table,
                                                    global_name_table, &func_local_name_table) |
-                              VarAsFuncUsing (end_line_node, all_func_name_table, &func_local_name_table);
-    if (var_errors == UNDECLARED_VAR)
-        fprintf (stderr, "varerror");
+                              VarAsFuncUsing (end_line_node, all_func_name_table, global_name_table);
 
     NameTableDtor (&func_local_name_table);
 
@@ -212,7 +210,7 @@ unsigned int VarsInFuncCheck (const TreeNode *func_node, const NameTable *all_fu
 }
 
 unsigned int VarAsFuncUsing (const TreeNode *current_node, const NameTable *all_func_name_table,
-                             const NameTable *func_local_name_table) {
+                             const NameTable *global_name_table) {
 
     if (!current_node)
         return (unsigned int) NO_ERRORS;
@@ -220,7 +218,7 @@ unsigned int VarAsFuncUsing (const TreeNode *current_node, const NameTable *all_
     MATH_TREE_NODE_VERIFY_UNSIGNED_FUNC (current_node);
 
     NAME_TABLE_VERIFY_UNSIGNED_FUNC (all_func_name_table);
-    NAME_TABLE_VERIFY_UNSIGNED_FUNC (func_local_name_table);
+    NAME_TABLE_VERIFY_UNSIGNED_FUNC (global_name_table);
 
     unsigned int var_as_func_error = (unsigned int) NO_ERRORS;
 
@@ -228,7 +226,7 @@ unsigned int VarAsFuncUsing (const TreeNode *current_node, const NameTable *all_
 
         current_node = current_node -> left_branch;
 
-        const char *called_func_name = NameTableVariableFind ((size_t) NODE_VALUE, func_local_name_table);
+        const char *called_func_name = NameTableVariableFind ((size_t) NODE_VALUE, global_name_table);
 
         if (NameTableWordFind (all_func_name_table, called_func_name, 0) == -1)
             var_as_func_error = (unsigned int) VAR_AS_FUNC_USAGE;
@@ -237,11 +235,11 @@ unsigned int VarAsFuncUsing (const TreeNode *current_node, const NameTable *all_
     }
 
     var_as_func_error |= VarAsFuncUsing (current_node -> left_branch, all_func_name_table,
-                                         func_local_name_table);
+                                         global_name_table);
     var_as_func_error |= VarAsFuncUsing (current_node -> right_branch, all_func_name_table,
-                                         func_local_name_table);
+                                         global_name_table);
 
-    return var_as_func_error;
+    return (unsigned int) NO_ERRORS;
 }
 
 unsigned int UndeclaredVarsCheck (const TreeNode *current_node, const NameTable *all_func_name_table,
@@ -344,6 +342,8 @@ SemanticFuncStatus FuncArgsNameTableFill (const TreeNode *func_node, const NameT
         const char *current_arg_name = NameTableVariableFind ((size_t) NODE_VALUE, global_name_table);
 
         NameTableAdd (func_local_name_table, NAME_TABLE_VARIABLE, current_arg_name, 0);
+
+        current_node = func_args_node;
 
         switch (NODE_LANG_OPERATOR) {
 

@@ -50,6 +50,8 @@ BackendFuncStatus AsmFileMathExpressionWrite (FILE *asm_file, const TreeNode *cu
 
 BackendFuncStatus AsmFileFuncCallWrite (FILE *asm_file, const TreeNode *current_node);
 
+BackendFuncStatus AsmFileFuncPassedArgsWrite (FILE *asm_file, const TreeNode *current_node);
+
 BackendFuncStatus AsmFileVarOrNumWrite (FILE *asm_file, const TreeNode *current_node);
 
 BackendFuncStatus AsmFileMathOperatorWrite (FILE *asm_file, const TreeNode *current_node);

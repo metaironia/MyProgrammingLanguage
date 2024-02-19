@@ -152,7 +152,7 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
             break;
 
         case FUNC_RET:
-            return "FUNC_RET";
+            return "RETURN";
             break;
 
         case READ:

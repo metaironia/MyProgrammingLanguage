@@ -57,13 +57,11 @@ enum SpuFuncStatus RunByteCode (FILE *bin_file) {
     for (size_t i = 0; !feof (bin_file); i++)
         fread (&code_array[i], sizeof (code_array[0]), 1, bin_file);
 
-
-
     size_t position_in_code_array = 0;
 
     while (1) {
 
-	assert ((position_in_code_array + 3) * sizeof (double) <= bin_file_stat.st_size);
+        assert ((position_in_code_array + 3) * sizeof (double) <= bin_file_stat.st_size);
 
         command = (long long) code_array[position_in_code_array];
 
@@ -74,13 +72,12 @@ enum SpuFuncStatus RunByteCode (FILE *bin_file) {
             default:
 
                 free (code_array);
-                code_array = NULL;		
+                code_array = NULL;
 
                 StackDtor (&(main_spu.stk));
                 StackDtor (&(main_spu.stk_ret_addresses));
 
                 return SPU_FUNC_FAIL;
-		    
         }
 
     }
@@ -89,11 +86,12 @@ enum SpuFuncStatus RunByteCode (FILE *bin_file) {
 double *GetArgument (const double *code_arr, size_t *code_arr_position, const char *const command_name,
                      double *spu_RAM, double *spu_regs) {
 
-    //TODO  if immed bit ONLY				 	-> return addr of immed in byte code
-    //TODO *if reg   bit ONLY				 	-> return addr of reg
-    //TODO *if RAM   bit (and other bits dont matter)     	-> return addr of RAM cell
+    //TODO  if immed bit ONLY				                 	-> return addr of immed in byte code
+    //TODO *if reg   bit ONLY				 	                -> return addr of reg
+    //TODO *if RAM   bit (and other bits dont matter)     	    -> return addr of RAM cell
     //TODO  if immed bit == 1 and reg bit == 1 and no ram bit   -> return addr of static result (THE ONLY CASE)
     //TODO * suitable for pop
+
     assert (code_arr);
     assert (code_arr_position);
 
@@ -126,7 +124,7 @@ double *GetArgument (const double *code_arr, size_t *code_arr_position, const ch
 
         address = (double *) spu_regs + (long long) code_arr[*code_arr_position];
 
-	assert (code_arr[*code_arr_position] < 4);
+        assert (code_arr[*code_arr_position] < 4);
 
         result += spu_regs[(long long) code_arr[(*code_arr_position)++]];
     }
@@ -136,7 +134,7 @@ double *GetArgument (const double *code_arr, size_t *code_arr_position, const ch
         if (is_pop)
             pop_arg_ram = true;
 
-	assert (result < RAM_SIZE);
+        assert (result < RAM_SIZE);
 
         address = (double *) spu_RAM + (long long) result;
 

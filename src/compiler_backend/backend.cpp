@@ -129,9 +129,7 @@ BackendFuncStatus AsmFileNewFuncWrite (FILE *asm_file, const TreeNode *current_n
         AsmFileInitFuncArgsWrite (asm_file, CURRENT_FUNC_NAME_NODE (func_node) -> left_branch);
         AsmFileLangOperatorWrite (asm_file, CURRENT_FUNC_FIRST_END_LINE_NODE (func_node));
 
-        fprintf (asm_file, "push rbx\n"
-                           "pop rdx\n"
-                           "ret\n\n");
+        fprintf (asm_file, "\n");
 
         switch (NODE_LANG_OPERATOR) {
 
@@ -246,6 +244,11 @@ BackendFuncStatus AsmFileOperatorRetWrite (FILE *asm_file, const TreeNode *curre
     if (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == FUNC_RET) {
 
         AsmFileMathExpressionWrite (asm_file, current_node -> left_branch);
+
+        fprintf (asm_file, "push rbx\n"
+                           "pop rdx\n"
+                           "ret\n");
+
         return BACKEND_FUNC_STATUS_OK;
     }
 

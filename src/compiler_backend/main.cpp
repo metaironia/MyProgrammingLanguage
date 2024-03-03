@@ -22,6 +22,7 @@ int main (const int argc, const char *argv[]) {
     NameTableCtor (&lang_name_table);
 
     FILE *input_file = fopen (InputFileName (argv), "r");
+    assert (input_file);
 
     Tree lang_tree = {};
     TreeCtor (&lang_tree);

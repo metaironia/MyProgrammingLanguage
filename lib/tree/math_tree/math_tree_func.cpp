@@ -994,7 +994,7 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
         else if (strcmp ("FUNC_CALL", buf) == 0)
             *tree_node_for_data_read = FUNC_CALL_ (NULL);
 
-        else if (strcmp ("FUNC_RET", buf) == 0)
+        else if (strcmp ("RETURN", buf) == 0)
             *tree_node_for_data_read = FUNC_RET_ (NULL);
 
         else if (strcmp ("NEW_FUNC", buf) == 0)

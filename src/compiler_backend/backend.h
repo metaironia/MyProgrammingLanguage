@@ -30,6 +30,8 @@ BackendFuncStatus AsmFileNewFuncWrite (FILE *asm_file, const TreeNode *current_n
 
 BackendFuncStatus AsmFileLangOperatorWrite (FILE *asm_file, const TreeNode *current_node);
 
+BackendFuncStatus AsmFileOperatorReadWrite (FILE *asm_file, const TreeNode *current_node);
+
 BackendFuncStatus AsmFileOperatorPrintWrite (FILE *asm_file, const TreeNode *current_node);
 
 BackendFuncStatus AsmFileOperatorIfWrite (FILE *asm_file, const TreeNode *current_node);

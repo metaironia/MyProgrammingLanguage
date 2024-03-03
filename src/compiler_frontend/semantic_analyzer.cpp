@@ -367,6 +367,9 @@ SemanticFuncStatus VarNameTableRecursiveFill (const TreeNode *end_line_node,
                                               const NameTable *global_name_table,
                                               NameTable *func_local_name_table) {
 
+    if (!end_line_node)
+        return SEMANTIC_FUNC_STATUS_OK;
+
     MATH_TREE_NODE_VERIFY (end_line_node, SEMANTIC);
 
     NAME_TABLE_VERIFY (global_name_table, SEMANTIC);
@@ -374,33 +377,32 @@ SemanticFuncStatus VarNameTableRecursiveFill (const TreeNode *end_line_node,
 
     const TreeNode *current_node = end_line_node;
 
-    while (end_line_node && NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == END_LINE) {
-
+    if (end_line_node && NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == END_LINE)
         current_node = end_line_node -> left_branch;
 
-        if (NODE_TYPE == LANGUAGE_OPERATOR)
-            switch (NODE_LANG_OPERATOR) {
+    else
+        return SEMANTIC_FUNC_STATUS_FAIL;
 
-                case IF:
-                case WHILE:
-                    VarNameTableRecursiveFill (current_node -> right_branch, global_name_table,
-                                               func_local_name_table);
-                    break;
+    switch (NODE_LANG_OPERATOR) {
 
-                case INIT: {
+        case IF:
+        case WHILE:
+            VarNameTableRecursiveFill (current_node -> right_branch, global_name_table,
+                                       func_local_name_table);
+            break;
 
-                    current_node         = current_node -> right_branch -> left_branch;
-                    const char *var_name = NameTableVariableFind ((size_t) NODE_VALUE, global_name_table);
+        case INIT: {
 
-                    NameTableAdd (func_local_name_table, NAME_TABLE_VARIABLE, var_name, 0);
-                }
-                //fallthrough
-                default:
-                    return SEMANTIC_FUNC_STATUS_OK;
-            }
+            current_node         = current_node -> right_branch -> left_branch;
+            const char *var_name = NameTableVariableFind ((size_t) NODE_VALUE, global_name_table);
 
-        end_line_node = end_line_node -> right_branch;
+            NameTableAdd (func_local_name_table, NAME_TABLE_VARIABLE, var_name, 0);
+        }
+        //fallthrough
+        default:
+            break;
     }
 
-    return SEMANTIC_FUNC_STATUS_OK;
+    return VarNameTableRecursiveFill (end_line_node -> right_branch, global_name_table,
+                                      func_local_name_table);
 }

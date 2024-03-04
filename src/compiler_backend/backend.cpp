@@ -43,7 +43,8 @@ BackendFuncStatus AsmFileFuncNameWrite (FILE *asm_file, const TreeNode *current_
     fprintf (asm_file, ":");
     fprintf (asm_file, "%s\n", (char *) ((size_t) NODE_VALUE));
 
-    fprintf (asm_file, "push rdx\n"
+    fprintf (asm_file, "push rbx\n"
+                       "push rdx\n"
                        "pop rbx\n"
                        "push rdx\n"
                        "push 16\n"
@@ -80,7 +81,9 @@ BackendFuncStatus AsmFileInitFuncArgsWrite (FILE *asm_file, const TreeNode *curr
                 return BACKEND_FUNC_STATUS_FAIL;
         }
 
+        fprintf (asm_file, "pop rcx\n");
         fprintf (asm_file, "pop [rbx+%zu]\n", (size_t) NODE_VALUE);
+        fprintf (asm_file, "push rcx\n");
 
         current_node = current_arg_node;
 
@@ -245,8 +248,10 @@ BackendFuncStatus AsmFileOperatorRetWrite (FILE *asm_file, const TreeNode *curre
 
         AsmFileMathExpressionWrite (asm_file, current_node -> left_branch);
 
-        fprintf (asm_file, "push rbx\n"
+        fprintf (asm_file, "pop rax\n"
+                           "push rbx\n"
                            "pop rdx\n"
+                           "pop rbx\n"
                            "ret\n");
 
         return BACKEND_FUNC_STATUS_OK;
@@ -485,6 +490,7 @@ BackendFuncStatus AsmFileFuncCallWrite (FILE *asm_file, const TreeNode *current_
         AsmFileFuncPassedArgsWrite (asm_file, current_node -> left_branch);
 
     fprintf (asm_file, "call %s\n", (char *) ((size_t) NODE_VALUE));
+    fprintf (asm_file, "push rax\n");
 
     return BACKEND_FUNC_STATUS_OK;
 }

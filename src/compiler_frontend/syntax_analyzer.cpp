@@ -23,8 +23,7 @@ void SyntaxAssert (const char *error_quote, const size_t current_pos, const Lang
         if (NODE_TYPE == END)
             break;
 
-        fprintf (stderr, "%s ",
-                    token_struct -> char_array[token_struct -> index_node_word[pos_to_print]]);
+        fprintf (stderr, "%s ", token_struct -> char_array[token_struct -> index_node_word[pos_to_print]]);
 
         current_node = (token_struct -> node_array)[++pos_to_print];
     }
@@ -95,6 +94,10 @@ TreeNode *GetFunction (const LanguageToken *token_struct, size_t *position) {
     while (!(NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == END_LINE)) {
 
         *next_node = GetLangOperator (token_struct, position);
+
+        if (!(*next_node))
+            return NULL;
+
         next_node  = &((*next_node) -> right_branch);
 
         current_node = (token_struct -> node_array)[*position];
@@ -143,9 +146,7 @@ TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position) 
     assert ((token_struct -> node_array)[*position]);
 
     const size_t old_position = *position;
-
-    TreeNode *current_node = (token_struct -> node_array)[*position];
-    TreeNode *tree_node    = GetIf (token_struct, position);
+    TreeNode *tree_node       = GetIf (token_struct, position);
 
     if (old_position == *position)
         tree_node = GetWhile (token_struct, position);
@@ -161,11 +162,6 @@ TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position) 
 
     if (old_position == *position)
         tree_node = GetFuncCall (token_struct, position);
-
-    current_node = (token_struct -> node_array)[*position];
-
-    SYN_ASSERT (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == END_LINE,
-                "ERROR in OPERATOR END LINE");
 
     SYN_ASSERT (old_position != *position && tree_node, "ERROR IN LANG OPERATOR");
 

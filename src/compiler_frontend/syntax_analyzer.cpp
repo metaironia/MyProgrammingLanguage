@@ -544,24 +544,44 @@ TreeNode *GetParenthesis (const LanguageToken *token_struct, size_t *position) {
     }
 
     else
-        switch (NODE_TYPE) {
+        return GetUnary (token_struct, position);
 
-            case NUMBER:
-                tree_node = GetNum (token_struct, position);
-                break;
+    return tree_node;
+}
 
-            case VARIABLE:
-                tree_node = GetVar (token_struct, position);
-                break;
+TreeNode *GetUnary (const LanguageToken *token_struct, size_t *position) {
 
-            case LANGUAGE_OPERATOR:
-                if (NODE_LANG_OPERATOR == FUNC_CALL)
-                    tree_node = GetFuncCall (token_struct, position);
-                break;
+    assert (position);
+    assert (token_struct);
+    assert ((token_struct -> node_array)[*position]);
 
-            default:
-                return NULL;
-        }
+    TreeNode *current_node = (token_struct -> node_array)[*position];
+    TreeNode *tree_node = NULL;
+
+    switch (NODE_TYPE) {
+
+        case NUMBER:
+            tree_node = GetNum (token_struct, position);
+            break;
+
+        case VARIABLE:
+            tree_node = GetVar (token_struct, position);
+            break;
+
+        case UNARY_OPERATOR:        // only sqrt is available
+            (*position)++;
+            if (NODE_MATH_OPERATOR == OPERATOR_SQRT)
+                tree_node = SQRT_ (GetParenthesis (token_struct, position));
+            break;
+
+        case LANGUAGE_OPERATOR:
+            if (NODE_LANG_OPERATOR == FUNC_CALL)
+                tree_node = GetFuncCall (token_struct, position);
+            break;
+
+        default:
+            return NULL;
+    }
 
     return tree_node;
 }

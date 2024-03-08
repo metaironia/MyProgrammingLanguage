@@ -45,6 +45,8 @@ TreeNode *GetMulDiv (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetPow (const LanguageToken *token_struct, size_t *position);
 
+TreeNode *GetUnary (const LanguageToken *token_struct, size_t *position);
+
 TreeNode *GetParenthesis (const LanguageToken *token_struct, size_t *position);
 
 TreeNode *GetFuncCall (const LanguageToken *token_struct, size_t *position);

@@ -82,6 +82,7 @@ MathNodeType IsOperatorUnaryOrBinary (const MathNodeOperator node_operator_to_ch
         case OPERATOR_SIN:
         case OPERATOR_COS:
         case OPERATOR_LN:
+        case OPERATOR_SQRT:
         case OPERATOR_OPEN_PARENTHESIS:
         case OPERATOR_CLOSE_PARENTHESIS:
             return UNARY_OPERATOR;
@@ -283,6 +284,10 @@ const char *MathNodeOperatorToString (const TreeNode *current_node) {
             return "ln";
             break;
 
+        case OPERATOR_SQRT:
+            return "SQRT";
+            break;
+
         case OPERATOR_GREATER:
             return "GREATER";
             break;
@@ -385,6 +390,9 @@ double MathTreeNodeUnaryCompute (const double left_branch_value,
 
         case OPERATOR_COS:
             return cos (left_branch_value);
+
+        case OPERATOR_SQRT:
+            return sqrt (left_branch_value);
 
         default:
             break;
@@ -1033,6 +1041,9 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
         else if (strcmp ("LN", buf) == 0)
             *tree_node_for_data_read = LN_ (NULL);
 
+        else if (strcmp ("SQRT", buf) == 0)
+            *tree_node_for_data_read = SQRT_ (NULL);
+
         else if (CheckIfWordIsNumber   (buf, tree_node_for_data_read) ||
                  CheckIfWordIsVariable (buf, tree_node_for_data_read, name_table));
         //continue if num or var wasn't read successfully
@@ -1085,7 +1096,7 @@ bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, 
             return false;
 
     *current_node = VAR_ (number_of_variable);
-
+fprintf (stderr, "%s\n", word_to_check);
     NameTableAdd (name_table, NAME_TABLE_VARIABLE, word_to_check, number_of_variable);
 
     number_of_variable++;

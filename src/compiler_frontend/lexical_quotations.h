@@ -42,6 +42,8 @@ const char *const SUB_QUOTES[] = {"отнимаю", "минус", "убыток", "отнимаешь"};
 
 const char *const POW_QUOTES[] = {"степен"};
 
+const char *const SQRT_QUOTES[] = {"корен"};
+
 const char *const OR_QUOTES[] = {"либо", "или"};
 
 const char *const INIT_QUOTES[] = {"сюда", "бля", "сипаю"};

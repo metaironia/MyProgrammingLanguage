@@ -3,6 +3,7 @@
 #include <locale.h>
 
 #include "../../lib/tree/tree_func.h"
+#include "../../lib/tree/tree_log.h"
 
 #include "../../lib/oneginlib/functions_for_input.h"
 #include "../../lib/oneginlib/functions_for_output.h"
@@ -21,29 +22,31 @@ int main (const int argc, const char *argv[]) {
     setlocale (LC_ALL, ".1251");
 
     LanguageToken lang_tokens = {};
+    LangTokenCtor (&lang_tokens);
 
     NameTable lang_name_table = {};
     NameTableCtor (&lang_name_table);
-
 
     FILE *input_file = fopen (InputFileName (argv), "r");
     assert (input_file);
 
     LexicalAnalyzer (input_file, &lang_tokens, &lang_name_table);
 
+//    LangTokenDump (&lang_tokens);
+
     fclose (input_file);
     input_file = NULL;
 
     /*
-    for (size_t i = 0; test_token.node_array[i]; i++) {
-        NodeTypePrint (stderr, test_token.node_array[i], &test_name_table);
+    for (size_t i = 0; lang_tokens.data.node_array[i]; i++) {
+        NodeTypePrint (stderr, lang_tokens.data.node_array[i], &lang_name_table);
         fprintf (stderr, "|");
-        fprintf (stderr, "%s", (test_token.char_array)[test_token.index_node_word[i]]);
+        fprintf (stderr, "%s", (lang_tokens.data.char_array)[lang_tokens.data.index_node_word[i]]);
         fprintf (stderr, "|\n");
     }
     fprintf (stderr, "\ngde\n");
     */
-
+    
     Tree lang_tree = {};
     TreeCtor (&lang_tree);
 
@@ -65,6 +68,7 @@ int main (const int argc, const char *argv[]) {
 
     TreeDtor (&lang_tree);
     NameTableDtor (&lang_name_table);
+    LangTokenDtor (&lang_tokens);
 
     return 0;
 }

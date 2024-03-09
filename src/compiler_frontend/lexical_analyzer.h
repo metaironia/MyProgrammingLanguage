@@ -16,6 +16,12 @@
                                                         return parent_func##_FUNC_STATUS_FAIL;  \
                                                     }                                           \
 
+#define LANG_TOKEN_VERIFY_PTR_FUNC(lang_token)      if (LangTokenVerify (lang_token) != 0) {    \
+                                                                                                \
+                                                        LangTokenDump (lang_token);             \
+                                                        return NULL;                            \
+                                                    }                                                      
+
 #define CHECK_WORD_LANGUAGE_OP(current_word, keyword)                                                 \
             {                                                                                         \
                 for (size_t i = 0; i < sizeof (keyword##_QUOTES) / sizeof (keyword##_QUOTES)[0]; i++) \

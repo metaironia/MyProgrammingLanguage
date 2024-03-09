@@ -19,7 +19,8 @@ LexicalFuncStatus LangTokenCtor (LanguageToken *token_struct) {
 
     LangTokenDataCtor (token_struct);
 
-    token_struct -> data_size     = 0;
+    token_struct -> char_size     = 0;
+    token_struct -> node_size     = 0;
     token_struct -> data_capacity = DEFAULT_DATA_CAPACITY;
 
     LANG_TOKEN_VERIFY (token_struct, LEXICAL);
@@ -44,14 +45,14 @@ LexicalFuncStatus LangTokenDataCtor (LanguageToken *token_struct) {
     return LEXICAL_FUNC_STATUS_OK;
 }
 
-
 LexicalFuncStatus LangTokenDtor (LanguageToken *token_struct) {
 
     assert (token_struct);
 
     LangTokenDataDtor (token_struct);
 
-    token_struct -> data_size     = LANG_TOKEN_POISON;
+    token_struct -> char_size     = LANG_TOKEN_POISON;
+    token_struct -> node_size     = LANG_TOKEN_POISON;
     token_struct -> data_capacity = LANG_TOKEN_POISON;
 
     return LEXICAL_FUNC_STATUS_OK;
@@ -85,27 +86,27 @@ LexicalFuncStatus LangTokenNodeAndIndexAdd (LanguageToken *token_struct, const T
 
     LANG_TOKEN_VERIFY (token_struct, LEXICAL);
 
-    if (token_struct -> data_size == token_struct -> data_capacity) 
+    if (token_struct -> node_size == token_struct -> char_size) 
         LangTokenRecalloc (token_struct);
 
-    ((token_struct -> data).node_array)[token_struct -> data_size]      = token_node;
-    ((token_struct -> data).index_node_word)[token_struct -> data_size] = token_index;
+    ((token_struct -> data).node_array)[token_struct -> node_size]      = token_node;
+    ((token_struct -> data).index_node_word)[token_struct -> node_size] = token_index;
 
-    (token_struct -> data_size)++;
+    (token_struct -> node_size)++;
 
     return LEXICAL_FUNC_STATUS_OK;
 }
 
-LexicalFuncStatus LangTokenWordAdd (LanguageToken *token_struct, const char *token_word) {
+LexicalFuncStatus LangTokenWordAdd (LanguageToken *token_struct, char *token_word) {
 
     LANG_TOKEN_VERIFY (token_struct, LEXICAL);
 
-    if (token_struct -> data_size == token_struct -> data_capacity) 
+    if (token_struct -> char_size == token_struct -> data_capacity) 
         LangTokenRecalloc (token_struct);
 
-    ((token_struct -> data).char_array)[token_struct -> data_size] = token_word;
+    ((token_struct -> data).char_array)[token_struct -> char_size] = token_word;
 
-    (token_struct -> data_size)++;
+    (token_struct -> char_size)++;
 
     return LEXICAL_FUNC_STATUS_OK;
 }
@@ -132,7 +133,7 @@ LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct) {
 
     LANG_TOKEN_VERIFY (token_struct, LEXICAL);
 
-    size_t cur_data_size = token_struct -> data_size;
+    size_t cur_data_size = token_struct -> char_size;
 
     memset (char_ptr_arr + cur_data_size,        0, new_char_ptr_arr_bytes - old_char_ptr_arr_bytes);
     memset (node_ptr_arr + cur_data_size,        0, new_node_ptr_arr_bytes - old_node_ptr_arr_bytes);
@@ -153,17 +154,18 @@ LexicalFuncStatus LangTokenDump (const LanguageToken *token_struct) {
 
     //TODO switch to log file
 
-    fprintf     (stderr, "LanguageToken struct [0x%p] {\n", token_struct);
-    fprintf     (stderr, "    data size     = %zu\n", token_struct -> data_size);
-    fprintf     (stderr, "    data capacity = %zu\n", token_struct -> data_capacity);
+    fprintf         (stderr, "LanguageToken struct [0x%p] {\n", token_struct);
+    fprintf         (stderr, "    char size     = %zu\n", token_struct -> char_size);
+    fprintf         (stderr, "    node size     = %zu\n", token_struct -> node_size);
+    fprintf         (stderr, "    data capacity = %zu\n", token_struct -> data_capacity);
 
-    fprintf     (stderr, "    data dump {\n");
+    fprintf         (stderr, "    data dump {\n");
 
     if (!(token_struct -> data).char_array ||
         !(token_struct -> data).node_array ||
         !(token_struct -> data).index_node_word)
 
-        fprintf (stderr, "        data is corrupted, null ptr\n");
+        fprintf     (stderr, "        data is corrupted, null ptr\n");
 
     else
         for (size_t i = 0; i < token_struct -> data_capacity; i++)
@@ -172,8 +174,8 @@ LexicalFuncStatus LangTokenDump (const LanguageToken *token_struct) {
                             ((token_struct -> data).node_array)[i],
                             ((token_struct -> data).index_node_word)[i]);
 
-    fprintf     (stderr, "    }\n"
-                         "}\n");
+    fprintf         (stderr, "    }\n"
+                             "}\n\n");
 
     return LEXICAL_FUNC_STATUS_OK;
 }
@@ -194,6 +196,9 @@ unsigned int LangTokenVerify (const LanguageToken *token_struct) {
     if (!(token_struct -> data).index_node_word)
         errors_in_tokens |= LANG_TOKEN_INDEX_NULL_PTR;
 
+    if ((token_struct -> char_size) < (token_struct -> node_size))
+        errors_in_tokens |= LANG_TOKEN_CHAR_LESS_THAN_NODE;
+
     //TODO specific output of errors
 
     if (errors_in_tokens)
@@ -202,7 +207,7 @@ unsigned int LangTokenVerify (const LanguageToken *token_struct) {
     return errors_in_tokens;
 }
 
-
+/*
 LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct, NameTable *name_table) {
 
     assert (input_file);

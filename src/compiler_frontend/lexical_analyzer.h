@@ -51,14 +51,32 @@ enum LexicalFuncStatus {
 };
 
 const int MAX_WORD_LENGTH    = 64;
-const int MAX_PROGRAM_LENGTH = 10000;
+const int MAX_PROGRAM_LENGTH = 10000; // to delete
+
+const int DEFAULT_DATA_CAPACITY = 16;
+const int LANG_TOKEN_POISON     = 0xDEAD;
+
+struct LanguageTokenData {
+
+    char     **char_array;
+    TreeNode **node_array;
+    size_t    *index_node_word;
+};
 
 struct LanguageToken {
 
-    char **char_array;
-    TreeNode **node_array;
-    size_t *index_node_word;
+    LanguageTokenData  data;
+    size_t             data_size;
+    size_t             data_capacity;
 };
+
+LexicalFuncStatus LangTokenCtor (LanguageToken *token_struct);
+
+LexicalFuncStatus LangTokenDtor (LanguageToken *token_struct);
+
+LexicalFuncStatus LangTokenDataCtor (LanguageToken *token_struct);
+
+LexicalFuncStatus LangTokenDataDtor (LanguageToken *token_struct);
 
 LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct, NameTable *name_table);
 

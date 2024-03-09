@@ -27,6 +27,8 @@ BackendFuncStatus AsmFileBeginAndEnd (FILE *asm_file) {
     assert (asm_file);
 
     fprintf (asm_file, "push 0\n"
+                       "push 0\n"
+                       "pop rbx\n"
                        "pop rdx\n"
                        "call main\n"
                        "hlt\n\n");
@@ -187,6 +189,11 @@ BackendFuncStatus AsmFileLangOperatorWrite (FILE *asm_file, const TreeNode *curr
 
             case FUNC_RET:
                 AsmFileOperatorRetWrite (asm_file, current_node);
+                break;
+
+            case FUNC_CALL:
+                AsmFileFuncCallWrite (asm_file, current_node -> left_branch);
+                fprintf (asm_file, "pop rax\n");
                 break;
 
             case PRINT:

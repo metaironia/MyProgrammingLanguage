@@ -115,6 +115,9 @@ LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct) {
     node_ptr_arr        = (const TreeNode **) realloc (node_ptr_arr,        new_node_ptr_arr_bytes);
     index_node_word_arr = (size_t *)          realloc (index_node_word_arr, new_index_node_word_arr_bytes);
 
+    if (!char_ptr_arr || !node_ptr_arr || !index_node_word_arr)
+        return LEXICAL_FUNC_STATUS_FAIL;
+
     size_t cur_data_size = token_struct -> data_size;
 
     memset (char_ptr_arr + cur_data_size,        0, new_char_ptr_arr_bytes - old_char_ptr_arr_bytes);
@@ -129,6 +132,29 @@ LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct) {
 
     return LEXICAL_FUNC_STATUS_OK;
 }
+
+LexicalFuncStatus LangTokenDump (const LanguageToken *token_struct) {
+
+    assert (token_struct);
+
+    fprintf     (stderr, "LanguageToken struct [0x%p] {\n", token_struct);
+    fprintf     (stderr, "    data size     = %zu\n", token_struct -> data_size);
+    fprintf     (stderr, "    data capacity = %zu\n", token_struct -> data_capacity);
+
+    fprintf     (stderr, "    data dump {\n");
+
+    for (size_t i = 0; i < token_struct -> data_capacity; i++)
+        fprintf (stderr, "        word = '%s', TreeNode addr = %p, word index in text = %zu\n", 
+                         ((token_struct -> data).char_array)[i],
+                         ((token_struct -> data).node_array)[i],
+                         ((token_struct -> data).index_node_word)[i]);
+
+    fprintf     (stderr, "    }\n"
+                         "}\n");
+
+    return LEXICAL_FUNC_STATUS_OK;
+}
+
 /*
 LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct, NameTable *name_table) {
 

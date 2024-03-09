@@ -82,7 +82,9 @@ LexicalFuncStatus LangTokenDataDtor (LanguageToken *token_struct);
 LexicalFuncStatus LangTokenAdd (LanguageToken *token_struct, char *token_word, 
                                 const TreeNode *token_node, const size_t token_index);
 
-LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct);                                
+LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct);            
+
+LexicalFuncStatus LangTokenDump (const LanguageToken *token_struct);
 
 LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct, NameTable *name_table);
 

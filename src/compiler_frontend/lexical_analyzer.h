@@ -6,6 +6,12 @@
 #include "../../lib/tree/tree_func.h"
 #include "../../lib/tree/math_tree/math_tree_func.h"
 
+#define LANG_TOKEN_VERIFY(lang_token, parent_func)  if (LangTokenVerify (lang_token) != 0) {    \
+                                                                                                \
+                                                        LangTokenDump (lang_token);             \
+                                                        return parent_func##_FUNC_STATUS_FAIL;  \
+                                                    }                                           \
+
 #define CHECK_WORD_LANGUAGE_OP(current_word, keyword)                                                 \
             {                                                                                         \
                 for (size_t i = 0; i < sizeof (keyword##_QUOTES) / sizeof (keyword##_QUOTES)[0]; i++) \
@@ -71,6 +77,16 @@ struct LanguageToken {
     size_t             data_capacity;
 };
 
+enum LangTokenErrors {
+
+    LANG_TOKEN_NULL_PTR = (1 << 0),
+    LANG_TOKEN_CHAR_NULL_PTR = (1 << 1),
+    LANG_TOKEN_NODE_NULL_PTR = (1 << 2),
+    LANG_TOKEN_INDEX_NULL_PTR = (1 << 3),
+    LANG_TOKEN_NEGATIVE_SIZE = (1 << 4),
+    LANG_TOKEN_NEGATIVE_CAPACITY = (1 << 5),
+};
+
 LexicalFuncStatus LangTokenCtor (LanguageToken *token_struct);
 
 LexicalFuncStatus LangTokenDtor (LanguageToken *token_struct);
@@ -85,6 +101,8 @@ LexicalFuncStatus LangTokenAdd (LanguageToken *token_struct, char *token_word,
 LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct);            
 
 LexicalFuncStatus LangTokenDump (const LanguageToken *token_struct);
+
+unsigned int LangTokenVerify (const LanguageToken *token_struct);
 
 LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct, NameTable *name_table);
 

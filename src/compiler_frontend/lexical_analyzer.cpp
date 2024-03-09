@@ -22,6 +22,8 @@ LexicalFuncStatus LangTokenCtor (LanguageToken *token_struct) {
     token_struct -> data_size     = 0;
     token_struct -> data_capacity = DEFAULT_DATA_CAPACITY;
 
+    LANG_TOKEN_VERIFY (token_struct, LEXICAL);
+
     return LEXICAL_FUNC_STATUS_OK;
 }
 
@@ -81,9 +83,9 @@ LexicalFuncStatus LangTokenDataDtor (LanguageToken *token_struct) {
 LexicalFuncStatus LangTokenAdd (LanguageToken *token_struct, char *token_word, 
                                 const TreeNode *token_node, const size_t token_index) {
 
-    assert (token_struct);
+    LANG_TOKEN_VERIFY (token_struct, LEXICAL);
 
-    if (token_struct -> data_size == token_struct -> data_capacity)
+    if (token_struct -> data_size == token_struct -> data_capacity) 
         LangTokenRecalloc (token_struct);
 
     ((token_struct -> data).char_array)[token_struct -> data_size]      = token_word;
@@ -97,7 +99,7 @@ LexicalFuncStatus LangTokenAdd (LanguageToken *token_struct, char *token_word,
 
 LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct) {
 
-    assert (token_struct);
+    LANG_TOKEN_VERIFY (token_struct, LEXICAL);
 
     const size_t old_char_ptr_arr_bytes        = (token_struct -> data_capacity) * sizeof (char *);
     const size_t old_node_ptr_arr_bytes        = (token_struct -> data_capacity) * sizeof (TreeNode *);
@@ -115,8 +117,7 @@ LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct) {
     node_ptr_arr        = (const TreeNode **) realloc (node_ptr_arr,        new_node_ptr_arr_bytes);
     index_node_word_arr = (size_t *)          realloc (index_node_word_arr, new_index_node_word_arr_bytes);
 
-    if (!char_ptr_arr || !node_ptr_arr || !index_node_word_arr)
-        return LEXICAL_FUNC_STATUS_FAIL;
+    LANG_TOKEN_VERIFY (token_struct, LEXICAL);
 
     size_t cur_data_size = token_struct -> data_size;
 
@@ -137,22 +138,55 @@ LexicalFuncStatus LangTokenDump (const LanguageToken *token_struct) {
 
     assert (token_struct);
 
+    //TODO switch to log file
+
     fprintf     (stderr, "LanguageToken struct [0x%p] {\n", token_struct);
     fprintf     (stderr, "    data size     = %zu\n", token_struct -> data_size);
     fprintf     (stderr, "    data capacity = %zu\n", token_struct -> data_capacity);
 
     fprintf     (stderr, "    data dump {\n");
 
-    for (size_t i = 0; i < token_struct -> data_capacity; i++)
-        fprintf (stderr, "        word = '%s', TreeNode addr = %p, word index in text = %zu\n", 
-                         ((token_struct -> data).char_array)[i],
-                         ((token_struct -> data).node_array)[i],
-                         ((token_struct -> data).index_node_word)[i]);
+    if (!(token_struct -> data).char_array ||
+        !(token_struct -> data).node_array ||
+        !(token_struct -> data).index_node_word)
+
+        fprintf (stderr, "        data is corrupted, null ptr\n");
+
+    else
+        for (size_t i = 0; i < token_struct -> data_capacity; i++)
+            fprintf (stderr, "        word = '%s', TreeNode addr = %p, word index in text = %zu\n", 
+                            ((token_struct -> data).char_array)[i],
+                            ((token_struct -> data).node_array)[i],
+                            ((token_struct -> data).index_node_word)[i]);
 
     fprintf     (stderr, "    }\n"
                          "}\n");
 
     return LEXICAL_FUNC_STATUS_OK;
+}
+
+unsigned int LangTokenVerify (const LanguageToken *token_struct) {
+
+    unsigned int errors_in_tokens = 0;
+
+    if (!token_struct)
+        errors_in_tokens |= LANG_TOKEN_NULL_PTR;
+
+    if (!(token_struct -> data).char_array)
+        errors_in_tokens |= LANG_TOKEN_CHAR_NULL_PTR;
+
+    if (!(token_struct -> data).node_array)
+        errors_in_tokens |= LANG_TOKEN_NODE_NULL_PTR;
+
+    if (!(token_struct -> data).index_node_word)
+        errors_in_tokens |= LANG_TOKEN_INDEX_NULL_PTR;
+
+    //TODO specific output of errors
+
+    if (errors_in_tokens)
+        fprintf (stderr, "LangTokensVerifier was asserted.\n");
+
+    return errors_in_tokens;
 }
 
 /*

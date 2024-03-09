@@ -468,11 +468,26 @@ BackendFuncStatus AsmFileMathExpressionWrite (FILE *asm_file, const TreeNode *cu
             break;
     }
 
-    if (AsmFileMathExpressionWrite (asm_file, current_node -> left_branch) == BACKEND_FUNC_STATUS_FAIL)
-        return BACKEND_FUNC_STATUS_FAIL;
+    switch (NODE_TYPE) {
 
-    if (AsmFileMathExpressionWrite (asm_file, current_node -> right_branch) == BACKEND_FUNC_STATUS_FAIL)
-        return BACKEND_FUNC_STATUS_FAIL;
+        case BINARY_OPERATOR:
+            if (AsmFileMathExpressionWrite (asm_file, current_node -> left_branch) == BACKEND_FUNC_STATUS_FAIL)
+                return BACKEND_FUNC_STATUS_FAIL;
+
+            if (AsmFileMathExpressionWrite (asm_file, current_node -> right_branch) == BACKEND_FUNC_STATUS_FAIL)
+                return BACKEND_FUNC_STATUS_FAIL;
+
+            break;
+
+        case UNARY_OPERATOR:
+            if (AsmFileMathExpressionWrite (asm_file, current_node -> left_branch) == BACKEND_FUNC_STATUS_FAIL)
+                return BACKEND_FUNC_STATUS_FAIL;
+
+            break;
+
+        default:
+            return BACKEND_FUNC_STATUS_OK;
+    }
 
     if (AsmFileMathOperatorWrite (asm_file, current_node) == BACKEND_FUNC_STATUS_FAIL)
         return BACKEND_FUNC_STATUS_FAIL;

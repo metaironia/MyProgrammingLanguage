@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <string.h>
 #include <ctype.h>
@@ -28,9 +29,9 @@ LexicalFuncStatus LangTokenDataCtor (LanguageToken *token_struct) {
 
     assert (token_struct);
 
-    (token_struct -> data).char_array      = (char **)     calloc (DEFAULT_DATA_CAPACITY, sizeof (char *));
-    (token_struct -> data).node_array      = (TreeNode **) calloc (DEFAULT_DATA_CAPACITY, sizeof (TreeNode *));
-    (token_struct -> data).index_node_word = (size_t *)    calloc (DEFAULT_DATA_CAPACITY, sizeof (size_t));
+    (token_struct -> data).char_array      = (char **)           calloc (DEFAULT_DATA_CAPACITY, sizeof (char *));
+    (token_struct -> data).node_array      = (const TreeNode **) calloc (DEFAULT_DATA_CAPACITY, sizeof (TreeNode *));
+    (token_struct -> data).index_node_word = (size_t *)          calloc (DEFAULT_DATA_CAPACITY, sizeof (size_t));
 
     if (!((token_struct -> data).char_array &&
           (token_struct -> data).node_array &&
@@ -73,6 +74,58 @@ LexicalFuncStatus LangTokenDataDtor (LanguageToken *token_struct) {
     (token_struct -> data).char_array      = NULL;
     (token_struct -> data).node_array      = NULL;
     (token_struct -> data).index_node_word = NULL;
+
+    return LEXICAL_FUNC_STATUS_OK;
+}
+
+LexicalFuncStatus LangTokenAdd (LanguageToken *token_struct, char *token_word, 
+                                const TreeNode *token_node, const size_t token_index) {
+
+    assert (token_struct);
+
+    if (token_struct -> data_size == token_struct -> data_capacity)
+        LangTokenRecalloc (token_struct);
+
+    ((token_struct -> data).char_array)[token_struct -> data_size]      = token_word;
+    ((token_struct -> data).node_array)[token_struct -> data_size]      = token_node;
+    ((token_struct -> data).index_node_word)[token_struct -> data_size] = token_index;
+
+    (token_struct -> data_size)++;
+
+    return LEXICAL_FUNC_STATUS_OK;
+}
+
+LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct) {
+
+    assert (token_struct);
+
+    const size_t old_char_ptr_arr_bytes        = (token_struct -> data_capacity) * sizeof (char *);
+    const size_t old_node_ptr_arr_bytes        = (token_struct -> data_capacity) * sizeof (TreeNode *);
+    const size_t old_index_node_word_arr_bytes = (token_struct -> data_capacity) * sizeof (size_t);
+
+    const size_t new_char_ptr_arr_bytes        = old_char_ptr_arr_bytes * INCREASE_NUM;
+    const size_t new_node_ptr_arr_bytes        = old_node_ptr_arr_bytes * INCREASE_NUM;
+    const size_t new_index_node_word_arr_bytes = old_index_node_word_arr_bytes * INCREASE_NUM;   
+
+    char           **char_ptr_arr        = (token_struct -> data).char_array;
+    const TreeNode **node_ptr_arr        = (token_struct -> data).node_array;
+    size_t          *index_node_word_arr = (token_struct -> data).index_node_word;
+
+    char_ptr_arr        = (char **)           realloc (char_ptr_arr,        new_char_ptr_arr_bytes);
+    node_ptr_arr        = (const TreeNode **) realloc (node_ptr_arr,        new_node_ptr_arr_bytes);
+    index_node_word_arr = (size_t *)          realloc (index_node_word_arr, new_index_node_word_arr_bytes);
+
+    size_t cur_data_size = token_struct -> data_size;
+
+    memset (char_ptr_arr + cur_data_size,        0, new_char_ptr_arr_bytes - old_char_ptr_arr_bytes);
+    memset (node_ptr_arr + cur_data_size,        0, new_node_ptr_arr_bytes - old_node_ptr_arr_bytes);
+    memset (index_node_word_arr + cur_data_size, 0, new_index_node_word_arr_bytes - old_index_node_word_arr_bytes);
+
+    (token_struct -> data).char_array      = char_ptr_arr;
+    (token_struct -> data).node_array      = node_ptr_arr;
+    (token_struct -> data).index_node_word = index_node_word_arr;
+
+    token_struct -> data_capacity *= INCREASE_NUM;
 
     return LEXICAL_FUNC_STATUS_OK;
 }

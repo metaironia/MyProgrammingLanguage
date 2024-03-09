@@ -83,8 +83,6 @@ enum LangTokenErrors {
     LANG_TOKEN_CHAR_NULL_PTR = (1 << 1),
     LANG_TOKEN_NODE_NULL_PTR = (1 << 2),
     LANG_TOKEN_INDEX_NULL_PTR = (1 << 3),
-    LANG_TOKEN_NEGATIVE_SIZE = (1 << 4),
-    LANG_TOKEN_NEGATIVE_CAPACITY = (1 << 5),
 };
 
 LexicalFuncStatus LangTokenCtor (LanguageToken *token_struct);
@@ -95,8 +93,10 @@ LexicalFuncStatus LangTokenDataCtor (LanguageToken *token_struct);
 
 LexicalFuncStatus LangTokenDataDtor (LanguageToken *token_struct);
 
-LexicalFuncStatus LangTokenAdd (LanguageToken *token_struct, char *token_word, 
-                                const TreeNode *token_node, const size_t token_index);
+LexicalFuncStatus LangTokenNodeAndIndexAdd (LanguageToken *token_struct, char *token_word, 
+                                            const TreeNode *token_node, const size_t token_index);
+
+LexicalFuncStatus LangTokenWordAdd (LanguageToken *token_struct, const char *token_word);
 
 LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct);            
 

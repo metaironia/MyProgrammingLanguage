@@ -103,14 +103,15 @@ enum NameTableDef {
 struct NameTableCell {
 
     NameTableDef word_type;
-    char *word_name;
     size_t word_number;
+    char *word_name;
 };
 
 struct NameTable {
 
     NameTableCell *name_table_cell;
     size_t table_size;
+    size_t table_capacity;
 };
 
 enum NameTableErrors {
@@ -120,7 +121,8 @@ enum NameTableErrors {
     // NAME_TABLE_MULTIPLE_VARS_ONE_NAME = (1 << 2)
 };
 
-const int MAX_NAME_TABLE_LENGTH = 32;
+const int DEFAULT_NAME_TABLE_SIZE = 4;
+const int NAME_TABLE_INCREASE_NUM = 2;
 
 const int DEAD_TREE       = 0xDEAD1;
 const int DEAD_TREE_NODE  = 0xDEAD2;
@@ -194,6 +196,8 @@ TreeFuncStatus NameTableCtor (NameTable *name_table);
 TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type,
                                                     const char *word_name,
                                                     const size_t word_number);
+
+TreeFuncStatus NameTableRecalloc (NameTable *name_table);
 
 long long NameTableWordFind (const NameTable *name_table, const char *word_name,
                              const long long start_index);

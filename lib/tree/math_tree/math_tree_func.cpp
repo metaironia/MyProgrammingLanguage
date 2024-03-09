@@ -727,7 +727,7 @@ TreeFuncStatus MathTreeNodeSmthAndOneSimplify (TreeNode *current_node) {
         return TREE_FUNC_STATUS_FAIL;
     }
 
-    switch ((current_node -> data -> nodeValue).mathOperator) {
+    switch (NODE_MATH_OPERATOR) {
 
         case OPERATOR_MUL:
             temp_node = TreeNodeCopy (temp_node, branch_non_one_ptr, sizeof (MathNode));
@@ -767,10 +767,13 @@ TreeFuncStatus NameTableCtor (NameTable *name_table) {
 
     assert (name_table);
 
-    name_table -> name_table_cell = (NameTableCell *) calloc (MAX_NAME_TABLE_LENGTH, sizeof (NameTableCell));
-    assert (name_table -> name_table_cell);
+    name_table -> name_table_cell = (NameTableCell *) calloc (DEFAULT_NAME_TABLE_SIZE, sizeof (NameTableCell));
 
-    name_table -> table_size = 0;
+    if (!(name_table -> name_table_cell))
+        return TREE_FUNC_STATUS_FAIL;
+
+    name_table -> table_size     = 0;
+    name_table -> table_capacity = DEFAULT_NAME_TABLE_SIZE;
 
     NAME_TABLE_VERIFY (name_table, TREE);
 
@@ -784,6 +787,12 @@ TreeFuncStatus NameTableAdd (NameTable *name_table, const NameTableDef word_type
     assert (word_name);
 
     NAME_TABLE_VERIFY (name_table, TREE);
+
+    if (name_table -> table_size == name_table -> table_capacity) {
+
+        NameTableRecalloc (name_table);
+        NAME_TABLE_VERIFY (name_table, TREE);
+    }
 
     (name_table -> name_table_cell)[name_table -> table_size].word_type = word_type;
     (name_table -> name_table_cell)[name_table -> table_size].word_name = strdup (word_name);
@@ -848,6 +857,28 @@ const char *NameTableRepeatCheck (const NameTable *name_table) {
     }
 
     return NULL;
+}
+
+TreeFuncStatus NameTableRecalloc (NameTable *name_table) {
+
+    NAME_TABLE_VERIFY (name_table, TREE);
+
+    const size_t old_name_table_bytes = (name_table -> table_capacity) * sizeof (NameTableCell);
+    const size_t new_name_table_bytes = old_name_table_bytes * NAME_TABLE_INCREASE_NUM;
+
+    NameTableCell *table_data = name_table -> name_table_cell;
+    table_data                = (NameTableCell *) realloc (table_data, new_name_table_bytes);
+
+    NAME_TABLE_VERIFY (name_table, TREE);
+
+    size_t cur_name_table_size = name_table -> table_size;
+
+    memset (table_data + cur_name_table_size, 0, new_name_table_bytes - old_name_table_bytes);
+
+    name_table -> table_capacity  *= NAME_TABLE_INCREASE_NUM;
+    name_table -> name_table_cell  = table_data;
+
+    return TREE_FUNC_STATUS_OK;
 }
 
 unsigned int NameTableVerify (const NameTable *name_table, const char *parent_func_name) {

@@ -8,7 +8,7 @@
 
 #define TOKEN_CHAR_ARR                              ((token_struct -> data).char_array)
 #define TOKEN_NODE_ARR                              ((token_struct -> data).node_array)
-#define TOKEN_INDEX_NODE                            ((token_struct -> data).index_node_word)      
+#define TOKEN_INDEX_NODE                            ((token_struct -> data).index_node_word)
 
 #define LANG_TOKEN_VERIFY(lang_token, parent_func)  if (LangTokenVerify (lang_token) != 0) {    \
                                                                                                 \
@@ -20,7 +20,7 @@
                                                                                                 \
                                                         LangTokenDump (lang_token);             \
                                                         return NULL;                            \
-                                                    }                                                      
+                                                    }
 
 #define CHECK_WORD_LANGUAGE_OP(current_word, keyword)                                                 \
             {                                                                                         \
@@ -69,7 +69,6 @@ enum LexicalFuncStatus {
 };
 
 const int MAX_WORD_LENGTH    = 64;    // ?
-const int MAX_PROGRAM_LENGTH = 10000; // to delete
 
 const int DEFAULT_DATA_CAPACITY = 2;
 const int LANG_TOKEN_POISON     = 0xDEAD;
@@ -107,12 +106,12 @@ LexicalFuncStatus LangTokenDataCtor (LanguageToken *token_struct);
 
 LexicalFuncStatus LangTokenDataDtor (LanguageToken *token_struct);
 
-LexicalFuncStatus LangTokenNodeAndIndexAdd (LanguageToken *token_struct, TreeNode *token_node, 
+LexicalFuncStatus LangTokenNodeAndIndexAdd (LanguageToken *token_struct, TreeNode *token_node,
                                             const size_t token_index);
 
 LexicalFuncStatus LangTokenWordAdd (LanguageToken *token_struct, char *token_word);
 
-LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct);            
+LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct);
 
 LexicalFuncStatus LangTokenDump (const LanguageToken *token_struct);
 

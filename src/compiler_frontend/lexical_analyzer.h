@@ -6,6 +6,10 @@
 #include "../../lib/tree/tree_func.h"
 #include "../../lib/tree/math_tree/math_tree_func.h"
 
+#define TOKEN_CHAR_ARR                              ((token_struct -> data).char_array)
+#define TOKEN_NODE_ARR                              ((token_struct -> data).node_array)
+#define TOKEN_INDEX_NODE                            ((token_struct -> data).index_node_word)      
+
 #define LANG_TOKEN_VERIFY(lang_token, parent_func)  if (LangTokenVerify (lang_token) != 0) {    \
                                                                                                 \
                                                         LangTokenDump (lang_token);             \
@@ -24,7 +28,7 @@
                             strcmp (keyword##_QUOTES[i], current_word) != 0)                          \
                                 break;                                                                \
                                                                                                       \
-                        ((token_struct -> data).index_node_word)[node_arr_index] = char_arr_index;    \
+                        TOKEN_INDEX_NODE[node_arr_index] = char_arr_index;                          \
                         *current_node++ = CreateLangTreeNode (keyword, NULL, NULL);                   \
                         (token_struct -> node_size)++;                                                \
                         is_success      = true;                                                       \
@@ -41,7 +45,7 @@
                                                                                                               \
                     if (strstr (current_word, keyword##_QUOTES[i])) {                                         \
                                                                                                               \
-                        ((token_struct -> data).index_node_word)[node_arr_index] = char_arr_index;            \
+                        TOKEN_INDEX_NODE[node_arr_index] = char_arr_index;                                    \
                         *current_node++ = CreateMathTreeNode (keyword_type, OPERATOR_##keyword, NULL, NULL);  \
                         (token_struct -> node_size)++;                                                        \
                         is_success      = true;                                                               \

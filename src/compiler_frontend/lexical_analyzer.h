@@ -24,8 +24,9 @@
                             strcmp (keyword##_QUOTES[i], current_word) != 0)                          \
                                 break;                                                                \
                                                                                                       \
-                        (token_struct -> index_node_word)[node_array_index] = char_array_index;       \
+                        ((token_struct -> data).index_node_word)[node_arr_index] = char_arr_index;    \
                         *current_node++ = CreateLangTreeNode (keyword, NULL, NULL);                   \
+                        (token_struct -> node_size)++;                                                \
                         is_success      = true;                                                       \
                         break;                                                                        \
                     }                                                                                 \
@@ -40,8 +41,9 @@
                                                                                                               \
                     if (strstr (current_word, keyword##_QUOTES[i])) {                                         \
                                                                                                               \
-                        (token_struct -> index_node_word)[node_array_index] = char_array_index;               \
+                        ((token_struct -> data).index_node_word)[node_arr_index] = char_arr_index;            \
                         *current_node++ = CreateMathTreeNode (keyword_type, OPERATOR_##keyword, NULL, NULL);  \
+                        (token_struct -> node_size)++;                                                        \
                         is_success      = true;                                                               \
                         break;                                                                                \
                     }                                                                                         \
@@ -65,9 +67,9 @@ const int INCREASE_NUM          = 2;
 
 struct LanguageTokenData {
 
-    char           **char_array;        // not const because of strstr()
-    const TreeNode **node_array;
-    size_t          *index_node_word;
+    char     **char_array;        // not const because of strstr()
+    TreeNode **node_array;
+    size_t    *index_node_word;
 };
 
 struct LanguageToken {
@@ -95,7 +97,7 @@ LexicalFuncStatus LangTokenDataCtor (LanguageToken *token_struct);
 
 LexicalFuncStatus LangTokenDataDtor (LanguageToken *token_struct);
 
-LexicalFuncStatus LangTokenNodeAndIndexAdd (LanguageToken *token_struct, const TreeNode *token_node, 
+LexicalFuncStatus LangTokenNodeAndIndexAdd (LanguageToken *token_struct, TreeNode *token_node, 
                                             const size_t token_index);
 
 LexicalFuncStatus LangTokenWordAdd (LanguageToken *token_struct, char *token_word);
@@ -108,7 +110,7 @@ unsigned int LangTokenVerify (const LanguageToken *token_struct);
 
 LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct, NameTable *name_table);
 
-LexicalFuncStatus StringInputFromFile (FILE *input_file, char **input_array);
+LexicalFuncStatus StringInputFromFile (FILE *input_file, LanguageToken *token_struct);
 
 LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *name_table);
 

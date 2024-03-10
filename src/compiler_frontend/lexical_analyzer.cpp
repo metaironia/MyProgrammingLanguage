@@ -81,12 +81,12 @@ LexicalFuncStatus LangTokenDataDtor (LanguageToken *token_struct) {
     return LEXICAL_FUNC_STATUS_OK;
 }
 
-LexicalFuncStatus LangTokenNodeAndIndexAdd (LanguageToken *token_struct, TreeNode *token_node, 
+LexicalFuncStatus LangTokenNodeAndIndexAdd (LanguageToken *token_struct, TreeNode *token_node,
                                             const size_t token_index) {
 
     LANG_TOKEN_VERIFY (token_struct, LEXICAL);
 
-    if (token_struct -> node_size == token_struct -> char_size) 
+    if (token_struct -> node_size == token_struct -> char_size)
         LangTokenRecalloc (token_struct);
 
     ((token_struct -> data).node_array)[token_struct -> node_size]      = token_node;
@@ -101,7 +101,7 @@ LexicalFuncStatus LangTokenWordAdd (LanguageToken *token_struct, char *token_wor
 
     LANG_TOKEN_VERIFY (token_struct, LEXICAL);
 
-    if (token_struct -> char_size == token_struct -> data_capacity) 
+    if (token_struct -> char_size == token_struct -> data_capacity)
         LangTokenRecalloc (token_struct);
 
     ((token_struct -> data).char_array)[token_struct -> char_size] = token_word;
@@ -121,7 +121,7 @@ LexicalFuncStatus LangTokenRecalloc (LanguageToken *token_struct) {
 
     const size_t new_char_ptr_arr_bytes        = old_char_ptr_arr_bytes * INCREASE_NUM;
     const size_t new_node_ptr_arr_bytes        = old_node_ptr_arr_bytes * INCREASE_NUM;
-    const size_t new_index_node_word_arr_bytes = old_index_node_word_arr_bytes * INCREASE_NUM;   
+    const size_t new_index_node_word_arr_bytes = old_index_node_word_arr_bytes * INCREASE_NUM;
 
     char     **char_ptr_arr        = (token_struct -> data).char_array;
     TreeNode **node_ptr_arr        = (token_struct -> data).node_array;
@@ -169,7 +169,7 @@ LexicalFuncStatus LangTokenDump (const LanguageToken *token_struct) {
 
     else
         for (size_t i = 0; i < token_struct -> data_capacity; i++)
-            fprintf (stderr, "       %zu. word = '%s', TreeNode addr = %p, word index in text = %zu\n", i, 
+            fprintf (stderr, "       %zu. word = '%s', TreeNode addr = %p, word index in text = %zu\n", i,
                             ((token_struct -> data).char_array)[i],
                             ((token_struct -> data).node_array)[i],
                             ((token_struct -> data).index_node_word)[i]);
@@ -224,7 +224,7 @@ LexicalFuncStatus LexicalAnalyzer (FILE *input_file, LanguageToken *token_struct
 LexicalFuncStatus StringInputFromFile (FILE *input_file, LanguageToken *token_struct) {
 
     assert (input_file);
-    
+
     LANG_TOKEN_VERIFY (token_struct, LEXICAL);
 
     char current_word[MAX_WORD_LENGTH] = "";
@@ -246,7 +246,7 @@ LexicalFuncStatus StringInputFromFile (FILE *input_file, LanguageToken *token_st
 LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *name_table) {
 
     LANG_TOKEN_VERIFY (token_struct, LEXICAL);
-    
+
     assert (name_table);
 
     TreeNode **current_node = (token_struct -> data).node_array;
@@ -274,7 +274,7 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
 
         CHECK_WORD_LANGUAGE_OP (current_word, IF);
         CHECK_WORD_LANGUAGE_OP (current_word, WHILE);
-//        CHECK_WORD_LANGUAGE_OP (current_word, ELSE);
+        CHECK_WORD_LANGUAGE_OP (current_word, ELSE);
         CHECK_WORD_LANGUAGE_OP (current_word, ASSIGN);
         CHECK_WORD_LANGUAGE_OP (current_word, PRINT);
         CHECK_WORD_LANGUAGE_OP (current_word, END_LINE);
@@ -306,4 +306,38 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
 
     return LEXICAL_FUNC_STATUS_OK;
 }
+
+bool WordCheckLanguageOperator (const char *const *quotes_arr, const size_t quotes_arr_size, const char *word) {
+
+    assert (quotes_arr);
+    assert (word);
+
+    for (size_t i = 0; i < quotes_arr_size; i++)
+        if (strstr (word, quotes_arr[i])) {
+
+            if ((strcmp (quotes_arr[i], "но") == 0 ||
+                (strcmp (quotes_arr[i], "не") == 0) ||
+                (strcmp (quotes_arr[i], "и") == 0)) &&
+                strcmp (quotes_arr[i], word) != 0)
+
+                return false;
+
+            return true;
+        }
+
+    return false;
+}
+
+bool WordCheckMathOperator (const char *const *quotes_arr, const size_t quotes_arr_size, const char *word) {
+
+    assert (quotes_arr);
+    assert (word);
+
+    for (size_t i = 0; i < quotes_arr_size; i++)
+        if (strstr (word, quotes_arr[i]))
+            return true;
+
+    return false;
+}
+
 

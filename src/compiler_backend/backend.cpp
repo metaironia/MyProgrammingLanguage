@@ -274,24 +274,20 @@ BackendFuncStatus AsmFileOperatorIfWrite (FILE *asm_file, const TreeNode *curren
     MATH_TREE_NODE_VERIFY (current_node, BACKEND);
 
     static size_t operator_if_number = 0;
+    const  size_t curr_if_number     = operator_if_number;
+
+    operator_if_number++;
 
     AsmFileOperatorOrAndWrite (asm_file, current_node -> left_branch);
 
     fprintf (asm_file, "push 0\n"
-                       "je end_if_%zu\n", operator_if_number);
+                       "je end_if_%zu\n", curr_if_number);
 
     current_node = current_node -> right_branch;
 
-    while (current_node) {
+    AsmFileLangOperatorWrite (asm_file, current_node);
 
-        AsmFileLangOperatorWrite (asm_file, current_node);
-
-        current_node = current_node -> right_branch;
-    }
-
-    fprintf (asm_file, ":end_if_%zu\n", operator_if_number);
-
-    operator_if_number++;
+    fprintf (asm_file, ":end_if_%zu\n", curr_if_number);
 
     return BACKEND_FUNC_STATUS_OK;
 }

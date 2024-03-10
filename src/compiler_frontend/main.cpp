@@ -9,17 +9,16 @@
 #include "../../lib/oneginlib/functions_for_output.h"
 
 #include "frontend_arg_checker.h"
-#include "lexical_quotations.h"
 #include "lexical_analyzer.h"
 #include "syntax_analyzer.h"
 #include "semantic_analyzer.h"
 
 int main (const int argc, const char *argv[]) {
 
+    setlocale (LC_ALL, ".1251");
+
     if (FrontendCheckCmdArgs (argc) == FRONTEND_STATUS_FAIL)
         return -1;
-
-    setlocale (LC_ALL, ".1251");
 
     LanguageToken lang_tokens = {};
     LangTokenCtor (&lang_tokens);
@@ -46,7 +45,7 @@ int main (const int argc, const char *argv[]) {
     }
     fprintf (stderr, "\ngde\n");
     */
-    
+
     Tree lang_tree = {};
     TreeCtor (&lang_tree);
 
@@ -57,6 +56,10 @@ int main (const int argc, const char *argv[]) {
 
     if (SemanticAnalyzer (&lang_tree, &lang_name_table) != 0)
         return -2;
+
+    MathTreeGraphDump (&lang_tree, &lang_name_table);
+
+    setlocale (LC_ALL, "C");
 
     FILE *output_file = fopen (OutputFileName (argv), "w");
     assert (output_file);

@@ -236,7 +236,17 @@ TreeNode *GetIf (const LanguageToken *token_struct, size_t *position) {
 
     (*position)++;
 
-    tree_node -> right_branch = GetLangOperator (token_struct, position);
+    current_node = TOKEN_NODE_ARR[*position];
+
+    TreeNode **next_node = &(tree_node -> right_branch);
+
+    while (!(NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == END_LINE)) {
+
+        *next_node   = GetLangOperator (token_struct, position);
+
+        next_node    = &((*next_node) -> right_branch);
+        current_node = TOKEN_NODE_ARR[*position];
+    }
 
     return tree_node;
 }

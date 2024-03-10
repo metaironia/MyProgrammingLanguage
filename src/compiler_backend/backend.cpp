@@ -280,7 +280,14 @@ BackendFuncStatus AsmFileOperatorIfWrite (FILE *asm_file, const TreeNode *curren
     fprintf (asm_file, "push 0\n"
                        "je end_if_%zu\n", operator_if_number);
 
-    AsmFileLangOperatorWrite (asm_file, current_node -> right_branch);
+    current_node = current_node -> right_branch;
+
+    while (current_node) {
+
+        AsmFileLangOperatorWrite (asm_file, current_node);
+
+        current_node = current_node -> right_branch;
+    }
 
     fprintf (asm_file, ":end_if_%zu\n", operator_if_number);
 

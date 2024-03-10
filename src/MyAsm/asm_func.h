@@ -19,8 +19,8 @@ const int ARG_FORMAT_IMMED = (1 << 5);
 const int ARG_FORMAT_REG   = (1 << 6);
 const int ARG_FORMAT_RAM   = (1 << 7);
 
-const int MAX_WORD_LENGTH = 20;
-const int MAX_NUM_OF_LABELS = 20;
+const int MAX_WORD_LENGTH = 32;
+const int MAX_NUM_OF_LABELS = 128;
 
 struct LabelForJump {
 

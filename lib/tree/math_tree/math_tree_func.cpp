@@ -242,7 +242,7 @@ const char *NumberToString (const double number) {
 
     memset (number_to_string, 0, MAX_NUMBER_LENGTH + 1);
 
-    sprintf (number_to_string, "%.3lg", number);
+    sprintf (number_to_string, "%.3lf", number);
 
     return number_to_string;
 }
@@ -302,7 +302,7 @@ const char *MathNodeOperatorToString (const TreeNode *current_node) {
             break;
 
         case OPERATOR_NOT_EQUAL:
-            return "NOT_EQUAL";
+            return "NOT_EQ";
             break;
 
         case OPERATOR_OPEN_PARENTHESIS:
@@ -501,8 +501,8 @@ unsigned int NodeBinaryOperatorCheckErrors (const TreeNode *current_node) {
 
     unsigned int is_binary_operator_error = 0;
 
-    is_binary_operator_error = (NODE_TYPE == BINARY_OPERATOR &&
-                               (!(current_node -> left_branch)                      ||
+    is_binary_operator_error = (NODE_TYPE == BINARY_OPERATOR     &&
+                               (!(current_node -> left_branch)   ||
                                !(current_node -> right_branch)));
 
     if (is_binary_operator_error)
@@ -517,8 +517,8 @@ unsigned int NodeUnaryOperatorCheckErrors (const TreeNode *current_node) {
 
     int is_unary_operator_error = 0;
 
-    is_unary_operator_error = (NODE_TYPE == UNARY_OPERATOR &&
-                              (((bool) (current_node -> left_branch))             ==
+    is_unary_operator_error = (NODE_TYPE == UNARY_OPERATOR            &&
+                              (((bool) (current_node -> left_branch)) ==
                               (bool) (current_node -> right_branch)));
 
     if (is_unary_operator_error)
@@ -531,8 +531,8 @@ unsigned int NodeVariableCheckErrors (const TreeNode *current_node) {
 
     assert (current_node);
 
-    unsigned int is_variable_error = (NODE_TYPE == VARIABLE &&
-                                     (((current_node -> left_branch))              ||
+    unsigned int is_variable_error = (NODE_TYPE == VARIABLE           &&
+                                     (((current_node -> left_branch)) ||
                                      (current_node -> right_branch)));
 
     if (is_variable_error)
@@ -1083,7 +1083,7 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
         else
             return TREE_FUNC_STATUS_FAIL;
 
-        ON_TREE_DEBUG (printf ("data read successfully"));
+        ON_TREE_DEBUG (NodeTypePrint (stderr, *tree_node_for_data_read, name_table));
 
         return TREE_FUNC_STATUS_OK;
     }
@@ -1128,7 +1128,7 @@ bool CheckIfWordIsVariable (const char *word_to_check, TreeNode **current_node, 
             return false;
 
     *current_node = VAR_ (number_of_variable);
-fprintf (stderr, "%s\n", word_to_check);
+
     NameTableAdd (name_table, NAME_TABLE_VARIABLE, word_to_check, number_of_variable);
 
     number_of_variable++;

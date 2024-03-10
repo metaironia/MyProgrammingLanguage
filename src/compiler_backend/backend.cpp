@@ -388,11 +388,11 @@ BackendFuncStatus AsmFileOperatorComparisonWrite (FILE *asm_file, const TreeNode
         switch (NODE_MATH_OPERATOR) {
 
             case OPERATOR_GREATER:
-                fprintf (asm_file, "ja ");
+                fprintf (asm_file, "jb ");
                 break;
 
             case OPERATOR_LESS:
-                fprintf (asm_file, "jb ");
+                fprintf (asm_file, "ja ");
                 break;
 
             case OPERATOR_EQUAL:

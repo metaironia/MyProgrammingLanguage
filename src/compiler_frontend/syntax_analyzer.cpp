@@ -67,7 +67,7 @@ TreeNode *GetGrammar (const LanguageToken *token_struct) {
 TreeNode *GetFunction (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     const size_t old_position = *position;
@@ -97,8 +97,7 @@ TreeNode *GetFunction (const LanguageToken *token_struct, size_t *position) {
         if (!(*next_node))
             return NULL;
 
-        next_node  = &((*next_node) -> right_branch);
-
+        next_node    = &((*next_node) -> right_branch);
         current_node = TOKEN_NODE_ARR[*position];
     }
 
@@ -113,7 +112,7 @@ TreeNode *GetFunction (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetArgument (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *current_node = TOKEN_NODE_ARR[*position];
@@ -131,7 +130,7 @@ TreeNode *GetArgument (const LanguageToken *token_struct, size_t *position) {
 
     while (NODE_TYPE == VARIABLE) {
 
-        tree_node    = COMMA_ (INIT_ (TYPE_INT_, GetVar (token_struct, position)), tree_node);
+        tree_node    = COMMA_ (tree_node, INIT_ (TYPE_INT_, GetVar (token_struct, position)));
         current_node = TOKEN_NODE_ARR[*position];
     }
 
@@ -141,7 +140,7 @@ TreeNode *GetArgument (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     const size_t old_position = *position;
@@ -172,7 +171,7 @@ TreeNode *GetLangOperator (const LanguageToken *token_struct, size_t *position) 
 TreeNode *GetReturn (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *current_node = TOKEN_NODE_ARR[*position];
@@ -192,7 +191,7 @@ TreeNode *GetReturn (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetPrint (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *current_node = TOKEN_NODE_ARR[*position];
@@ -216,7 +215,7 @@ TreeNode *GetPrint (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetIf (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *current_node = TOKEN_NODE_ARR[*position];
@@ -245,7 +244,7 @@ TreeNode *GetIf (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetWhile (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *current_node = TOKEN_NODE_ARR[*position];
@@ -274,7 +273,7 @@ TreeNode *GetWhile (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetExpression (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *tree_node    = GetComparison (token_struct, position);
@@ -312,7 +311,7 @@ TreeNode *GetExpression (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetComparison (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *tree_node    = GetSumSub (token_struct, position);
@@ -358,7 +357,7 @@ TreeNode *GetComparison (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     size_t old_position = *position;
@@ -413,7 +412,7 @@ TreeNode *GetAssign (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetSumSub (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *tree_node    = GetMulDiv (token_struct, position);
@@ -451,7 +450,7 @@ TreeNode *GetSumSub (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetMulDiv (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *tree_node    = GetPow (token_struct, position);
@@ -489,7 +488,7 @@ TreeNode *GetMulDiv (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetPow (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *tree_node    = GetParenthesis (token_struct, position);
@@ -520,7 +519,7 @@ TreeNode *GetPow (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetParenthesis (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *tree_node    = NULL;
@@ -551,7 +550,7 @@ TreeNode *GetParenthesis (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetUnary (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *current_node = TOKEN_NODE_ARR[*position];
@@ -588,7 +587,7 @@ TreeNode *GetUnary (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetFuncCall (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *current_node = TOKEN_NODE_ARR[*position];
@@ -636,7 +635,7 @@ TreeNode *GetFuncCall (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetVar (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *current_node = TOKEN_NODE_ARR[*position];
@@ -657,7 +656,7 @@ TreeNode *GetVar (const LanguageToken *token_struct, size_t *position) {
 TreeNode *GetNum (const LanguageToken *token_struct, size_t *position) {
 
     assert (position);
-    
+
     LANG_TOKEN_VERIFY_PTR_FUNC (token_struct);
 
     TreeNode *current_node = TOKEN_NODE_ARR[*position];

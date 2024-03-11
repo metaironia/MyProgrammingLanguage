@@ -76,6 +76,8 @@ MathNodeType IsOperatorUnaryOrBinary (const MathNodeOperator node_operator_to_ch
         case OPERATOR_EQUAL:
         case OPERATOR_NOT_EQUAL:
         case OPERATOR_GREATER:
+        case OPERATOR_GREATER_EQ:
+        case OPERATOR_LESS_EQ:
         case OPERATOR_LESS:
             return BINARY_OPERATOR;
             break;
@@ -198,7 +200,8 @@ const char *LangNodeOperatorToString (const LangNodeOperator current_operator) {
 
 const char *MathNodeTypeToString (const TreeNode *current_node, const NameTable *name_table) {
 
-    MATH_TREE_NODE_VERIFY_PTR_FUNC (current_node);
+    assert (current_node);
+    assert (current_node -> data);
 
     const char *node_type_to_string = NULL;
 
@@ -213,7 +216,8 @@ const char *MathNodeTypeToString (const TreeNode *current_node, const NameTable 
 
 const char *MathNodeNumVarEndToString (const TreeNode *current_node, const NameTable *name_table) {
 
-    MATH_TREE_NODE_VERIFY_PTR_FUNC (current_node);
+    assert (current_node);
+    assert (current_node -> data);
 
     switch (NODE_TYPE) {
 
@@ -249,7 +253,8 @@ const char *NumberToString (const double number) {
 
 const char *MathNodeOperatorToString (const TreeNode *current_node) {
 
-    MATH_TREE_NODE_VERIFY_PTR_FUNC (current_node);
+    assert (current_node);
+    assert (current_node -> data);
 
     switch (NODE_MATH_OPERATOR) {
 
@@ -295,6 +300,14 @@ const char *MathNodeOperatorToString (const TreeNode *current_node) {
 
         case OPERATOR_LESS:
             return "LESS";
+            break;
+
+        case OPERATOR_GREATER_EQ:
+            return "GREATER_EQ";
+            break;
+
+        case OPERATOR_LESS_EQ:
+            return "LESS_EQ";
             break;
 
         case OPERATOR_EQUAL:
@@ -947,7 +960,7 @@ TreeFuncStatus LangTreeNodeRead (FILE *file_for_read_tree, TreeNode **tree_node_
 
         return TREE_FUNC_STATUS_FAIL;
 
-    ON_TREE_DEBUG (printf ("|read two nodes|"));
+//    ON_TREE_DEBUG (printf ("|read two nodes|"));
 
     if (IsBracketInFileStr (file_for_read_tree, ')')) {
 
@@ -964,7 +977,7 @@ TreeFuncStatus TreeNodeNilCheck (FILE *file_for_node_nil_check) {
 
     char buf[NODE_READ_BUF_SIZE] = "";
 
-    fscanf (file_for_node_nil_check, "%4s", buf);
+    fscanf (file_for_node_nil_check, " %3s", buf);
 
     if (strcmp (buf, NIL) == 0) {
 
@@ -1000,6 +1013,18 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
 
         else if (strcmp ("LESS", buf) == 0)
             *tree_node_for_data_read = LESS_ (NULL, NULL);
+
+        else if (strcmp ("GREATER_EQ", buf) == 0)
+            *tree_node_for_data_read = GREATER_EQ_ (NULL, NULL);
+
+        else if (strcmp ("LESS_EQ", buf) == 0)
+            *tree_node_for_data_read = LESS_EQ_ (NULL, NULL);
+
+        else if (strcmp ("OPEN_PARENTHESIS", buf) == 0)
+            *tree_node_for_data_read = OPEN_PARENTHESIS_;
+
+        else if (strcmp ("CLOSE_PARENTHESIS", buf) == 0)
+            *tree_node_for_data_read = CLOSE_PARENTHESIS_;
 
         else if (strcmp ("PRINT", buf) == 0)
             *tree_node_for_data_read = PRINT_;
@@ -1080,8 +1105,11 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
                  CheckIfWordIsVariable (buf, tree_node_for_data_read, name_table));
         //continue if num or var wasn't read successfully
 
-        else
+        else {
+
+            fprintf (stderr, "UNKNOWN NODE DATA '%s'\n", buf);
             return TREE_FUNC_STATUS_FAIL;
+        }
 
         ON_TREE_DEBUG (NodeTypePrint (stderr, *tree_node_for_data_read, name_table));
 

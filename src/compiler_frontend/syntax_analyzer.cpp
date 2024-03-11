@@ -611,33 +611,37 @@ TreeNode *GetFuncCall (const LanguageToken *token_struct, size_t *position) {
 
     SYN_ASSERT (tree_node -> left_branch, "WRONG FUNCTION NAME in FUNCTION CALL");
 
-    TreeNode **next_node = &(tree_node -> left_branch -> left_branch);
-    current_node         = TOKEN_NODE_ARR[*position];
+    TreeNode *next_arg_node = NULL;
+    TreeNode *all_args_node = NULL; // &(tree_node -> left_branch -> left_branch);
+
+    current_node = TOKEN_NODE_ARR[*position];
 
     while (NODE_TYPE == VARIABLE || NODE_TYPE == NUMBER) {
-
-        if (*next_node != NULL) {
-
-            *next_node = COMMA_ (NULL, *next_node);
-            next_node  = &((*next_node) -> left_branch);
-        }
 
         switch (NODE_TYPE) {
 
             case VARIABLE:
-                *next_node = GetVar (token_struct, position);
+                next_arg_node = GetVar (token_struct, position);
                 break;
 
             case NUMBER:
-                *next_node = GetNum (token_struct, position);
+                next_arg_node = GetNum (token_struct, position);
                 break;
 
             default:
-                *next_node = NULL;
+                next_arg_node = NULL;
         }
+
+        if (all_args_node)
+            all_args_node = COMMA_ (all_args_node, next_arg_node);
+
+        else
+            all_args_node = next_arg_node;
 
         current_node = TOKEN_NODE_ARR[*position];
     }
+
+    tree_node -> left_branch -> left_branch = all_args_node;
 
     return tree_node;
 }

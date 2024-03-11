@@ -299,21 +299,22 @@ BackendFuncStatus AsmFileOperatorWhileWrite (FILE *asm_file, const TreeNode *cur
     MATH_TREE_NODE_VERIFY (current_node, BACKEND);
 
     static size_t operator_while_number = 0;
+    const  size_t curr_while_number     = operator_while_number;
 
-    fprintf (asm_file, ":while_%zu\n", operator_while_number);
+    operator_while_number++;
+
+    fprintf (asm_file, ":while_%zu\n", curr_while_number);
 
     AsmFileOperatorOrAndWrite (asm_file, current_node -> left_branch);
 
     fprintf (asm_file, "push 0\n"
-                       "je end_while_%zu\n", operator_while_number);
+                       "je end_while_%zu\n", curr_while_number);
 
     AsmFileLangOperatorWrite (asm_file, current_node -> right_branch);
 
     fprintf (asm_file, "jmp while_%zu\n"
                        ":end_while_%zu\n",
-                       operator_while_number, operator_while_number);
-
-    operator_while_number++;
+                       curr_while_number, curr_while_number);
 
     return BACKEND_FUNC_STATUS_OK;
 }
@@ -538,7 +539,12 @@ BackendFuncStatus AsmFileFuncPassedArgsWrite (FILE *asm_file, const TreeNode *cu
 
         //TODO make call_func as argument
 
-    return AsmFileFuncPassedArgsWrite (asm_file, current_arg_node -> left_branch);
+    current_node = current_arg_node;
+
+    if (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == COMMA)
+        return AsmFileFuncPassedArgsWrite (asm_file, current_arg_node -> left_branch);
+
+    return BACKEND_FUNC_STATUS_OK;
 }
 
 BackendFuncStatus AsmFileVarOrNumWrite (FILE *asm_file, const TreeNode *current_node) {

@@ -133,7 +133,8 @@ BackendFuncStatus AsmFileNewFuncWrite (FILE *asm_file, const TreeNode *current_n
         AsmFileInitFuncArgsWrite (asm_file, CURRENT_FUNC_NAME_NODE (func_node) -> left_branch);
         AsmFileLangOperatorWrite (asm_file, CURRENT_FUNC_FIRST_END_LINE_NODE (func_node));
 
-        fprintf (asm_file, "\n");
+
+        fprintf (asm_file, "ret\n\n");      // because of Arman (declane)!!!!!
 
         switch (NODE_LANG_OPERATOR) {
 

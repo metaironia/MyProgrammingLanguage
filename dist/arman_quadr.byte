@@ -1,0 +1,310 @@
+push 0
+push 0
+pop rbx
+pop rdx
+call main
+hlt
+
+:main
+push rbx
+push rdx
+pop rbx
+push rdx
+push 16
+add
+pop rdx
+in
+pop [rbx+0]
+in
+pop [rbx+1]
+in
+pop [rbx+2]
+push [rbx+2]
+push [rbx+1]
+push [rbx+0]
+call GetNumberOfRoots
+push rax
+pop [rbx+3]
+push [rbx+3]
+push 3.000000
+jne comparison_0
+push 0
+jmp comparison_end_0
+:comparison_0
+push 1
+:comparison_end_0
+push 0
+je end_if_0
+push [rbx+3]
+out
+push [rbx+3]
+push 1.000000
+jbe comparison_1
+push 0
+jmp comparison_end_1
+:comparison_1
+push 1
+:comparison_end_1
+push 0
+je end_if_1
+push [rbx+2]
+push [rbx+1]
+push [rbx+0]
+call GetFirstRoot
+push rax
+pop [rbx+4]
+:end_if_1
+:end_if_0
+
+:GetSecondRoot
+push rbx
+push rdx
+pop rbx
+push rdx
+push 16
+add
+pop rdx
+pop rcx
+pop [rbx+2]
+push rcx
+pop rcx
+pop [rbx+1]
+push rcx
+pop rcx
+pop [rbx+0]
+push rcx
+push [rbx+1]
+push [rbx+1]
+mul
+push 4.000000
+push [rbx+0]
+mul
+push [rbx+2]
+mul
+sub
+pop [rbx+3]
+push [rbx+3]
+sqrt
+pop [rbx+4]
+push 0.000000
+push [rbx+1]
+sub
+push [rbx+4]
+add
+push 2.000000
+div
+push [rbx+0]
+div
+pop rax
+push rbx
+pop rdx
+pop rbx
+ret
+
+:GetFirstRoot
+push rbx
+push rdx
+pop rbx
+push rdx
+push 16
+add
+pop rdx
+pop rcx
+pop [rbx+2]
+push rcx
+pop rcx
+pop [rbx+1]
+push rcx
+pop rcx
+pop [rbx+0]
+push rcx
+push [rbx+0]
+push 0.000000
+je comparison_2
+push 0
+jmp comparison_end_2
+:comparison_2
+push 1
+:comparison_end_2
+push 0
+je end_if_2
+push 0.000000
+push [rbx+2]
+push [rbx+1]
+div
+sub
+pop rax
+push rbx
+pop rdx
+pop rbx
+ret
+:end_if_2
+push [rbx+1]
+push [rbx+1]
+mul
+push 4.000000
+push [rbx+0]
+mul
+push [rbx+2]
+mul
+sub
+pop [rbx+3]
+push [rbx+3]
+sqrt
+pop [rbx+4]
+push 0.000000
+push [rbx+1]
+sub
+push [rbx+4]
+sub
+push 2.000000
+div
+push [rbx+0]
+div
+pop rax
+push rbx
+pop rdx
+pop rbx
+ret
+
+:GetNumberOfRoots
+push rbx
+push rdx
+pop rbx
+push rdx
+push 16
+add
+pop rdx
+pop rcx
+pop [rbx+2]
+push rcx
+pop rcx
+pop [rbx+1]
+push rcx
+pop rcx
+pop [rbx+0]
+push rcx
+push [rbx+0]
+push 0.000000
+je comparison_3
+push 0
+jmp comparison_end_3
+:comparison_3
+push 1
+:comparison_end_3
+push 0
+je end_if_3
+push [rbx+1]
+push 0.000000
+je comparison_4
+push 0
+jmp comparison_end_4
+:comparison_4
+push 1
+:comparison_end_4
+push 0
+je end_if_4
+push [rbx+2]
+push 0.000000
+jne comparison_5
+push 0
+jmp comparison_end_5
+:comparison_5
+push 1
+:comparison_end_5
+push 0
+je end_if_5
+push 0.000000
+pop rax
+push rbx
+pop rdx
+pop rbx
+ret
+:end_if_5
+push [rbx+2]
+push 0.000000
+je comparison_6
+push 0
+jmp comparison_end_6
+:comparison_6
+push 1
+:comparison_end_6
+push 0
+je end_if_6
+push 3.000000
+pop rax
+push rbx
+pop rdx
+pop rbx
+ret
+:end_if_6
+:end_if_4
+push [rbx+1]
+push 0.000000
+jne comparison_7
+push 0
+jmp comparison_end_7
+:comparison_7
+push 1
+:comparison_end_7
+push 0
+je end_if_7
+push 1.000000
+pop rax
+push rbx
+pop rdx
+pop rbx
+ret
+:end_if_7
+:end_if_3
+push [rbx+1]
+push [rbx+1]
+mul
+push 4.000000
+push [rbx+0]
+mul
+push [rbx+2]
+mul
+sub
+pop [rbx+3]
+push [rbx+3]
+push 0.000000
+je comparison_8
+push 0
+jmp comparison_end_8
+:comparison_8
+push 1
+:comparison_end_8
+push 0
+je end_if_8
+push 1.000000
+pop rax
+push rbx
+pop rdx
+pop rbx
+ret
+:end_if_8
+push [rbx+3]
+push 0.000000
+ja comparison_9
+push 0
+jmp comparison_end_9
+:comparison_9
+push 1
+:comparison_end_9
+push 0
+je end_if_9
+push 0.000000
+pop rax
+push rbx
+pop rdx
+pop rbx
+ret
+:end_if_9
+push 2.000000
+pop rax
+push rbx
+pop rdx
+pop rbx
+ret
+

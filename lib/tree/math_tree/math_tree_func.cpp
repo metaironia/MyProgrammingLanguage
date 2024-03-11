@@ -76,6 +76,8 @@ MathNodeType IsOperatorUnaryOrBinary (const MathNodeOperator node_operator_to_ch
         case OPERATOR_EQUAL:
         case OPERATOR_NOT_EQUAL:
         case OPERATOR_GREATER:
+        case OPERATOR_GREATER_EQ:
+        case OPERATOR_LESS_EQ:
         case OPERATOR_LESS:
             return BINARY_OPERATOR;
             break;
@@ -298,6 +300,14 @@ const char *MathNodeOperatorToString (const TreeNode *current_node) {
 
         case OPERATOR_LESS:
             return "LESS";
+            break;
+
+        case OPERATOR_GREATER_EQ:
+            return "GREATER_EQ";
+            break;
+
+        case OPERATOR_LESS_EQ:
+            return "LESS_EQ";
             break;
 
         case OPERATOR_EQUAL:
@@ -1004,6 +1014,12 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
         else if (strcmp ("LESS", buf) == 0)
             *tree_node_for_data_read = LESS_ (NULL, NULL);
 
+        else if (strcmp ("GREATER_EQ", buf) == 0)
+            *tree_node_for_data_read = GREATER_EQ_ (NULL, NULL);
+
+        else if (strcmp ("LESS_EQ", buf) == 0)
+            *tree_node_for_data_read = LESS_EQ_ (NULL, NULL);
+
         else if (strcmp ("PRINT", buf) == 0)
             *tree_node_for_data_read = PRINT_;
 
@@ -1083,8 +1099,11 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
                  CheckIfWordIsVariable (buf, tree_node_for_data_read, name_table));
         //continue if num or var wasn't read successfully
 
-        else
+        else {
+
+            fprintf (stderr, "UNKNOWN NODE DATA '%s'\n", buf);
             return TREE_FUNC_STATUS_FAIL;
+        }
 
         ON_TREE_DEBUG (NodeTypePrint (stderr, *tree_node_for_data_read, name_table));
 

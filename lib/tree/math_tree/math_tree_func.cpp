@@ -1020,6 +1020,12 @@ TreeFuncStatus LangTreeNodeDataRead (FILE *file_for_read_node_data, TreeNode **t
         else if (strcmp ("LESS_EQ", buf) == 0)
             *tree_node_for_data_read = LESS_EQ_ (NULL, NULL);
 
+        else if (strcmp ("OPEN_PARENTHESIS", buf) == 0)
+            *tree_node_for_data_read = OPEN_PARENTHESIS_;
+
+        else if (strcmp ("CLOSE_PARENTHESIS", buf) == 0)
+            *tree_node_for_data_read = CLOSE_PARENTHESIS_;
+
         else if (strcmp ("PRINT", buf) == 0)
             *tree_node_for_data_read = PRINT_;
 

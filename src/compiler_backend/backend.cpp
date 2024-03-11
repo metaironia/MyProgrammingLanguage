@@ -537,20 +537,17 @@ BackendFuncStatus AsmFileFuncPassedArgsWrite (FILE *asm_file, const TreeNode *cu
 
     MATH_TREE_NODE_VERIFY (current_node, BACKEND);
 
-    const TreeNode *current_arg_node = current_node;
+    if (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == COMMA) {
 
-    if (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == COMMA)
+        AsmFileFuncPassedArgsWrite (asm_file, current_node -> left_branch);
+
         current_node = current_node -> right_branch;
+    }
 
     if (AsmFileMathExpressionWrite (asm_file, current_node) == BACKEND_FUNC_STATUS_FAIL)
         return BACKEND_FUNC_STATUS_FAIL;
 
         //TODO make call_func as argument
-
-    current_node = current_arg_node;
-
-    if (NODE_TYPE == LANGUAGE_OPERATOR && NODE_LANG_OPERATOR == COMMA)
-        return AsmFileFuncPassedArgsWrite (asm_file, current_arg_node -> left_branch);
 
     return BACKEND_FUNC_STATUS_OK;
 }

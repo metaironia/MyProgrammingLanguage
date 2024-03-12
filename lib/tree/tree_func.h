@@ -11,7 +11,7 @@
     #define TREE_DATA_FORMAT    "%s"
 #endif
 
-#define DEBUG_TREE               1
+#define DEBUG_TREE               0
 
 #if DEBUG_TREE
     #define ON_TREE_DEBUG(...)   {__VA_ARGS__;}

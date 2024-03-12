@@ -54,6 +54,6 @@ const char *const CLOSE_BRACE_QUOTES[] = {".", "דנננא", "באי", "ןנמשאי"};
 
 const char *const OPEN_BRACE_QUOTES[] = {",", "ךסעאעט", "‎י"};
 
-const char *const END_LINE_QUOTES[] = {";"};
+const char *const END_LINE_QUOTES[] = {";", "ימ", "ימף", "דמף", "ץוי", "ץ‎י"};
 
 #endif

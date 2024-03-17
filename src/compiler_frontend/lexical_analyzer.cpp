@@ -13,6 +13,10 @@
 #include "lexical_quotations.h"
 
 
+#define WORD_LANGUAGE_OP(...)  CHECK_WORD_LANGUAGE_OP (__VA_ARGS__);
+#define WORD_MATH_OP(...)      CHECK_WORD_MATH_OP (__VA_ARGS__);
+
+
 LexicalFuncStatus LangTokenCtor (LanguageToken *token_struct) {
 
     assert (token_struct);
@@ -272,34 +276,7 @@ LexicalFuncStatus StringTokenSeparate (LanguageToken *token_struct, NameTable *n
 
         bool is_success = false;
 
-        CHECK_WORD_LANGUAGE_OP (current_word, IF);
-        CHECK_WORD_LANGUAGE_OP (current_word, WHILE);
-        CHECK_WORD_LANGUAGE_OP (current_word, ELSE);
-        CHECK_WORD_LANGUAGE_OP (current_word, ASSIGN);
-        CHECK_WORD_LANGUAGE_OP (current_word, PRINT);
-        CHECK_WORD_LANGUAGE_OP (current_word, END_LINE);
-        CHECK_WORD_LANGUAGE_OP (current_word, INIT);
-        CHECK_WORD_LANGUAGE_OP (current_word, FUNC_CALL);
-        CHECK_WORD_LANGUAGE_OP (current_word, FUNC_RET);
-        CHECK_WORD_LANGUAGE_OP (current_word, OPEN_BRACE);
-        CHECK_WORD_LANGUAGE_OP (current_word, CLOSE_BRACE);
-        CHECK_WORD_LANGUAGE_OP (current_word, READ);
-        CHECK_WORD_LANGUAGE_OP (current_word, FUNC_ARG);
-        CHECK_WORD_LANGUAGE_OP (current_word, AND);
-        CHECK_WORD_LANGUAGE_OP (current_word, OR);
-
-        CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, ADD);
-        CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, SUB);
-        CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, DIV);
-        CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, MUL);
-        CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, POW);
-        CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR,  SQRT);
-        CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, EQUAL);
-        CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, NOT_EQUAL);
-        CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, LESS);
-        CHECK_WORD_MATH_OP     (current_word, BINARY_OPERATOR, GREATER);
-        CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR,  OPEN_PARENTHESIS);
-        CHECK_WORD_MATH_OP     (current_word, UNARY_OPERATOR,  CLOSE_PARENTHESIS);
+        #include "math_and_lang_operators.h"          // checks all math and lang operators
     }
 
     *current_node = END_;

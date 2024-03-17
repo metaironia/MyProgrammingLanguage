@@ -22,7 +22,7 @@
                                                         return NULL;                            \
                                                     }
 
-#define CHECK_WORD_LANGUAGE_OP(current_word, keyword)                                            \
+#define CHECK_WORD_LANGUAGE_OP(keyword)                                                          \
             {                                                                                    \
                 is_success = WordCheckLanguageOperator (keyword##_QUOTES,                        \
                                                         sizeof (keyword##_QUOTES) / sizeof (keyword##_QUOTES)[0], \
@@ -38,7 +38,7 @@
                 }                                                                                \
             }
 
-#define CHECK_WORD_MATH_OP(current_word, keyword_type, keyword)                                                \
+#define CHECK_WORD_MATH_OP(keyword_type, keyword)                                                              \
             {                                                                                                  \
                 is_success = WordCheckMathOperator (keyword##_QUOTES,                                          \
                                                     sizeof (keyword##_QUOTES) / sizeof (keyword##_QUOTES)[0],  \

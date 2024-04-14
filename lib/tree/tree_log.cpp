@@ -55,6 +55,9 @@ enum TreeFuncStatus MathTreeGraphDump (const Tree *tree_for_graph_dump, const Na
 
     TreeDotFileEnd (tree_dot_file);
 
+    fclose (tree_dot_file);
+    tree_dot_file = NULL;
+
     TreeImageFolderCreate ();
 
     TreeImageCreate (tree_dot_file);

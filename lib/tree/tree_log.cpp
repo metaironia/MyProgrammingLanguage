@@ -58,9 +58,8 @@ enum TreeFuncStatus MathTreeGraphDump (const Tree *tree_for_graph_dump, const Na
     fclose (tree_dot_file);
     tree_dot_file = NULL;
 
-    TreeImageFolderCreate ();
-
-    TreeImageCreate (tree_dot_file);
+    TreeImageFolderCreate();
+    TreeImageCreate();
 
     return TREE_FUNC_STATUS_OK;
 }
@@ -72,9 +71,7 @@ enum TreeFuncStatus TreeImageFolderCreate (void) {
     return TREE_FUNC_STATUS_OK;
 }
 
-enum TreeFuncStatus TreeImageCreate (FILE *tree_dot_file) {
-
-    assert (tree_dot_file);
+enum TreeFuncStatus TreeImageCreate (void) {
 
     system (CommandToCreateImageCreate (ImageNameCreate ()));
 

@@ -46,7 +46,7 @@ const char *const SQRT_QUOTES[] = {"корен"};
 
 const char *const OR_QUOTES[] = {"либо", "или"};
 
-const char *const INIT_QUOTES[] = {"сюда", "бля", "сипаю"};
+const char *const INIT_QUOTES[] = {"сюда", "сипаю"};
 
 const char *const AND_QUOTES[] = {"и"};
 

@@ -1,4 +1,4 @@
-# Язык программирования "Rap language"
+# Язык программирования "Rap language" и компилятор для него
 
 Сергей Кулагин, 1 курс ФРКТ МФТИ
 
@@ -49,7 +49,7 @@
     $ compiler_backend <input_file> <output_file>
     ```
 
-## Описание языка "Rap language"
+## Правила и синтаксис языка "Rap language"
 
 Rap language - Тьюринг-полный язык программирования. 
 
@@ -230,4 +230,42 @@ int main (void) {
 3. Значение корня уравнения, если корень один;
 
 4. Значения двух корней уравнения, если корней два.
+
+## Компилятор языка Rap language
+
+Компилятор языка Rap language состоит из трех частей: frontend, middle-end и backend.
+
+### Frontend
+
+Frontend часть переводит код с языка Rap language в AST, после чего сохраняет AST в отдельный файл. Пример AST дерева (AST программы [fact.txt](src/examples_of_programs/fact.txt)):
+
+![AST программы fact.txt](/readme_images/fact_ast.png)
+
+Выше описанные правила и синтаксис языка Rap language - это на самом деле правила работы frontend части компилятора.
+
+Стандарт AST будет описан чуть позже.
+
+### Middle-end
+
+Middle-end часть читает файл и строит AST из файла, после чего происходит свертка констант; измененное AST сохраняется в файл. Пример работы middle-end части:
+
+<image src="readme_images/middle_end_work_example.jpg" alt="Пример работы middle-end части" width=70%>
+
+
+### Backend
+
+Backend часть также читает AST из файла и имеет две версии преобразования AST:
+
+1. Преобразование AST в код [разработанного мной ассемблера](src/MyAsm);
+
+2. Преобразование в NASM x86-64 для последующего исполнения в Win64. Информацию про эту версию можно посмотреть здесь: https://github.com/metaironia/CompilerBackend
+
+
+Например, в такой код на языке разработанного мной ассемблера преобразуется AST демонстрационной программы [fact.txt](src/examples_of_programs/fact.txt) (на картинке отображена лишь начальная часть кода): 
+
+<image src="readme_images/code_my_asm_example.jpg" alt="Пример кода на моем ассемблере" width=50%>
+
+<!-- ## Описание стандарта AST
+
+Стандарт AST придуман вместе с [worthlane](https://github.com/worthlane) и [d3clane](https://github.com/d3clane). -->
 

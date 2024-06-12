@@ -7,29 +7,29 @@
 ### Для сборки:
 
 1. Клонируйте репозиторий: 
-    ```
+    ```console
     $ git clone https://github.com/metaironia/MyProgrammingLanguage
     ```
 
 2. Перейдите в папку с исходниками:
 
-    ```
+    ```console
     $ cd MyProgrammingLanguage/src
     ```
 
 3. Соберите компилятор:
     - Для сборки frontend-части:
-        ```
+        ```console
         $ cd compiler_frontend
         $ make -f makefile_frontend 
         ```
     - Для сборки middle-части:
-        ```
+        ```console
         $ cd compiler_middleend
         $ make -f makefile_middleend
         ```
     - Для сборки backend-части:
-        ```
+        ```console
         $ cd compiler_backend
         $ make -f makefile_backend
         ```
@@ -37,15 +37,15 @@
 ### Для запуска:
 
 * Для запуска frontend-части:
-    ```
+    ```console
     $ compiler_frontend <input_file> <output_file>
     ```
 * Для запуска middle-части:
-    ```
+    ```console
     $ compiler_middleend <input_file> <output_file>
     ```
 * Для запуска backend-части:
-    ```
+    ```console
     $ compiler_backend <input_file> <output_file>
     ```
 
@@ -161,8 +161,6 @@ READ считывает число в консоли (по сути резуль
 
 Здесь пуллап - FUNC_CALL; function - имя вызываемой функции.
 
-
-
 ## Примеры программ на Rap language
 
 Репозиторий содержит две демонстрационных программы на Rap language. Одна из них - это программа, вычисляющая факториал вводимого числа ([fact.txt](src/examples_of_programs/fact.txt)). Другая - программа, решающая квадратное уравнение ([quadratic.txt](src/examples_of_programs/quadratic.txt)).
@@ -254,16 +252,19 @@ Middle-end часть читает файл и строит AST из файла,
 
 ### Backend
 
-Backend часть также читает AST из файла и имеет две версии преобразования AST:
+Backend часть также читает AST из файла и имеет две модели преобразования AST:
 
 1. Преобразование AST в код [разработанного мной ассемблера](src/MyAsm);
 
-2. Преобразование в NASM x86-64 для последующего исполнения в Win64. Информацию про эту версию можно посмотреть здесь: https://github.com/metaironia/CompilerBackend
-
+2. Преобразование в NASM x86-64 для последующего исполнения в Win64. 
 
 Например, в такой код на языке разработанного мной ассемблера преобразуется AST демонстрационной программы [fact.txt](src/examples_of_programs/fact.txt) (на картинке отображена лишь начальная часть кода): 
 
 <image src="readme_images/code_my_asm_example.jpg" alt="Пример кода на моем ассемблере" width=50%>
+
+В этом репозитории содержится только первая модель backend части (преобразующая AST в код для моего ассемблера).
+
+Вторая модель содержится в другом репозитории: https://github.com/metaironia/CompilerBackend; подробное описание про эту модель находится в файле readme.md в репозитории по этой ссылке. 
 
 <!-- ## Описание стандарта AST
 
